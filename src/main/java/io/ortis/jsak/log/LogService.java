@@ -32,26 +32,26 @@ public class LogService extends Handler implements Runnable
 	{
 		try
 		{
-			while(!Thread.interrupted())
+			while (!Thread.interrupted())
 			{
 				try
 				{
 
 					final LogService.Event event = this.eventQueue.poll(1000, TimeUnit.MILLISECONDS);
 
-					if(event != null && event.getLogLevel().intValue() >= getLevel().intValue())
+					if (event != null && event.getLogLevel().intValue() >= getLevel().intValue())
 					{
-						synchronized(this.listeners)
+						synchronized (this.listeners)
 						{
-							for(final LogService.Listener listener : this.listeners)
+							for (final LogService.Listener listener : this.listeners)
 								listener.onEvent(event);
 						}
 					}
 
-				} catch(final InterruptedException e)
+				} catch (final InterruptedException e)
 				{
 					throw e;
-				} catch(final Exception e)
+				} catch (final Exception e)
 				{
 					System.out.println("Error while processing log events - " + e.getMessage());
 					e.printStackTrace();
@@ -59,15 +59,21 @@ public class LogService extends Handler implements Runnable
 				}
 			}
 
-		} catch(final InterruptedException e)
+		} catch (final InterruptedException e)
 		{
 			Thread.currentThread().interrupt();
-		} catch(final Exception e)
+		} catch (final Exception e)
 		{
 			System.out.println("Fatal error in " + getClass().getSimpleName() + " - " + e.getMessage());
 			e.printStackTrace();
 
 		}
+	}
+
+	public LogService defaultListener()
+	{
+		addListener(event -> System.out.println(event.getFormattedMessage()));
+		return this;
 	}
 
 	public LogService start()
@@ -79,12 +85,11 @@ public class LogService extends Handler implements Runnable
 		return this;
 	}
 
-
 	@Override
 	public void publish(final LogRecord record)
 	{
 		final LogService.Event event;
-		synchronized(this.lock)
+		synchronized (this.lock)
 		{
 			final LocalDateTime now = LocalDateTime.now(this.clock);
 			final String formattedMessage = this.recordFormatter.format(now, record);
@@ -107,10 +112,10 @@ public class LogService extends Handler implements Runnable
 
 	public Logger getLogger(final String name)
 	{
-		synchronized(this.cache)
+		synchronized (this.cache)
 		{
 			Logger logger = this.cache.get(name);
-			if(logger != null)
+			if (logger != null)
 				return logger;
 
 			// create new logger
@@ -129,7 +134,7 @@ public class LogService extends Handler implements Runnable
 
 	public LogService addListener(final LogService.Listener listener)
 	{
-		synchronized(this.listeners)
+		synchronized (this.listeners)
 		{
 			this.listeners.add(listener);
 		}
@@ -139,7 +144,7 @@ public class LogService extends Handler implements Runnable
 
 	public boolean removeListener(final LogService.Listener listener)
 	{
-		synchronized(this.listeners)
+		synchronized (this.listeners)
 		{
 			return this.listeners.remove(listener);
 		}
@@ -147,7 +152,7 @@ public class LogService extends Handler implements Runnable
 
 	public LogService setLogRecordFormatter(final LogRecordFormatter logRecordFormatter)
 	{
-		synchronized(this.lock)
+		synchronized (this.lock)
 		{
 			this.recordFormatter = logRecordFormatter;
 		}
@@ -157,7 +162,7 @@ public class LogService extends Handler implements Runnable
 
 	public LogService setClock(final Clock clock)
 	{
-		synchronized(this.lock)
+		synchronized (this.lock)
 		{
 			this.clock = clock;
 
@@ -231,7 +236,8 @@ public class LogService extends Handler implements Runnable
 				sb.append(" ").append(DATETIME_FORMATTER.format(now));
 				sb.append("|").append(logRecord.getLoggerName());
 				sb.append("|").append(Thread.currentThread().getName());
-				sb.append("|").append(FormatUtils.extractSimpleClassName(logRecord.getSourceClassName())).append(".").append(logRecord.getSourceMethodName());
+				sb.append("|").append(FormatUtils.extractSimpleClassName(logRecord.getSourceClassName())).append(".")
+				  .append(logRecord.getSourceMethodName());
 				sb.append(": ").append(logRecord.getMessage());
 
 				return sb.toString();
@@ -248,7 +254,8 @@ public class LogService extends Handler implements Runnable
 				sb.append(" ").append(DATETIME_FORMATTER.format(now));
 				sb.append("|").append(logRecord.getLoggerName());
 				sb.append("|").append(Thread.currentThread().getName());
-				sb.append("|").append(FormatUtils.extractSimpleClassName(logRecord.getSourceClassName())).append(".").append(logRecord.getSourceMethodName());
+				sb.append("|").append(FormatUtils.extractSimpleClassName(logRecord.getSourceClassName())).append(".")
+				  .append(logRecord.getSourceMethodName());
 				sb.append(":\n").append(logRecord.getMessage());
 
 				return sb.toString();

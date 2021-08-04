@@ -10,8 +10,7 @@ public abstract class IOUtils
 {
 	private static final int MAX_INT = Integer.MAX_VALUE - 1;
 
-	public static byte[] readResource(final String path, final byte[] buffer, final int offset, final int length)
-			throws IOException
+	public static byte[] readResource(final String path, final byte[] buffer, final int offset, final int length) throws IOException
 	{
 		try (final ByteArrayOutputStream baos = new ByteArrayOutputStream())
 		{
@@ -20,8 +19,8 @@ public abstract class IOUtils
 		}
 	}
 
-	public static void readResource(final String path, final OutputStream destination, final byte[] buffer,
-			final int offset, final int length) throws IOException
+	public static void readResource(final String path, final OutputStream destination, final byte[] buffer, final int offset, final int length)
+			throws IOException
 	{
 		try (final InputStream is = IOUtils.class.getResourceAsStream(path))
 		{
@@ -32,8 +31,7 @@ public abstract class IOUtils
 		}
 	}
 
-	public static void readExact(final int length, final Path path, final byte[] destination,
-			final int destinationOffset) throws IOException
+	public static void readExact(final int length, final Path path, final byte[] destination, final int destinationOffset) throws IOException
 	{
 		try (final RandomAccessFile raf = new RandomAccessFile(path.toFile(), "r"))
 		{
@@ -41,8 +39,8 @@ public abstract class IOUtils
 		}
 	}
 
-	public static void readExact(final int length, final RandomAccessFile randomAccessFile, final byte[] destination,
-			final int destinationOffset) throws IOException
+	public static void readExact(final int length, final RandomAccessFile randomAccessFile, final byte[] destination, final int destinationOffset)
+			throws IOException
 	{
 		int total = 0;
 		while (total < length)
@@ -58,21 +56,20 @@ public abstract class IOUtils
 			throw new IOException("Total read mismatch (expected " + length + " but read " + total + ")");
 	}
 
-	public static void readExact(final int length, final RandomAccessFile randomAccessFile,
-			final OutputStream destination, final byte[] buffer) throws IOException
+	public static void readExact(final int length, final RandomAccessFile randomAccessFile, final OutputStream destination, final byte[] buffer)
+			throws IOException
 	{
 		readExact(length, randomAccessFile, destination, buffer, 0, buffer.length);
 	}
 
-	public static void readExact(final int length, final RandomAccessFile randomAccessFile,
-			final OutputStream destination, final byte[] buffer, final int bufferFrom) throws IOException
+	public static void readExact(final int length, final RandomAccessFile randomAccessFile, final OutputStream destination, final byte[] buffer,
+			final int bufferFrom) throws IOException
 	{
 		readExact(length, randomAccessFile, destination, buffer, bufferFrom, buffer.length);
 	}
 
-	public static void readExact(final int length, final RandomAccessFile randomAccessFile,
-			final OutputStream destination, final byte[] buffer, final int bufferOffset, final int bufferLength)
-			throws IOException
+	public static void readExact(final int length, final RandomAccessFile randomAccessFile, final OutputStream destination, final byte[] buffer,
+			final int bufferOffset, final int bufferLength) throws IOException
 	{
 		if (bufferLength == 0)
 			throw new IllegalArgumentException("Buffer length must be greater than 0");
@@ -94,8 +91,8 @@ public abstract class IOUtils
 			throw new IOException("Length mismatch (expected " + length + " but read " + total + ")");
 	}
 
-	public static int readAtMost(final int length, final RandomAccessFile randomAccessFile, final byte[] destination,
-			final int destinationOffset) throws IOException
+	public static int readAtMost(final int length, final RandomAccessFile randomAccessFile, final byte[] destination, final int destinationOffset)
+			throws IOException
 	{
 		int total = 0;
 		while (total < length)
@@ -110,19 +107,17 @@ public abstract class IOUtils
 		return total;
 	}
 
-	public static int stream(final InputStream source, final byte[] destination, final int destinationOffset)
-			throws IOException
+	public static int stream(final InputStream source, final byte[] destination, final int destinationOffset) throws IOException
 	{
-		return stream(source, destination, destinationOffset, -1);
+		return stream(source, destination, destinationOffset, destination.length);
 	}
 
-	public static int stream(final InputStream source, final byte[] destination, final int destinationOffset,
-			int destinationLength) throws IOException
+	public static int stream(final InputStream source, final byte[] destination, final int destinationOffset, int destinationLength)
+			throws IOException
 	{
-		int read;
+		int read = 0;
 		int total = 0;
-		while ((read = source.read(destination, destinationOffset + total, destinationLength - total)) > -1 &&
-			   total < destinationLength)
+		while (total < destinationLength && (read = source.read(destination, destinationOffset + total, destinationLength - total)) > -1)
 			total += read;
 
 		if (read < 0 && total == 0)
@@ -131,25 +126,23 @@ public abstract class IOUtils
 		return total;
 	}
 
-	public static int stream(final InputStream source, final OutputStream destination, final byte[] buffer)
-			throws IOException
+	public static int stream(final InputStream source, final OutputStream destination, final byte[] buffer) throws IOException
 	{
-		return stream(source, destination, buffer, 0, -1);
+		return stream(source, destination, buffer, 0, buffer.length);
 	}
 
 
-	public static int stream(final InputStream source, final OutputStream destination, final byte[] buffer,
-			final int maxLength) throws IOException
+	public static int stream(final InputStream source, final OutputStream destination, final byte[] buffer, final int maxLength) throws IOException
 	{
 		return stream(source, destination, buffer, 0, maxLength);
 	}
 
-	public static int stream(final InputStream source, final OutputStream destination, final byte[] buffer,
-			final int bufferOffset, int bufferLength) throws IOException
+	public static int stream(final InputStream source, final OutputStream destination, final byte[] buffer, final int bufferOffset, int bufferLength)
+			throws IOException
 	{
 		int read = 0;
 		int total = 0;
-		while (bufferLength > 0 && (read = source.read(buffer, bufferOffset, bufferLength)) > -1  )
+		while (bufferLength > 0 && (read = source.read(buffer, bufferOffset, bufferLength)) > -1)
 		{
 			destination.write(buffer, bufferOffset, read);
 			total += read;
@@ -161,8 +154,8 @@ public abstract class IOUtils
 		return total;
 	}
 
-	public static int stream(final RandomAccessFile randomAccessFile, final OutputStream destination,
-			final byte[] buffer, final int bufferOffset, final int bufferLength) throws IOException
+	public static int stream(final RandomAccessFile randomAccessFile, final OutputStream destination, final byte[] buffer, final int bufferOffset,
+			final int bufferLength) throws IOException
 	{
 		int read = 0;
 		int total = 0;
@@ -178,14 +171,13 @@ public abstract class IOUtils
 		return total;
 	}
 
-	public static void streamExact(final int length, final InputStream source, final byte[] destination)
-			throws IOException
+	public static void streamExact(final int length, final InputStream source, final byte[] destination) throws IOException
 	{
 		streamExact(length, source, destination, 0);
 	}
 
-	public static void streamExact(final int length, final InputStream source, final byte[] destination,
-			final int destinationOffset) throws IOException
+	public static void streamExact(final int length, final InputStream source, final byte[] destination, final int destinationOffset)
+			throws IOException
 	{
 		if (destination.length - destinationOffset < length)
 			throw new IOException("Not enough space in destination (buffer overflow)");
@@ -209,14 +201,13 @@ public abstract class IOUtils
 			throw new IOException("Length mismatch (expected " + length + " but read " + total + ")");
 	}
 
-	public static void streamExact(final int length, final InputStream source, final OutputStream destination,
-			final byte[] buffer) throws IOException
+	public static void streamExact(final int length, final InputStream source, final OutputStream destination, final byte[] buffer) throws IOException
 	{
 		streamExact(length, source, destination, buffer, 0, buffer.length);
 	}
 
-	public static void streamExact(final int length, final InputStream source, final OutputStream destination,
-			final byte[] buffer, final int bufferOffset, final int bufferLength) throws IOException
+	public static void streamExact(final int length, final InputStream source, final OutputStream destination, final byte[] buffer,
+			final int bufferOffset, final int bufferLength) throws IOException
 	{
 		if (bufferLength == 0)
 			throw new IllegalArgumentException("Buffer length must be greater than 0");

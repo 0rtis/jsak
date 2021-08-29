@@ -1,4 +1,4 @@
-package io.ortis.jsak;
+package io.ortis.jsak.math;
 
 import io.ortis.jsak.io.bytes.ByteUtils;
 import io.ortis.jsak.io.bytes.Bytes;

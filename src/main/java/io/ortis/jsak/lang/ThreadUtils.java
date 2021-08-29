@@ -1,4 +1,4 @@
-package io.ortis.jsak;
+package io.ortis.jsak.lang;
 
 public abstract class ThreadUtils
 {

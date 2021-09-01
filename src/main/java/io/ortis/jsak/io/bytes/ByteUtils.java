@@ -1,6 +1,6 @@
 package io.ortis.jsak.io.bytes;
 
-import io.ortis.jsak.UZ;
+import io.ortis.jsak.math.UZ;
 
 import java.math.BigInteger;
 import java.util.Arrays;

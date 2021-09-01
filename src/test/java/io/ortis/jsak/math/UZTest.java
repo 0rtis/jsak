@@ -1,5 +1,6 @@
 package io.ortis.jsak.math;
 
+import io.ortis.jsak.TestUtils;
 import io.ortis.jsak.io.bytes.ByteUtils;
 import io.ortis.jsak.io.bytes.Bytes;
 import org.junit.*;

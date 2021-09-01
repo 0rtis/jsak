@@ -1,4 +1,4 @@
-package io.ortis.jsak;
+package io.ortis.jsak.util;
 
 /**
  * Reference to an {@link Object}. Useful to access outer field from anonymous class.

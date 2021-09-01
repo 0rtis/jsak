@@ -1,4 +1,4 @@
-package io.ortis.jsak;
+package io.ortis.jsak.math;
 
 import java.math.BigInteger;
 

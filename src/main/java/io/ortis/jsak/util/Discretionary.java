@@ -1,4 +1,4 @@
-package io.ortis.jsak;
+package io.ortis.jsak.util;
 
 import java.util.Objects;
 import java.util.Optional;

@@ -2,7 +2,7 @@ package io.ortis.jsak.io.bytes;
 
 
 import io.ortis.jsak.TestUtils;
-import io.ortis.jsak.UZ;
+import io.ortis.jsak.math.UZ;
 import org.junit.*;
 
 import java.math.BigInteger;

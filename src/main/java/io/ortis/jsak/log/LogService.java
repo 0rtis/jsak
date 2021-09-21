@@ -110,6 +110,11 @@ public class LogService extends Handler implements Runnable
 
 	}
 
+	public Logger getLogger(final Class<?> clazz)
+	{
+		return getLogger(clazz.getSimpleName());
+	}
+
 	public Logger getLogger(final String name)
 	{
 		synchronized (this.cache)

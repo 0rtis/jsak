@@ -27,7 +27,7 @@ public abstract class IOUtils
 			if (is == null)
 				throw new IOException("Resource not found");
 
-			stream(is, destination, buffer, offset, length);
+			stream(is, BytesConsumer.of(destination), buffer, offset, length);
 		}
 	}
 
@@ -126,11 +126,11 @@ public abstract class IOUtils
 		return total;
 	}
 
+
 	public static int stream(final InputStream source, final OutputStream destination, final byte[] buffer) throws IOException
 	{
 		return stream(source, destination, buffer, 0, buffer.length);
 	}
-
 
 	public static int stream(final InputStream source, final OutputStream destination, final byte[] buffer, final int maxLength) throws IOException
 	{
@@ -140,11 +140,28 @@ public abstract class IOUtils
 	public static int stream(final InputStream source, final OutputStream destination, final byte[] buffer, final int bufferOffset, int bufferLength)
 			throws IOException
 	{
+		return stream(source, BytesConsumer.of(destination), buffer, bufferOffset, bufferLength);
+	}
+
+
+	public static int stream(final InputStream source, final BytesConsumer consumer, final byte[] buffer) throws IOException
+	{
+		return stream(source, consumer, buffer, 0, buffer.length);
+	}
+
+	public static int stream(final InputStream source, final BytesConsumer consumer, final byte[] buffer, final int maxLength) throws IOException
+	{
+		return stream(source, consumer, buffer, 0, maxLength);
+	}
+
+	public static int stream(final InputStream source, final BytesConsumer consumer, final byte[] buffer, final int bufferOffset, int bufferLength)
+			throws IOException
+	{
 		int read = 0;
 		int total = 0;
 		while (bufferLength > 0 && (read = source.read(buffer, bufferOffset, bufferLength)) > -1)
 		{
-			destination.write(buffer, bufferOffset, read);
+			consumer.accept(buffer, bufferOffset, read);
 			total += read;
 		}
 
@@ -154,14 +171,14 @@ public abstract class IOUtils
 		return total;
 	}
 
-	public static int stream(final RandomAccessFile randomAccessFile, final OutputStream destination, final byte[] buffer, final int bufferOffset,
+	public static int stream(final RandomAccessFile randomAccessFile, final BytesConsumer consumer, final byte[] buffer, final int bufferOffset,
 			final int bufferLength) throws IOException
 	{
 		int read = 0;
 		int total = 0;
 		while (bufferLength > 0 && (read = randomAccessFile.read(buffer, bufferOffset, bufferLength)) > -1)
 		{
-			destination.write(buffer, bufferOffset, read);
+			consumer.accept(buffer, bufferOffset, read);
 			total += read;
 		}
 
@@ -209,6 +226,17 @@ public abstract class IOUtils
 	public static void streamExact(final int length, final InputStream source, final OutputStream destination, final byte[] buffer,
 			final int bufferOffset, final int bufferLength) throws IOException
 	{
+		streamExact(length, source, BytesConsumer.of(destination), buffer, bufferOffset, bufferLength);
+	}
+
+	public static void streamExact(final int length, final InputStream source, final BytesConsumer consumer, final byte[] buffer) throws IOException
+	{
+		streamExact(length, source, consumer, buffer, 0, buffer.length);
+	}
+
+	public static void streamExact(final int length, final InputStream source, final BytesConsumer consumer, final byte[] buffer,
+			final int bufferOffset, final int bufferLength) throws IOException
+	{
 		if (bufferLength == 0)
 			throw new IllegalArgumentException("Buffer length must be greater than 0");
 
@@ -224,12 +252,12 @@ public abstract class IOUtils
 				if (read < 0)
 					throw new IOException("End of stream before target length was reached");
 
-				destination.write(read);
+				consumer.accept(read);
 				total++;
 				continue;
 			}
 
-			destination.write(buffer, bufferOffset, read);
+			consumer.accept(buffer, bufferOffset, read);
 			total += read;
 		}
 

@@ -1,9 +1,7 @@
 package io.ortis.jsak.log;
 
-import io.ortis.jsak.TestUtils;
 import org.junit.*;
 
-import java.util.Random;
 import java.util.logging.Logger;
 
 public class LogServiceTest
@@ -26,11 +24,7 @@ public class LogServiceTest
 	@Test
 	public void test() throws Exception
 	{
-		final Random random = TestUtils.getDeterministicRandom();
-		final int runs = TestUtils.computeTestRuns(BASE_TEST_RUNS);
-
-
-		final LogService logService = new LogService().start();
+			final LogService logService = new LogService().start();
 		logService.addListener(FilteredLogListener.CONSOLE_ALL);
 
 		final Logger logger = logService.getLogger("test");

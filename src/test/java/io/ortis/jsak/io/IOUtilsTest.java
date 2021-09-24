@@ -26,12 +26,6 @@ public class IOUtilsTest
 	}
 
 	@Test
-	public void testReadExact() throws Exception
-	{
-		Assert.fail("Test not implemented");
-	}
-
-	@Test
 	public void testStream() throws Exception
 	{
 		final Random random = TestUtils.getDeterministicRandom();
@@ -95,7 +89,7 @@ public class IOUtilsTest
 	{
 		final Random random = TestUtils.getDeterministicRandom();
 		final int runs = TestUtils.computeTestRuns(BASE_TEST_RUNS);
-		;
+
 		for (int run = 0; run < runs; run++)
 		{
 			final byte[] data = new byte[run % 20 == 0 ? 0 : random.nextInt(MAX_BYTES_LENGTH)];

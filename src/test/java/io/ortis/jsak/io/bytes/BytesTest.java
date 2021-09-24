@@ -29,8 +29,8 @@ public class BytesTest
 	public void testGetters()
 	{
 		final Random random = TestUtils.getDeterministicRandom();
-
-		for(int run = 0; run < BASE_RUNS; run++)
+		final int runs = TestUtils.computeTestRuns(BASE_RUNS);
+		for(int run = 0; run < runs; run++)
 		{
 			final int length = run == 0 ? 0 : random.nextInt(MAX_LENGTH);
 			final byte[] buffer = new byte[length];
@@ -53,8 +53,8 @@ public class BytesTest
 	public void testEquals() throws IOException
 	{
 		final Random random = TestUtils.getDeterministicRandom();
-
-		for(int run = 0; run < BASE_RUNS; run++)
+		final int runs = TestUtils.computeTestRuns(BASE_RUNS);
+		for(int run = 0; run < runs; run++)
 		{
 			final int length = run == 0 ? 0 : random.nextInt(MAX_LENGTH);
 			final byte[] buffer = new byte[length];
@@ -141,8 +141,8 @@ public class BytesTest
 	public void testRead() throws Exception
 	{
 		final Random random = TestUtils.getDeterministicRandom();
-
-		for(int run = 0; run < BASE_RUNS; run++)
+		final int runs = TestUtils.computeTestRuns(BASE_RUNS);
+		for(int run = 0; run < runs; run++)
 		{
 			final int length = run == 0 ? 0 : random.nextInt(MAX_LENGTH);
 			final byte[] buffer = new byte[length];

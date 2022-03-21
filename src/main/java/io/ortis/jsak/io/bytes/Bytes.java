@@ -19,7 +19,7 @@ public class Bytes
 
 	private Bytes(final byte[] data, final int dataOffset, final int dataLength)
 	{
-		if(data == null)
+		if (data == null)
 			throw new IllegalArgumentException("data is null");
 
 		this.data = data;
@@ -29,11 +29,11 @@ public class Bytes
 		//fast hash code for byte array
 		final int m = 31;
 		int hashCodeBuffer = m * this.dataLength;
-		for(int i = 0; i < this.dataLength; i++)
+		for (int i = 0; i < this.dataLength; i++)
 		{
-			if(i <= 3 || i == 5 || i == 8 || i == 13 || i == 21)
+			if (i <= 3 || i == 5 || i == 8 || i == 13 || i == 21)
 				hashCodeBuffer += m * hashCodeBuffer + this.data[this.dataOffset + i];
-			if(i >= 21)
+			if (i >= 21)
 				break;
 		}
 
@@ -44,7 +44,7 @@ public class Bytes
 	public byte read() throws IOException
 	{
 		final int remaining = this.dataLength - this.position;
-		if(remaining <= 0)
+		if (remaining <= 0)
 			throw new IOException("End of bytes");
 
 		return this.data[this.position++];
@@ -53,7 +53,7 @@ public class Bytes
 	public int read(final byte[] buffer, final int offset, int length)
 	{
 		final int remaining = this.dataLength - this.position;
-		if(remaining <= 0)
+		if (remaining <= 0)
 			return -1;
 
 		length = Math.min(remaining, length);
@@ -72,7 +72,7 @@ public class Bytes
 
 	public Bytes seek(final int position)
 	{
-		if(position < 0 || position >= length())
+		if (position < 0 || position >= length())
 			throw new IllegalArgumentException("Position out of bounds");
 
 		this.position = position;
@@ -104,11 +104,6 @@ public class Bytes
 		return wrap(this);
 	}
 
-	public Bytes copy()
-	{
-		return Bytes.wrap(toByteArray());
-	}
-
 	@Override
 	public int hashCode()
 	{
@@ -118,21 +113,21 @@ public class Bytes
 	@Override
 	public boolean equals(final Object o)
 	{
-		if(this == o)
+		if (this == o)
 			return true;
 
-		if(o != null && hashCode() != o.hashCode())
+		if (o != null && hashCode() != o.hashCode())
 			return false;
 
-		if(o instanceof Bytes)
+		if (o instanceof Bytes)
 		{
 			final Bytes other = (Bytes) o;
 
-			if(this.dataLength != other.dataLength)
+			if (this.dataLength != other.dataLength)
 				return false;
 
-			for(int i = 0; i < this.dataLength; i++)
-				if(this.data[this.dataOffset + i] != other.data[other.dataOffset + i])
+			for (int i = 0; i < this.dataLength; i++)
+				if (this.data[this.dataOffset + i] != other.data[other.dataOffset + i])
 					return false;
 
 			return true;
@@ -144,11 +139,9 @@ public class Bytes
 	@Override
 	public String toString()
 	{
-		return getClass().getSimpleName() + "{" +
-				"base16=" + (this.dataLength <= 0 ? null : ByteUtils.bytesToHexadecimal(this.data, this.dataOffset, this.dataLength)) +
-				", dataOffset=" + this.dataOffset +
-				", dataLength=" + this.dataLength +
-				"}";
+		return getClass().getSimpleName() + "{" + "base16=" +
+			   (this.dataLength <= 0 ? null : ByteUtils.bytesToHexadecimal(this.data, this.dataOffset, this.dataLength)) + ", dataOffset=" +
+			   this.dataOffset + ", dataLength=" + this.dataLength + "}";
 	}
 
 	public static Bytes wrap(final byte b)

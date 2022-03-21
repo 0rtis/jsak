@@ -1,9 +1,9 @@
-package io.ortis.jsak.server.http.limiter;
+package io.ortis.jsak.http.server.limiter;
 
 
-import io.ortis.jsak.server.http.limiter.config.HTTPLimiterConfig;
+import io.ortis.jsak.http.server.config.HTTPServerConfig;
+import io.ortis.jsak.http.server.limiter.config.HTTPLimiterConfig;
 import io.ortis.jsak.FormatUtils;
-import io.ortis.jsak.server.http.config.HTTPConfig;
 
 import java.time.Duration;
 import java.util.logging.Logger;
@@ -19,7 +19,7 @@ public class HTTPLimiterWrapper implements HTTPLimiter, Runnable
 	private String serial;
 	private HTTPLimiter limiter;
 
-	public HTTPLimiterWrapper(final HTTPConfig config, final Logger log) throws Exception
+	public HTTPLimiterWrapper(final HTTPServerConfig config, final Logger log) throws Exception
 	{
 		this(new HTTPLimiterConfig.HTTPConfigWrapper(config), log);
 	}

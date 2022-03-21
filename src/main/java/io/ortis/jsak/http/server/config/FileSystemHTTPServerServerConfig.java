@@ -1,10 +1,10 @@
-package io.ortis.jsak.server.http.config;
+package io.ortis.jsak.http.server.config;
 
 
 import io.ortis.jsak.io.bytes.Bytes;
 import io.ortis.jsak.io.file.FileContentListener;
 import io.ortis.jsak.io.file.FileContentMonitor;
-import io.ortis.jsak.server.http.limiter.config.HTTPLimiterConfig;
+import io.ortis.jsak.http.server.limiter.config.HTTPLimiterConfig;
 import io.ortis.jsak.FormatUtils;
 
 import java.io.IOException;
@@ -16,19 +16,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-public class FileSystemHTTPConfig implements HTTPConfig, FileContentListener
+public class FileSystemHTTPServerServerConfig implements HTTPServerConfig, FileContentListener
 {
 	private final Path configPath;
 	private final Logger log;
 
 	private final FileContentMonitor fileContentMonitor;
 	private final Object lock = new Object();
-	private HTTPConfig httpConfig;
+	private HTTPServerConfig httpConfig;
 
-	public FileSystemHTTPConfig(final Path configPath, final Duration pulse, final Logger log)
-			throws NoSuchAlgorithmException, IOException, Exception
+	public FileSystemHTTPServerServerConfig(final Path configPath, final Duration pulse, final Logger log) throws NoSuchAlgorithmException, IOException, Exception
 	{
-		this.configPath=configPath;
+		this.configPath = configPath;
 		this.fileContentMonitor = new FileContentMonitor(this.configPath, pulse, log);
 		this.fileContentMonitor.addFileListener(this);
 		this.log = log;
@@ -36,10 +35,10 @@ public class FileSystemHTTPConfig implements HTTPConfig, FileContentListener
 		final Bytes serial = this.fileContentMonitor.getFileContent(this.configPath);
 		final String json = new String(serial.toByteArray(), StandardCharsets.UTF_8);
 
-		this.httpConfig = ImmutableHTTPConfig.of(json);
+		this.httpConfig = ImmutableHTTPServerConfig.of(json);
 	}
 
-	public FileSystemHTTPConfig monitor()
+	public FileSystemHTTPServerServerConfig monitor()
 	{
 		final Thread t = new Thread(this.fileContentMonitor);
 		t.setName(this.fileContentMonitor.getClass().getSimpleName());
@@ -50,7 +49,7 @@ public class FileSystemHTTPConfig implements HTTPConfig, FileContentListener
 	@Override
 	public void onFileContentChange(final Path filePath, final Bytes serial)
 	{
-		if(!filePath.equals(this.configPath))
+		if (!filePath.equals(this.configPath))
 			return;
 
 		this.log.info("Reloading config file " + this.configPath);
@@ -58,7 +57,7 @@ public class FileSystemHTTPConfig implements HTTPConfig, FileContentListener
 
 		try
 		{
-			final HTTPConfig newHttpConfig = ImmutableHTTPConfig.of(json);
+			final HTTPServerConfig newHttpConfig = ImmutableHTTPServerConfig.of(json);
 
 			synchronized (this.lock)
 			{

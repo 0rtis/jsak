@@ -1,4 +1,4 @@
-package io.ortis.jsak.server.http;
+package io.ortis.jsak.http.server;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

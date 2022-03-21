@@ -27,7 +27,7 @@ public abstract class IOUtils
 			if (is == null)
 				throw new IOException("Resource not found");
 
-			stream(is, BytesConsumer.of(destination), buffer, offset, length);
+			stream(is, destination, buffer, offset, length);
 		}
 	}
 
@@ -59,16 +59,10 @@ public abstract class IOUtils
 	public static void readExact(final int length, final RandomAccessFile randomAccessFile, final OutputStream destination, final byte[] buffer)
 			throws IOException
 	{
-		readExact(length, randomAccessFile, destination, buffer, 0, buffer.length);
+		readExact(length, randomAccessFile, BytesConsumer.of(destination), buffer, 0, buffer.length);
 	}
 
-	public static void readExact(final int length, final RandomAccessFile randomAccessFile, final OutputStream destination, final byte[] buffer,
-			final int bufferFrom) throws IOException
-	{
-		readExact(length, randomAccessFile, destination, buffer, bufferFrom, buffer.length);
-	}
-
-	public static void readExact(final int length, final RandomAccessFile randomAccessFile, final OutputStream destination, final byte[] buffer,
+	public static void readExact(final int length, final RandomAccessFile randomAccessFile, final BytesConsumer destination, final byte[] buffer,
 			final int bufferOffset, final int bufferLength) throws IOException
 	{
 		if (bufferLength == 0)
@@ -83,7 +77,7 @@ public abstract class IOUtils
 			if (read < 0 || (read == 0 && randomAccessFile.getFilePointer() >= randomAccessFile.length()))
 				throw new IOException("End of file before target length was reached");
 
-			destination.write(buffer, bufferOffset, read);
+			destination.accept(buffer, bufferOffset, read);
 			total += read;
 		}
 
@@ -107,17 +101,22 @@ public abstract class IOUtils
 		return total;
 	}
 
-	public static int stream(final InputStream source, final byte[] destination, final int destinationOffset) throws IOException
+	public static int stream(final InputStream source, final byte[] destination) throws IOException
 	{
-		return stream(source, destination, destinationOffset, destination.length);
+		return stream(BytesProvider.of(source), destination, 0, destination.length);
 	}
 
-	public static int stream(final InputStream source, final byte[] destination, final int destinationOffset, int destinationLength)
+	public static int stream(final InputStream source, final byte[] destination, final int destinationOffset, int destinationLength) throws IOException
+	{
+		return stream(BytesProvider.of(source), destination, destinationOffset, destinationLength);
+	}
+
+	public static int stream(final BytesProvider source, final byte[] destination, final int destinationOffset, int destinationLength)
 			throws IOException
 	{
 		int read = 0;
 		int total = 0;
-		while (total < destinationLength && (read = source.read(destination, destinationOffset + total, destinationLength - total)) > -1)
+		while (total < destinationLength && (read = source.get(destination, destinationOffset + total, destinationLength - total)) > -1)
 			total += read;
 
 		if (read < 0 && total == 0)
@@ -140,28 +139,22 @@ public abstract class IOUtils
 	public static int stream(final InputStream source, final OutputStream destination, final byte[] buffer, final int bufferOffset, int bufferLength)
 			throws IOException
 	{
-		return stream(source, BytesConsumer.of(destination), buffer, bufferOffset, bufferLength);
+		return stream(BytesProvider.of(source), BytesConsumer.of(destination), buffer, bufferOffset, bufferLength);
 	}
 
-
-	public static int stream(final InputStream source, final BytesConsumer consumer, final byte[] buffer) throws IOException
+	public static int stream(final BytesProvider source, final BytesConsumer destination, final byte[] buffer) throws IOException
 	{
-		return stream(source, consumer, buffer, 0, buffer.length);
+		return stream(source, destination, buffer, 0, buffer.length);
 	}
 
-	public static int stream(final InputStream source, final BytesConsumer consumer, final byte[] buffer, final int maxLength) throws IOException
-	{
-		return stream(source, consumer, buffer, 0, maxLength);
-	}
-
-	public static int stream(final InputStream source, final BytesConsumer consumer, final byte[] buffer, final int bufferOffset, int bufferLength)
-			throws IOException
+	public static int stream(final BytesProvider source, final BytesConsumer destination, final byte[] buffer, final int bufferOffset,
+			int bufferLength) throws IOException
 	{
 		int read = 0;
 		int total = 0;
-		while (bufferLength > 0 && (read = source.read(buffer, bufferOffset, bufferLength)) > -1)
+		while (bufferLength > 0 && (read = source.get(buffer, bufferOffset, bufferLength)) > -1)
 		{
-			consumer.accept(buffer, bufferOffset, read);
+			destination.accept(buffer, bufferOffset, read);
 			total += read;
 		}
 
@@ -194,6 +187,12 @@ public abstract class IOUtils
 	}
 
 	public static void streamExact(final int length, final InputStream source, final byte[] destination, final int destinationOffset)
+			throws IOException
+	{
+		streamExact(length, BytesProvider.of(source), destination, destinationOffset);
+	}
+
+	public static void streamExact(final int length, final BytesProvider source, final byte[] destination, final int destinationOffset)
 			throws IOException
 	{
 		if (destination.length - destinationOffset < length)
@@ -239,6 +238,8 @@ public abstract class IOUtils
 	{
 		if (bufferLength == 0)
 			throw new IllegalArgumentException("Buffer length must be greater than 0");
+
+
 
 		int read;
 		int total = 0;

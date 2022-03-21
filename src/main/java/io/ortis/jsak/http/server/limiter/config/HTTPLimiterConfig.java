@@ -1,6 +1,6 @@
-package io.ortis.jsak.server.http.limiter.config;
+package io.ortis.jsak.http.server.limiter.config;
 
-import io.ortis.jsak.server.http.config.HTTPConfig;
+import io.ortis.jsak.http.server.config.HTTPServerConfig;
 
 import java.time.Duration;
 
@@ -11,14 +11,14 @@ public interface HTTPLimiterConfig
 	String getSerial();
 
 	/**
-	 * Request internal {@link HTTPLimiterConfig} from {@link HTTPConfig}.
-	 * Use when {@link HTTPConfig} is mutable
+	 * Request internal {@link HTTPLimiterConfig} from {@link HTTPServerConfig}.
+	 * Use when {@link HTTPServerConfig} is mutable
 	 */
 	public class HTTPConfigWrapper implements HTTPLimiterConfig
 	{
-		private final HTTPConfig httpConfig;
+		private final HTTPServerConfig httpConfig;
 
-		public HTTPConfigWrapper(final HTTPConfig httpConfig)
+		public HTTPConfigWrapper(final HTTPServerConfig httpConfig)
 		{
 			this.httpConfig = httpConfig;
 		}

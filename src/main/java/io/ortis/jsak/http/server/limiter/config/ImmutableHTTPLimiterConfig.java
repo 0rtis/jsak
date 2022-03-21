@@ -1,4 +1,4 @@
-package io.ortis.jsak.server.http.limiter.config;
+package io.ortis.jsak.http.server.limiter.config;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;

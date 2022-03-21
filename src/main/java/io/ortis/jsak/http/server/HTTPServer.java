@@ -1,4 +1,4 @@
-package io.ortis.jsak.server.http;
+package io.ortis.jsak.http.server;
 
 import com.sun.net.httpserver.HttpHandler;
 

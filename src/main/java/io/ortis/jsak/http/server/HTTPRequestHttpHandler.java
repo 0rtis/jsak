@@ -1,12 +1,12 @@
-package io.ortis.jsak.server.http;
+package io.ortis.jsak.http.server;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import io.ortis.jsak.http.server.config.HTTPServerConfig;
 import io.ortis.jsak.io.Compression;
 import io.ortis.jsak.io.IOUtils;
-import io.ortis.jsak.server.http.limiter.HTTPLimiter;
+import io.ortis.jsak.http.server.limiter.HTTPLimiter;
 import io.ortis.jsak.FormatUtils;
-import io.ortis.jsak.server.http.config.HTTPConfig;
 
 import java.io.*;
 import java.math.BigInteger;
@@ -19,21 +19,21 @@ public class HTTPRequestHttpHandler implements HttpHandler
 {
 	private final String contextPath;
 	private final String contextPathUpperCase;
-	private final HTTPConfig config;
+	private final HTTPServerConfig config;
 	private final List<HTTPEndpoint> endpoints;
 	private final Compression.Algorithm compressionAlgorithm;
 	private final HTTPLimiter limiter;
 	private final int bufferLength;
 	private final Logger log;
 
-	public HTTPRequestHttpHandler(final HTTPConfig config, final List<HTTPEndpoint> endpoints,
+	public HTTPRequestHttpHandler(final HTTPServerConfig config, final List<HTTPEndpoint> endpoints,
 			final Compression.Algorithm compressionAlgorithm, final HTTPLimiter limiter, final int bufferLength,
 			final Logger log)
 	{
 		this(null, config, endpoints, compressionAlgorithm, limiter, bufferLength, log);
 	}
 
-	public HTTPRequestHttpHandler(final String contextPath, final HTTPConfig config, final List<HTTPEndpoint> endpoints,
+	public HTTPRequestHttpHandler(final String contextPath, final HTTPServerConfig config, final List<HTTPEndpoint> endpoints,
 			final Compression.Algorithm compressionAlgorithm, final HTTPLimiter limiter, final int bufferLength,
 			final Logger log)
 	{

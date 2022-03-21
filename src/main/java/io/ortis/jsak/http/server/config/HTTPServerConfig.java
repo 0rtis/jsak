@@ -1,11 +1,11 @@
-package io.ortis.jsak.server.http.config;
+package io.ortis.jsak.http.server.config;
 
-import io.ortis.jsak.server.http.limiter.config.HTTPLimiterConfig;
+import io.ortis.jsak.http.server.limiter.config.HTTPLimiterConfig;
 
 import java.util.List;
 import java.util.Map;
 
-public interface HTTPConfig
+public interface HTTPServerConfig
 {
 	String getHost();
 

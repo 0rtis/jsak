@@ -13,4 +13,9 @@ public abstract class JsonUtils
 
 		return je;
 	}
+
+
+	public static String sanitizeJson(final String json) {
+		return json.replace("\\", "/");
+	}
 }

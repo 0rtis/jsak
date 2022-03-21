@@ -1,16 +1,16 @@
-package io.ortis.jsak.server.http.config;
+package io.ortis.jsak.http.server.config;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.ortis.jsak.JsonUtils;
-import io.ortis.jsak.server.http.limiter.config.HTTPLimiterConfig;
-import io.ortis.jsak.server.http.limiter.config.ImmutableHTTPLimiterConfig;
+import io.ortis.jsak.http.server.limiter.config.HTTPLimiterConfig;
+import io.ortis.jsak.http.server.limiter.config.ImmutableHTTPLimiterConfig;
 
 import java.util.*;
 
-public class ImmutableHTTPConfig implements HTTPConfig
+public class ImmutableHTTPServerConfig implements HTTPServerConfig
 {
 	private static final List<String> EMPTY_STRINGS = Collections.unmodifiableList(new LinkedList<>());
 	private static final Map<String, String> EMPTY_INCLUDE_RESPONSE_HEADER = Collections.unmodifiableMap(new HashMap<>());
@@ -23,7 +23,7 @@ public class ImmutableHTTPConfig implements HTTPConfig
 	private final List<String> banList;
 	private final ImmutableHTTPLimiterConfig limiterConfig;
 
-	public ImmutableHTTPConfig(final String host, final int port, final int parallelism, final Map<String, String> includeHttpResponseHeaders,
+	public ImmutableHTTPServerConfig(final String host, final int port, final int parallelism, final Map<String, String> includeHttpResponseHeaders,
 			final List<String> passList, final List<String> banList, final ImmutableHTTPLimiterConfig limiterConfig)
 	{
 		this.host = host;
@@ -90,13 +90,11 @@ public class ImmutableHTTPConfig implements HTTPConfig
 		return this.limiterConfig;
 	}
 
-	public static ImmutableHTTPConfig of(String json) throws Exception
+	public static ImmutableHTTPServerConfig of(String json) throws Exception
 	{
-		json = json.replace("\\", "/");
+		json = JsonUtils.sanitizeJson(json);
 
-		final JsonParser jsonParser = new JsonParser();
-
-		final JsonObject bean = jsonParser.parse(json).getAsJsonObject();
+		final JsonObject bean = JsonParser.parseString(json).getAsJsonObject();
 
 
 		final String host = JsonUtils.parseJsonElement(bean, "host").getAsString();
@@ -141,7 +139,7 @@ public class ImmutableHTTPConfig implements HTTPConfig
 		}
 
 		final ImmutableHTTPLimiterConfig limiterConfig = ImmutableHTTPLimiterConfig.of(bean.get("limiter").toString());
-		return new ImmutableHTTPConfig(host, port, parallelism, includeResponseHeaders, passList, banList, limiterConfig);
+		return new ImmutableHTTPServerConfig(host, port, parallelism, includeResponseHeaders, passList, banList, limiterConfig);
 	}
 
 	private static class StringPair

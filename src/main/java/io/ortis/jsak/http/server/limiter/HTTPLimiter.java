@@ -1,4 +1,4 @@
-package io.ortis.jsak.server.http.limiter;
+package io.ortis.jsak.http.server.limiter;
 
 
 import com.google.gson.JsonObject;

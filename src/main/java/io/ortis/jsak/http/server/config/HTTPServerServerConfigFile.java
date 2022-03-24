@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-public class FileSystemHTTPServerServerConfig implements HTTPServerConfig, FileContentListener
+public class HTTPServerServerConfigFile implements HTTPServerConfig, FileContentListener
 {
 	private final Path configPath;
 	private final Logger log;
@@ -25,11 +25,11 @@ public class FileSystemHTTPServerServerConfig implements HTTPServerConfig, FileC
 	private final Object lock = new Object();
 	private HTTPServerConfig httpConfig;
 
-	public FileSystemHTTPServerServerConfig(final Path configPath, final Duration pulse, final Logger log) throws NoSuchAlgorithmException, IOException, Exception
+	public HTTPServerServerConfigFile(final Path configPath, final Duration pulse, final Logger log) throws NoSuchAlgorithmException, IOException, Exception
 	{
 		this.configPath = configPath;
 		this.fileContentMonitor = new FileContentMonitor(this.configPath, pulse, log);
-		this.fileContentMonitor.addFileListener(this);
+		this.fileContentMonitor.addListener(this);
 		this.log = log;
 
 		final Bytes serial = this.fileContentMonitor.getFileContent(this.configPath);
@@ -38,7 +38,7 @@ public class FileSystemHTTPServerServerConfig implements HTTPServerConfig, FileC
 		this.httpConfig = ImmutableHTTPServerConfig.of(json);
 	}
 
-	public FileSystemHTTPServerServerConfig monitor()
+	public HTTPServerServerConfigFile monitor()
 	{
 		final Thread t = new Thread(this.fileContentMonitor);
 		t.setName(this.fileContentMonitor.getClass().getSimpleName());

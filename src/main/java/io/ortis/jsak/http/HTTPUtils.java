@@ -10,7 +10,7 @@ import java.util.*;
 
 public abstract class HTTPUtils
 {
-	public static String parametersToForm(final Map<String, String> params, final boolean encode) throws UnsupportedEncodingException
+	public static String parametersToForm(final Map<String, String> params, final boolean encode)
 	{
 		final StringBuilder sb = new StringBuilder();
 		boolean first = true;

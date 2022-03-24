@@ -2,6 +2,7 @@ package io.ortis.jsak.log;
 
 
 import io.ortis.jsak.FormatUtils;
+import io.ortis.jsak.log.config.LogServiceConfig;
 
 import java.time.Clock;
 import java.time.Duration;
@@ -66,9 +67,9 @@ public class LogService extends Handler implements Runnable
 		{
 			System.out.println("Fatal error in " + getClass().getSimpleName() + " - " + e.getMessage());
 			e.printStackTrace();
-
 		}
 	}
+
 
 	public LogService defaultListener()
 	{
@@ -136,6 +137,25 @@ public class LogService extends Handler implements Runnable
 		}
 	}
 
+	public void setConfig(final LogServiceConfig config)
+	{
+		synchronized (this.listeners)
+		{
+			final List<LogService.Listener> oldListeners = new ArrayList<>(this.listeners);
+			removeAllListeners();
+
+			for(final LogService.Listener listener : config.getOutputs())
+			{
+				final int oldIndex = oldListeners.indexOf(listener);
+				if (oldIndex>=0)
+					addListener(oldListeners.get(oldIndex));
+				else
+					addListener(listener);
+			}
+			setLevel(config.getLevel());
+		}
+	}
+
 
 	public LogService addListener(final LogService.Listener listener)
 	{
@@ -145,6 +165,14 @@ public class LogService extends Handler implements Runnable
 		}
 
 		return this;
+	}
+
+	public void removeAllListeners()
+	{
+		synchronized (this.listeners)
+		{
+			this.listeners.clear();
+		}
 	}
 
 	public boolean removeListener(final LogService.Listener listener)

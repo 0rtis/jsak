@@ -28,23 +28,33 @@ public class FileContentMonitor implements Runnable
 	private final Object lock = new Object();
 	private final Map<Path, Bytes> files;
 
+	public FileContentMonitor(final Path filePath, final Duration pulse) throws IOException
+	{
+		this(filePath, pulse, null);
+	}
+
 	public FileContentMonitor(final Path filePath, final Duration pulse, final Logger logger) throws IOException
 	{
 		this(Collections.singletonList(filePath), pulse, logger);
 	}
 
+	public FileContentMonitor(final List<Path> filePaths, final Duration pulse) throws IOException
+	{
+		this(filePaths, pulse, null);
+	}
+
 	public FileContentMonitor(final List<Path> filePaths, final Duration pulse, final Logger logger) throws IOException
 	{
 		this.files = new LinkedHashMap<>();
-		for(final Path path : filePaths)
+		for (final Path path : filePaths)
 		{
-			if(!this.files.containsKey(path))
+			if (!this.files.containsKey(path))
 				this.files.put(path, Bytes.wrap(Files.readAllBytes(path)));
 		}
 
 		this.pulse = pulse;
 		this.pulseMillis = this.pulse.toMillis();
-		if(this.pulseMillis < 0)
+		if (this.pulseMillis < 0)
 			throw new IllegalArgumentException("Invalid pulse duration");
 
 		this.logger = logger;
@@ -55,29 +65,30 @@ public class FileContentMonitor implements Runnable
 	{
 		try
 		{
-			while(!Thread.interrupted())
+			while (!Thread.interrupted())
 			{
 				try
 				{
 					final long start = System.currentTimeMillis();
 
 					final List<Path> paths = new LinkedList<>(this.files.keySet());
-					for(final Path path : paths)
+					for (final Path path : paths)
 					{
 						final Bytes previousFileSerial = this.files.get(path);
 						final Bytes newFileSerial = Bytes.wrap(Files.readAllBytes(path));
-						if(!newFileSerial.equals(previousFileSerial))
+						if (!newFileSerial.equals(previousFileSerial))
 						{
-							this.logger.info("File '" + path + "' has changed");
+							if (this.logger != null)
+								this.logger.info("File '" + path + "' has changed");
 
-							synchronized(this.lock)
+							synchronized (this.lock)
 							{
 								this.files.put(path, newFileSerial);
 							}
 
-							synchronized(this.listeners)
+							synchronized (this.listeners)
 							{
-								for(final FileContentListener fl : this.listeners)
+								for (final FileContentListener fl : this.listeners)
 									fl.onFileContentChange(path, newFileSerial);
 							}
 						}
@@ -85,43 +96,53 @@ public class FileContentMonitor implements Runnable
 
 					final long end = System.currentTimeMillis();
 					final long sleep = this.pulseMillis - (end - start);
-					if(sleep < 0)
-						this.logger.warning("Monitoring loop is late by " + FormatUtils.formatDuration(Duration.ofMillis(sleep).negated()));
-					else
+					if (sleep < 0)
+					{
+						if (this.logger != null)
+							this.logger.warning("Monitoring loop is late by " + FormatUtils.formatDuration(Duration.ofMillis(sleep).negated()));
+					} else
 						Thread.sleep(sleep);
 
 
-				} catch(final InterruptedException e)
+				} catch (final InterruptedException e)
 				{
 					throw e;
-				} catch(final Exception e)
+				} catch (final Exception e)
 				{
-					this.logger.severe("Error while monitoring files\n" + FormatUtils.formatException(e));
-					this.logger.info(FormatUtils.formatDuration(COOLDOWN) + " before resuming files monitoring");
+					if (this.logger != null)
+					{
+						this.logger.severe("Error while monitoring files\n" + FormatUtils.formatException(e));
+						this.logger.info(FormatUtils.formatDuration(COOLDOWN) + " before resuming files monitoring");
+					} else
+						e.printStackTrace();
+
 					Thread.sleep(COOLDOWN.toMillis());
 				}
 			}
 
-		} catch(final InterruptedException e)
+		} catch (final InterruptedException e)
 		{
 			Thread.currentThread().interrupt();
-		} catch(final Exception e)
+		} catch (final Exception e)
 		{
-			this.logger.severe("Critical error while monitoring files\n" + FormatUtils.formatException(e));
+			if (this.logger != null)
+				this.logger.severe("Critical error while monitoring files\n" + FormatUtils.formatException(e));
+			else
+				e.printStackTrace();
 		}
 	}
 
 	public Bytes getFileContent(final Path path)
 	{
-		synchronized(this.lock)
+		synchronized (this.lock)
 		{
 			return this.files.get(path);
 		}
 	}
 
-	public boolean addFileListener(final FileContentListener fileListener)
+	public boolean addListener(final FileContentListener fileListener)
 	{
-		synchronized(this.listeners)
+		synchronized (this.listeners)
 		{
 			return this.listeners.add(fileListener);
 		}

@@ -39,7 +39,7 @@ public class LogFileTest
 		logFile.onEvent(new LogService.Event(LocalDateTime.now(), new LogRecord(Level.INFO, "Hello world !"), "Hello world !"));
 
 		Assert.assertTrue(Files.exists(this.logFilePath));
-		Assert.assertEquals("Hello world !", Files.readString(this.logFilePath));
+		Assert.assertEquals("Hello world !\n", Files.readString(this.logFilePath));
 	}
 
 	@Test

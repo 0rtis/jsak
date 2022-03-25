@@ -17,7 +17,7 @@ import java.util.UUID;
 
 public class LogFile implements LogService.Listener
 {
-	private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd_HHmmss");
+	private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd_HHmmssSSS");
 	private static final DecimalFormat _4_LEADING_ZEROS_FORMATTER = new DecimalFormat("0000");
 
 	private final Path outputFilePath;

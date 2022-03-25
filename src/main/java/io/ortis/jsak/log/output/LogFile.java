@@ -105,7 +105,7 @@ public class LogFile implements LogService.Listener
 	@Override
 	public void onEvent(final LogService.Event event)
 	{
-		final String log = event.getFormattedMessage();
+		final String log = event.getFormattedMessage() + "\n";
 		synchronized (this.lock)
 		{
 			try

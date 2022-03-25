@@ -52,7 +52,7 @@ public class LogFile implements LogService.Listener
 				if (this.maxFileSize != null && Files.size(this.outputFilePath) >= this.maxFileSize)
 				{
 					final Path archive = this.outputFilePath.getParent().resolve(nextArchiveFileName());
-					Files.move(this.outputFilePath, archive, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.COPY_ATTRIBUTES);
+					Files.move(this.outputFilePath, archive, StandardCopyOption.REPLACE_EXISTING);
 				} else if (this.fileRotation != null)
 				{
 

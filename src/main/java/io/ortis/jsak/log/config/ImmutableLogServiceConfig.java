@@ -65,7 +65,7 @@ public class ImmutableLogServiceConfig implements LogServiceConfig
 			{
 				final Path path = Path.of(jo.get("path").getAsString());
 				final Long maxSize = jo.get("maxSize").isJsonNull() ? null : jo.get("maxSize").getAsLong();
-				final ChronoUnit fileRotation = ChronoUnit.valueOf(jo.get("rotation").getAsString());
+				final ChronoUnit fileRotation = jo.get("rotation").isJsonNull() ? null : ChronoUnit.valueOf(jo.get("rotation").getAsString());
 				outputs.add(new LogFile(path, maxSize, fileRotation));
 			} else
 				throw new IllegalArgumentException("Unhandled log output type " + jo.get("class").getAsString());

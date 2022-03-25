@@ -53,9 +53,8 @@ public class LogFile implements LogService.Listener
 				{
 					final Path archive = this.outputFilePath.getParent().resolve(nextArchiveFileName());
 					Files.move(this.outputFilePath, archive, StandardCopyOption.REPLACE_EXISTING);
-				} else if (this.fileRotation != null)
+				} else if (this.fileRotation != null && !this.fileRotation.equals(ChronoUnit.FOREVER))
 				{
-
 					final BasicFileAttributes attr = Files.readAttributes(this.outputFilePath, BasicFileAttributes.class);
 					final FileTime fileTime = attr.creationTime();
 					final LocalDateTime creationTime = fileTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();

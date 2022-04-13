@@ -19,10 +19,8 @@ import java.util.logging.Logger;
 public class LogService extends Handler implements Runnable
 {
 	private static final Duration COOLDOWN = Duration.ofSeconds(60);
-
 	private final Map<String, Logger> cache = new HashMap<>();
 	private final List<LogService.Listener> listeners = new LinkedList<>();
-
 	private transient LogRecordFormatter recordFormatter = LogRecordFormatter.ONE_LINE_FORMATTER;
 	private transient Clock clock = Clock.systemDefaultZone();
 	private transient final PriorityBlockingQueue<LogService.Event> eventQueue = new PriorityBlockingQueue<>();
@@ -37,7 +35,6 @@ public class LogService extends Handler implements Runnable
 			{
 				try
 				{
-
 					final LogService.Event event = this.eventQueue.poll(1000, TimeUnit.MILLISECONDS);
 
 					if (event != null && event.getLogLevel().intValue() >= getLevel().intValue())
@@ -99,6 +96,12 @@ public class LogService extends Handler implements Runnable
 		this.eventQueue.add(event);
 	}
 
+	public LogService setLogLevel(final Level logLevel)
+	{
+		setLevel(logLevel);
+		return this;
+	}
+
 	@Override
 	public void flush()
 	{
@@ -137,23 +140,25 @@ public class LogService extends Handler implements Runnable
 		}
 	}
 
-	public void setConfig(final LogServiceConfig config)
+	public LogService setConfig(final LogServiceConfig config)
 	{
 		synchronized (this.listeners)
 		{
 			final List<LogService.Listener> oldListeners = new ArrayList<>(this.listeners);
 			removeAllListeners();
 
-			for(final LogService.Listener listener : config.getOutputs())
+			for (final LogService.Listener listener : config.getOutputs())
 			{
 				final int oldIndex = oldListeners.indexOf(listener);
-				if (oldIndex>=0)
+				if (oldIndex >= 0)
 					addListener(oldListeners.get(oldIndex));
 				else
 					addListener(listener);
 			}
 			setLevel(config.getLevel());
 		}
+
+		return this;
 	}
 
 

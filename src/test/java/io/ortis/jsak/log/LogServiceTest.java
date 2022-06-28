@@ -24,7 +24,7 @@ public class LogServiceTest
 	@Test
 	public void test() throws Exception
 	{
-			final LogService logService = new LogService().start();
+		final LogService logService = new LogService().start();
 		logService.addListener(FilteredLogListener.CONSOLE_ALL);
 
 		final Logger logger = logService.getLogger("test");

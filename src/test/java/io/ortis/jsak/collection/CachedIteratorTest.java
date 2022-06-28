@@ -26,7 +26,6 @@ public class CachedIteratorTest
 	@Test
 	public void test() throws Exception
 	{
-
 		final List<Integer> list = new ArrayList<>();
 		for (int i = 0; i < 256; i++)
 			list.add(i);

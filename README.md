@@ -1,17 +1,10 @@
 [![GitHub license](https://img.shields.io/github/license/0rtis/jsak.svg?style=flat-square)](https://github.com/0rtis/jsak/blob/master/LICENSE)
-[![Build Status](https://img.shields.io/travis/0rtis/jsafebox.svg?style=flat-square)](https://travis-ci.org/0rtis/jsak)
-[![codecov](https://img.shields.io/codecov/c/github/0rtis/jsafebox.svg?style=flat-square)](https://codecov.io/gh/0rtis/jsak)
-[![Follow @trwitter handle](https://img.shields.io/twitter/follow/ortis95.svg?style=flat-square)](https://twitter.com/intent/follow?screen_name=ortis95) 
+[![Follow @twitter handle](https://img.shields.io/twitter/follow/ortis95.svg?style=flat-square)](https://twitter.com/intent/follow?screen_name=ortis95) 
 
 
-## JSAK - The Java Swiss Army Knife
+## JSAK - Java Swiss Army Knife
 
-The Java Swiss Army Knife is a utility package that provide various tools to help build java remoteProject
+The Java Swiss Army Knife is a utility package that provide various tools for Java development
 
-### IO operation
+*You can support this project by donating to our crypto-currency wallet **0xA68fBfa3E0c86D1f3fF071853df6DAe8753095E2***
 
-### File monitoring
-
-### Logs
-
-### Web server

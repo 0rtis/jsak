@@ -3,7 +3,7 @@ package io.ortis.jsak.collection;
 import java.util.Iterator;
 
 /**
- * Keep a reference to the current element
+ * Keep a reference to the current element of an {@link Iterator}
  * @param <E>
  */
 public class CachedIterator<E> implements Iterator<E>

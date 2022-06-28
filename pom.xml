@@ -7,7 +7,16 @@
     <groupId>io.ortis</groupId>
     <artifactId>jsak</artifactId>
     <version>0.1</version>
-    <name>jsak</name>
+    <name>Java Swiss Army Knife</name>
+    <description>Quantum secure cryptographic schemes in pure Java</description>
+    <url>https://github.com/0rtis/jqbit</url>
+    <licenses>
+        <license>
+            <name>MIT</name>
+            <url>https://github.com/0rtis/jqbit/blob/master/LICENSE</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>17</maven.compiler.release>

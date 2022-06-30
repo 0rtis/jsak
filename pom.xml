@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.ortis</groupId>
     <artifactId>jsak</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.2</version>
     <name>Java Swiss Army Knife</name>
     <description>Utility library for Java development</description>
     <url>https://github.com/0rtis/jsak</url>
@@ -27,7 +25,7 @@
     <scm>
         <developerConnection>scm:git:ssh://github.com/0rtis/jsak.git</developerConnection>
         <url>https://github.com/0rtis/jsak</url>
-        <tag>jsak-0.1</tag>
+        <tag>jsak-0.2</tag>
     </scm>
     <distributionManagement>
         <snapshotRepository>

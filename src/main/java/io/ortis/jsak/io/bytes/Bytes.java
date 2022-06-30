@@ -150,7 +150,7 @@ public class Bytes
 	}
 
 	/**
-	 * WARNING: do not change the input <code>byte []</code> afterwards or it will invalid <code>hash() & equals()</code>
+	 * WARNING: do not change the input <code>byte []</code> afterwards or it will invalid <code>hash() and equals()</code>
 	 *
 	 * @param data
 	 * @return
@@ -161,12 +161,12 @@ public class Bytes
 	}
 
 	/**
-	 * WARNING: do not change the input <code>byte []</code> afterwards or it will invalid <code>hash() & equals()</code>
+	 * WARNING: do not change the input <code>byte []</code> afterwards or it will invalid <code>hash() and equals()</code>
 	 *
 	 * @param buffer
 	 * @param offset
 	 * @param length
-	 * @return
+	 * @return {@link Bytes}
 	 */
 	public static Bytes wrap(final byte[] buffer, final int offset, final int length)
 	{

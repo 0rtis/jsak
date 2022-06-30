@@ -29,8 +29,6 @@ public class Compression
 
 	/**
 	 * Compress data
-	 *
-	 * @return
 	 * @throws IOException
 	 */
 	public static void deflate(final Algorithm algorithm, final InputStream source, final OutputStream destination,
@@ -62,8 +60,6 @@ public class Compression
 
 	/**
 	 * Uncompress data
-	 *
-	 * @return
 	 */
 	public static void inflate(final Algorithm algorithm, final InputStream source, final byte[] buffer,
 			final OutputStream destination) throws IOException

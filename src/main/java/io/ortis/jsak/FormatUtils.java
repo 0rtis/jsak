@@ -15,7 +15,7 @@ public class FormatUtils
 	 *
 	 * @param length: length in bytes
 	 * @param si:     International System of Unit (if true k=1000, else K=1024)
-	 * @return: byte length as {@link String}
+	 * @return byte length as {@link String}
 	 */
 	public static String formatByteLength(final long length, final boolean si)
 	{

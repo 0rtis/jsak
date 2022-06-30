@@ -5,3 +5,10 @@
 /target
 /install*.sh
 /*.test
+
+# maven release
+/release.sh
+/*.sh
+/*.log
+/release.properties
+/*.releaseBackup

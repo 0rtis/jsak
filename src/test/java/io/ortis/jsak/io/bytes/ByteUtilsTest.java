@@ -25,15 +25,27 @@ public class ByteUtilsTest
 	@Test
 	public void testHexadecimal()
 	{
+		hexTest(new byte[]{0, 0, 0, 0, 0, 0, 0}, "00000000000000");
+		hexTest(new byte[]{0, 0, 0, 0, 1, 42, 3}, "00000000012A03");// leading zero conversion
 
-		for(int i = -100_000; i < 100_000; i++)
+		for (int i = -100_000; i < 100_000; i++)
 		{
 			final byte[] bytes = ByteUtils.zToBytes(i, 6);
 			final String hex = ByteUtils.bytesToHexadecimal(bytes);
+			Assert.assertArrayEquals(bytes, ByteUtils.hexadecimalToBytes(hex));
 			final BigInteger bi = new BigInteger(hex, 16);
 			final BigInteger uz = ByteUtils.bytesToUnsignedZ(bytes);
 			Assert.assertEquals(bi, uz);
 		}
+	}
+
+	private void hexTest(final byte[] bytes, final String hex)
+	{
+		Assert.assertArrayEquals(bytes, ByteUtils.hexadecimalToBytes(hex));
+		Assert.assertArrayEquals(ByteUtils.hexadecimalToBytes(ByteUtils.bytesToHexadecimal(ByteUtils.hexadecimalToBytes(hex))),
+				ByteUtils.hexadecimalToBytes(hex));
+		Assert.assertEquals(ByteUtils.bytesToHexadecimal(ByteUtils.hexadecimalToBytes(ByteUtils.bytesToHexadecimal(bytes))),
+				ByteUtils.bytesToHexadecimal(bytes));
 	}
 
 	@Test
@@ -41,7 +53,7 @@ public class ByteUtilsTest
 	{
 		final Random random = TestUtils.getDeterministicRandom();
 
-		for(int i = 0; i < 100_000; i++)
+		for (int i = 0; i < 100_000; i++)
 		{
 			final byte[] bytes = new byte[random.nextInt(1024)];
 			random.nextBytes(bytes);
@@ -54,17 +66,17 @@ public class ByteUtilsTest
 				final boolean[] bits = ByteUtils.bytesToBits(bytes);
 				final String bitString = ByteUtils.bytesToBitString(bytes);
 				Assert.assertEquals(bits.length, bitString.length());
-				for(int j = 0; j < bits.length; j++)
+				for (int j = 0; j < bits.length; j++)
 					Assert.assertEquals(bits[j], bitString.charAt(j) == '1');
 
 				Assert.assertArrayEquals(bytes, ByteUtils.bitsToBytes(bits));
 
-				if(bytes.length == 4)
+				if (bytes.length == 4)
 				{
 					final String expected = Integer.toBinaryString(ByteUtils.bytesToZ(bytes).intValueExact());
 					final int diff = bitString.length() - expected.length();
 
-					for(int j = 0; j < diff; j++)
+					for (int j = 0; j < diff; j++)
 						Assert.assertEquals(bitString.charAt(j), '0');
 
 					Assert.assertEquals(expected, bitString.substring(diff));
@@ -74,7 +86,7 @@ public class ByteUtilsTest
 			// bytes to unsigned
 			final short[] ubytes = ByteUtils.bytesToUnsignedShortArray(bytes, new short[bytes.length]);
 			Assert.assertEquals(bytes.length, ubytes.length);
-			for(int j = 0; j < bytes.length; j++)
+			for (int j = 0; j < bytes.length; j++)
 			{
 				final int expected = Byte.toUnsignedInt(bytes[j]);
 				final int e = bytes[j] & 0xff;
@@ -83,7 +95,7 @@ public class ByteUtilsTest
 			}
 
 			// pack
-			if(bytes.length > 3)
+			if (bytes.length > 3)
 			{
 				bytes[0] = ByteUtils.BITS_0;
 				bytes[1] = ByteUtils.BITS_0;
@@ -108,28 +120,28 @@ public class ByteUtilsTest
 	{
 
 		//for(int i = -1_000_000; i < 1_000_000; i++)
-		for(int i = -100_000; i < 100_000; i++)
+		for (int i = -100_000; i < 100_000; i++)
 		{
-			if(i >= Byte.MIN_VALUE && i <= Byte.MAX_VALUE)
+			if (i >= Byte.MIN_VALUE && i <= Byte.MAX_VALUE)
 				intTest(i, 1);
 			else
 				try
 				{
 					intTest(i, 1);
 					Assert.fail("Should not allow underflow");
-				} catch(final Exception e)
+				} catch (final Exception e)
 				{
 
 				}
 
-			if(i >= Short.MIN_VALUE && i <= Short.MAX_VALUE)
+			if (i >= Short.MIN_VALUE && i <= Short.MAX_VALUE)
 				intTest(i, 2);
 			else
 				try
 				{
 					intTest(i, 2);
 					Assert.fail("Should not allow underflow");
-				} catch(final Exception e)
+				} catch (final Exception e)
 				{
 
 				}
@@ -206,9 +218,9 @@ public class ByteUtilsTest
 
 		Assert.assertArrayEquals(iBytes, biBytes);
 
-		if(i == 0)
-			for(byte b : iBytes)
-				if(b != 0)
+		if (i == 0)
+			for (byte b : iBytes)
+				if (b != 0)
 					Assert.fail("Serial of 0 should contains zeros");
 
 
@@ -220,7 +232,7 @@ public class ByteUtilsTest
 		Assert.assertEquals(bi, ByteUtils.bytesToZ(biBytes));
 		Assert.assertEquals(bi, ByteUtils.bytesToZ(biBytes, 0, biBytes.length));
 
-		if(i >= 0)
+		if (i >= 0)
 		{
 			// unsigned
 			Assert.assertEquals(bi, ByteUtils.bytesToUnsignedZ(iBytes));
@@ -236,8 +248,7 @@ public class ByteUtilsTest
 			Assert.assertArrayEquals(iBytes, uzBytes);
 			Assert.assertEquals(uz, ByteUtils.bytesToUZ(uzBytes));
 			Assert.assertEquals(uz, ByteUtils.bytesToUZ(uzBytes, 0, uzBytes.length));
-		}
-		else
+		} else
 		{
 			final UZ uz = new UZ(Bytes.wrap(bi.toByteArray()));
 			Assert.assertArrayEquals(bi.toByteArray(), uz.asBytes().toByteArray());

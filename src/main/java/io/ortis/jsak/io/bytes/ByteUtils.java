@@ -4,6 +4,7 @@ import io.ortis.jsak.math.UZ;
 
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.logging.Level;
 
 /**
  * Helper functions for {@link Byte}
@@ -16,13 +17,13 @@ public abstract class ByteUtils
 	static
 	{
 		final boolean[] bits0 = byteToBits(BITS_0);
-		for(final boolean b : bits0)
-			if(b)
+		for (final boolean b : bits0)
+			if (b)
 				throw new RuntimeException("Invalid bit filler 0");
 
 		final boolean[] bits1 = byteToBits(BITS_1);
-		for(final boolean b : bits1)
-			if(!b)
+		for (final boolean b : bits1)
+			if (!b)
 				throw new RuntimeException("Invalid bit filler 1");
 	}
 
@@ -47,7 +48,7 @@ public abstract class ByteUtils
 	{
 		final byte[] data = value.toByteArray();
 
-		if(data.length == length)
+		if (data.length == length)
 			return data;
 
 		return packSignedZBytes(data, length);
@@ -62,10 +63,10 @@ public abstract class ByteUtils
 	{
 		final Bytes bytes = value.asBytes();
 		final int diff = bytes.length() - length;
-		if(diff == 0)
+		if (diff == 0)
 			return bytes.toByteArray();
 
-		if(diff > 0)
+		if (diff > 0)
 			throw new IndexOutOfBoundsException("Cannot fit bytes in given length");
 
 		// copy uz bytes to array pre-filled with 0
@@ -95,7 +96,7 @@ public abstract class ByteUtils
 			System.arraycopy(value, offset + fillingZeros, buffer, 0, buffer.length);
 		}*/
 
-		if(offset == 0 && value.length == length)
+		if (offset == 0 && value.length == length)
 			buffer = value;
 		else
 		{
@@ -123,7 +124,7 @@ public abstract class ByteUtils
 
 	public static BigInteger bytesToUnsignedZ(final byte[] value, final int offset, final int length)
 	{
-		if(length <= 0)
+		if (length <= 0)
 			throw new IllegalArgumentException("Invalid byte array length " + length);
 
 		//Use hex String to read value as unsigned Z
@@ -133,12 +134,12 @@ public abstract class ByteUtils
 	public static boolean[] bytesToBits(final byte[] bytes)
 	{
 		final boolean[] bits = new boolean[bytes.length * Byte.SIZE];
-		for(int i = 0; i < bytes.length; i++)
+		for (int i = 0; i < bytes.length; i++)
 		{
 			//final short b = (short) (bytes[i] < 0 ? bytes[i] + 128 : bytes[i]);//Java byte are signed
 			//final short b = (short) (bytes[i]+128);//Java byte are signed
 			final short b = bytes[i];
-			for(int j = 0; j < Byte.SIZE; j++)
+			for (int j = 0; j < Byte.SIZE; j++)
 				bits[i * Byte.SIZE + j] = ((b << j) & 128) == 128;
 			//bits[i * Byte.SIZE + j] = ((bytes[i] >> Byte.SIZE-j-1) & 1) == 1;
 		}
@@ -149,7 +150,7 @@ public abstract class ByteUtils
 	{
 
 		final boolean[] bits = new boolean[Byte.SIZE];
-		for(int j = 0; j < Byte.SIZE; j++)
+		for (int j = 0; j < Byte.SIZE; j++)
 			bits[j] = ((b << j) & 128) == 128;
 		return bits;
 	}
@@ -158,7 +159,7 @@ public abstract class ByteUtils
 	{
 		final boolean[] bits = bytesToBits(bytes);
 		final StringBuilder sb = new StringBuilder();
-		for(final boolean bit : bits)
+		for (final boolean bit : bits)
 			sb.append(bit ? '1' : '0');
 		return sb.toString();
 	}
@@ -167,12 +168,12 @@ public abstract class ByteUtils
 	{
 		final byte[] bytes = new byte[bits.length / Byte.SIZE + (bits.length % Byte.SIZE == 0 ? 0 : 1)];
 
-		for(int i = bytes.length - 1; i >= 0; i--)
+		for (int i = bytes.length - 1; i >= 0; i--)
 		{
 			//bytes[i] =(byte) (bits[i * Byte.SIZE] ? 128 : 0);
 			short b = 0;
-			for(int j = 0; j < Byte.SIZE; j++)
-				if(bits[i * Byte.SIZE + j])
+			for (int j = 0; j < Byte.SIZE; j++)
+				if (bits[i * Byte.SIZE + j])
 					b += 1 << (Byte.SIZE - j - 1);
 
 			bytes[i] = (byte) b;
@@ -229,10 +230,10 @@ public abstract class ByteUtils
 	 */
 	public static short[] bytesToUnsignedShortArray(final byte[] data, final short[] destination)
 	{
-		if(data.length != destination.length)
+		if (data.length != destination.length)
 			throw new IllegalArgumentException("Size mismatch");
 
-		for(int i = 0; i < data.length; i++)
+		for (int i = 0; i < data.length; i++)
 			destination[i] = byteToUnsignedShort(data[i]);
 
 		return destination;
@@ -318,7 +319,7 @@ public abstract class ByteUtils
 		final int diff = bytes.length - packLength;
 		final byte[] pack = new byte[packLength];
 
-		if(diff > 0)
+		if (diff > 0)
 		{// bytes > pack
 
 			final byte[] trim = new byte[diff];
@@ -327,25 +328,24 @@ public abstract class ByteUtils
 			final boolean[] packMSB = byteToBits(pack[0]);
 
 			Byte trimByte = null;
-			for(final byte b : trim)
-				if(trimByte == null)
+			for (final byte b : trim)
+				if (trimByte == null)
 					trimByte = b;
-				else if(b != trimByte)
+				else if (b != trimByte)
 					throw new IndexOutOfBoundsException("Cannot fit bytes in given length (different byte value in trim section)");
 
-			if(trimByte == null)
+			if (trimByte == null)
 				throw new RuntimeException("trimByte is null");
 
-			if(trimByte != BITS_0 && trimByte != BITS_1)
+			if (trimByte != BITS_0 && trimByte != BITS_1)
 				throw new IndexOutOfBoundsException(
 						"Cannot fit bytes in given length (byte value in trim is " + trimByte + ", expected " + BITS_0 + " or " + BITS_1 + ")");
 
 			final boolean[] trimBit = byteToBits(trimByte);
 
-			if(trimBit[0] != packMSB[0])
+			if (trimBit[0] != packMSB[0])
 				throw new IndexOutOfBoundsException("Cannot fit bytes in given length (LSB trim and MSB pack do not match)");
-		}
-		else
+		} else
 		{
 			final boolean[] MSB = byteToBits(bytes[0]);
 			final byte fill = MSB[0] ? BITS_1 : BITS_0;
@@ -356,21 +356,37 @@ public abstract class ByteUtils
 		return pack;
 	}
 
-	public static String bytesToHexadecimal(final byte [] bytes)
+	public static String bytesToHexadecimal(final byte[] bytes)
 	{
 		return bytesToHexadecimal(bytes, 0, bytes.length);
 	}
 
-	public static String bytesToHexadecimal(final byte [] bytes, final int offset, final int length)
+	public static String bytesToHexadecimal(final byte[] bytes, final int offset, final int length)
 	{
-		if(length<=0)
+		if (length <= 0)
 			throw new IllegalArgumentException("Length must be greater than 0");
 
 		final StringBuilder sb = new StringBuilder();
 
-		for(int i=0;i<length;i++)
-			sb.append(String.format("%02X", bytes[offset+i]));
+		for (int i = 0; i < length; i++)
+			sb.append(String.format("%02X", bytes[offset + i]));
 
 		return sb.toString();
+	}
+
+	public static byte[] hexadecimalToBytes(final String hex)
+	{
+		if (hex.length() % 2 != 0)
+			throw new IllegalArgumentException("Hexadecimal string length must be even");
+		final int byteLength = hex.length() >> 1;
+		final byte[] bytes = new byte[byteLength];
+		final byte[] bigIntBytes = new BigInteger(hex, 16).toByteArray();
+		int leadingZeros = 0;
+		if (bigIntBytes.length > bytes.length)
+			for (; leadingZeros < bigIntBytes.length; leadingZeros++)
+				if (bigIntBytes[leadingZeros] != 0)
+					break;
+		System.arraycopy(bigIntBytes, leadingZeros, bytes, bytes.length - (bigIntBytes.length - leadingZeros), bigIntBytes.length - leadingZeros);
+		return bytes;
 	}
 }

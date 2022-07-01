@@ -66,9 +66,7 @@ public class HTTPRequestHttpHandler implements HttpHandler
 		final Map<String, List<String>> requestHeaders = new LinkedHashMap<>();
 		try
 		{
-
-			for (final Map.Entry<String, List<String>> header : httpExchange.getRequestHeaders().entrySet())
-				requestHeaders.put(header.getKey(), header.getValue());
+			requestHeaders.putAll(httpExchange.getRequestHeaders());
 
 			final String rejectReason;
 			{

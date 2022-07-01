@@ -1,6 +1,7 @@
 package io.ortis.jsak.io;
 
 import java.io.*;
+import java.net.URL;
 import java.nio.file.Path;
 
 /**
@@ -30,6 +31,15 @@ public abstract class IOUtils
 			stream(is, destination, buffer, offset, length);
 		}
 	}
+
+
+	public static File[] listResourceFolder(String folderPath)
+	{
+		final ClassLoader loader = Thread.currentThread().getContextClassLoader();
+		final URL url = loader.getResource(folderPath);
+		return new File(url.getPath()).listFiles();
+	}
+
 
 	public static void readExact(final int length, final Path path, final byte[] destination, final int destinationOffset) throws IOException
 	{
@@ -106,7 +116,8 @@ public abstract class IOUtils
 		return stream(BytesProvider.of(source), destination, 0, destination.length);
 	}
 
-	public static int stream(final InputStream source, final byte[] destination, final int destinationOffset, int destinationLength) throws IOException
+	public static int stream(final InputStream source, final byte[] destination, final int destinationOffset, int destinationLength)
+			throws IOException
 	{
 		return stream(BytesProvider.of(source), destination, destinationOffset, destinationLength);
 	}
@@ -131,9 +142,9 @@ public abstract class IOUtils
 		return stream(source, destination, buffer, 0, buffer.length);
 	}
 
-	public static int stream(final InputStream source, final OutputStream destination, final byte[] buffer, final int maxLength) throws IOException
+	public static int stream(final InputStream source, final OutputStream destination, final byte[] buffer, final int bufferLength) throws IOException
 	{
-		return stream(source, destination, buffer, 0, maxLength);
+		return stream(source, destination, buffer, 0, bufferLength);
 	}
 
 	public static int stream(final InputStream source, final OutputStream destination, final byte[] buffer, final int bufferOffset, int bufferLength)
@@ -238,7 +249,6 @@ public abstract class IOUtils
 	{
 		if (bufferLength == 0)
 			throw new IllegalArgumentException("Buffer length must be greater than 0");
-
 
 
 		int read;

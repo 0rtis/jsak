@@ -20,7 +20,6 @@ public class HTTPServerServerConfigFile implements HTTPServerConfig, FileContent
 {
 	private final Path configPath;
 	private final Logger log;
-
 	private final FileContentMonitor fileContentMonitor;
 	private final Object lock = new Object();
 	private HTTPServerConfig httpConfig;

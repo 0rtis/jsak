@@ -125,6 +125,27 @@ public interface HTTPEndpoint
 			return new Response(EMPTY_HEADERS, 400, payload.length, new ByteArrayInputStream(payload), false);
 		}
 
+		public static Response http401Unauthorized()
+		{
+			return http401Unauthorized((String) null);
+		}
+
+		public static Response http401Unauthorized(String msg)
+		{
+			if (msg == null)
+				msg = "Unauthorized";
+			final ErrorPayload errorPayload = new ErrorPayload(msg);
+			return http401Unauthorized(GSON.toJson(errorPayload).getBytes(StandardCharsets.UTF_8));
+		}
+
+		public static Response http401Unauthorized(byte[] payload)
+		{
+			if (payload == null)
+				return http401Unauthorized();
+
+			return new Response(EMPTY_HEADERS, 401, payload.length, new ByteArrayInputStream(payload), false);
+		}
+
 		public static Response http404NotFound()
 		{
 			return http404NotFound((String) null);

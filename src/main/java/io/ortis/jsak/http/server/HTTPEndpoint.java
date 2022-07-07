@@ -188,6 +188,28 @@ public interface HTTPEndpoint
 			return new Response(EMPTY_HEADERS, 405, payload.length, new ByteArrayInputStream(payload), false);
 		}
 
+		public static Response http429TooManyRequests()
+		{
+			return http429TooManyRequests((String) null);
+		}
+
+		public static Response http429TooManyRequests(String msg)
+		{
+			if (msg == null)
+				msg = "Too many requests";
+			final ErrorPayload errorPayload = new ErrorPayload(msg);
+			return http429TooManyRequests(GSON.toJson(errorPayload).getBytes(StandardCharsets.UTF_8));
+		}
+
+		public static Response http429TooManyRequests(byte[] payload)
+		{
+			if (payload == null)
+				return http429TooManyRequests();
+
+			return new Response(EMPTY_HEADERS, 429, payload.length, new ByteArrayInputStream(payload), false);
+		}
+
+
 		public static Response http500InternalError()
 		{
 			return http500InternalError((String) null);

@@ -104,6 +104,11 @@ public interface HTTPEndpoint
 			return this.compressible;
 		}
 
+		public static Response http204NoContent()
+		{
+			return new Response(EMPTY_HEADERS, 204, 0, new ByteArrayInputStream(new byte [0]), false);
+		}
+
 		public static Response http400BadRequest()
 		{
 			return http400BadRequest((String) null);

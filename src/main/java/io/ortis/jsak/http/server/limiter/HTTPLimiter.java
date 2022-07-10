@@ -16,9 +16,7 @@ public interface HTTPLimiter
 
 	public static int parseCleanScheduleMinutes(final String serial)
 	{
-		final JsonParser jsonParser = new JsonParser();
-
-		final JsonObject bean = jsonParser.parse(serial).getAsJsonObject();
+		final JsonObject bean = JsonParser.parseString(serial).getAsJsonObject();
 
 		final Integer cleanScheduleMinutes = bean.get("cleanScheduleMinutes").getAsJsonObject() == null ||
 											 bean.get("cleanScheduleMinutes").isJsonNull() ? null :
@@ -34,9 +32,7 @@ public interface HTTPLimiter
 
 	public static HTTPLimiter of(final String serial)
 	{
-		final JsonParser jsonParser = new JsonParser();
-
-		final JsonObject bean = jsonParser.parse(serial).getAsJsonObject();
+		final JsonObject bean = JsonParser.parseString(serial).getAsJsonObject();
 
 		final String type = bean.get("type").getAsString();
 

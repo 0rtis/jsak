@@ -130,11 +130,20 @@ public interface HTTPEndpoint
 			return new Response(EMPTY_HEADERS, 400, payload.length, new ByteArrayInputStream(payload), false);
 		}
 
+		/**
+		 * Invalid credentials
+		 * @return
+		 */
 		public static Response http401Unauthorized()
 		{
 			return http401Unauthorized((String) null);
 		}
 
+		/**
+		 * Invalid credentials
+		 * @param msg
+		 * @return
+		 */
 		public static Response http401Unauthorized(String msg)
 		{
 			if (msg == null)
@@ -143,6 +152,11 @@ public interface HTTPEndpoint
 			return http401Unauthorized(GSON.toJson(errorPayload).getBytes(StandardCharsets.UTF_8));
 		}
 
+		/**
+		 * Invalid credentials
+		 * @param payload
+		 * @return
+		 */
 		public static Response http401Unauthorized(byte[] payload)
 		{
 			if (payload == null)
@@ -150,6 +164,43 @@ public interface HTTPEndpoint
 
 			return new Response(EMPTY_HEADERS, 401, payload.length, new ByteArrayInputStream(payload), false);
 		}
+
+
+		/**
+		 * Credentials provided but enough rights to perform the action
+		 * @return
+		 */
+		public static Response http403Forbidden()
+		{
+			return http403Forbidden((String) null);
+		}
+
+		/**
+		 * Credentials provided but enough rights to perform the action
+		 * @param msg
+		 * @return
+		 */
+		public static Response http403Forbidden(String msg)
+		{
+			if (msg == null)
+				msg = "Forbidden";
+			final ErrorPayload errorPayload = new ErrorPayload(msg);
+			return http403Forbidden(GSON.toJson(errorPayload).getBytes(StandardCharsets.UTF_8));
+		}
+
+		/**
+		 * Credentials provided but enough rights to perform the action
+		 * @param payload
+		 * @return
+		 */
+		public static Response http403Forbidden(byte[] payload)
+		{
+			if (payload == null)
+				return http403Forbidden();
+
+			return new Response(EMPTY_HEADERS, 403, payload.length, new ByteArrayInputStream(payload), false);
+		}
+
 
 		public static Response http404NotFound()
 		{

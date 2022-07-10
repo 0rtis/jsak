@@ -18,33 +18,40 @@ public class ImmutableHTTPServerConfig implements HTTPServerConfig
 	private final String host;
 	private final int port;
 	private final int parallelism;
+	private final int backlog;
 	private final Map<String, String> includeHttpResponseHeaders;
 	private final List<String> passList;
 	private final List<String> banList;
 	private final ImmutableHTTPLimiterConfig limiterConfig;
 
-	public ImmutableHTTPServerConfig(final String host, final int port, final int parallelism, final Map<String, String> includeHttpResponseHeaders,
+	public ImmutableHTTPServerConfig(final String host, final int port, final int parallelism, final int backlog,
+			final Map<String, String> includeHttpResponseHeaders,
 			final List<String> passList, final List<String> banList, final ImmutableHTTPLimiterConfig limiterConfig)
 	{
 		this.host = host;
-		if(this.host == null)
+		if (this.host == null)
 			throw new IllegalArgumentException("Host must be set");
 
 		this.port = port;
-		if(this.port <= 0)
+		if (this.port <= 0)
 			throw new IllegalArgumentException("Port must be greater than 0");
 
 		this.parallelism = parallelism;
-		if(this.parallelism <= 0)
+		if (this.parallelism <= 0)
 			throw new IllegalArgumentException("Parallelism must be greater than 0");
 
-		this.includeHttpResponseHeaders = includeHttpResponseHeaders == null ? EMPTY_INCLUDE_RESPONSE_HEADER : Collections.unmodifiableMap(includeHttpResponseHeaders);
+		this.backlog = backlog;
+		if (this.backlog <= 0)
+			throw new IllegalArgumentException("Backlog must be greater than 0");
+
+		this.includeHttpResponseHeaders =
+				includeHttpResponseHeaders == null ? EMPTY_INCLUDE_RESPONSE_HEADER : Collections.unmodifiableMap(includeHttpResponseHeaders);
 
 		this.passList = passList == null ? EMPTY_STRINGS : Collections.unmodifiableList(passList);
 		this.banList = banList == null ? EMPTY_STRINGS : Collections.unmodifiableList(banList);
 
 		this.limiterConfig = limiterConfig;
-		if(this.limiterConfig == null)
+		if (this.limiterConfig == null)
 			throw new IllegalArgumentException("Limiter must be set");
 	}
 
@@ -64,6 +71,12 @@ public class ImmutableHTTPServerConfig implements HTTPServerConfig
 	public int getParallelism()
 	{
 		return this.parallelism;
+	}
+
+	@Override
+	public int getBacklog()
+	{
+		return this.backlog;
 	}
 
 	@Override
@@ -100,20 +113,21 @@ public class ImmutableHTTPServerConfig implements HTTPServerConfig
 		final String host = JsonUtils.parseJsonElement(bean, "host").getAsString();
 		final int port = JsonUtils.parseJsonElement(bean, "port").getAsInt();
 		final int parallelism = JsonUtils.parseJsonElement(bean, "parallelism").getAsInt();
+		final int backlog = JsonUtils.parseJsonElement(bean, "backlog").getAsInt();
 
 		final Map<String, String> includeResponseHeaders = new LinkedHashMap<>();
-		if(bean.get("includeHttpResponseHeaders") != null)
+		if (bean.get("includeHttpResponseHeaders") != null)
 		{
 			final JsonArray includeResponseHeadersArray = bean.get("includeHttpResponseHeaders").getAsJsonArray();
-			for(int i = 0; i < includeResponseHeadersArray.size(); i++)
+			for (int i = 0; i < includeResponseHeadersArray.size(); i++)
 			{
 				final JsonObject jo = includeResponseHeadersArray.get(i).getAsJsonObject();
-				if(jo.entrySet().size() != 1)
+				if (jo.entrySet().size() != 1)
 					throw new IllegalArgumentException("Invalid include response header at index " + i);
 
 				final Map.Entry<String, JsonElement> entry = jo.entrySet().iterator().next();
 
-				if(includeResponseHeaders.containsKey(entry.getKey()))
+				if (includeResponseHeaders.containsKey(entry.getKey()))
 					throw new IllegalArgumentException("Duplicate include response header " + entry.getKey());
 
 				includeResponseHeaders.put(entry.getKey(), entry.getValue().getAsString());
@@ -126,35 +140,19 @@ public class ImmutableHTTPServerConfig implements HTTPServerConfig
 			JsonElement je = bean.get("passList");
 			final JsonArray passListArray = je == null || je.isJsonNull() ? null : je.getAsJsonArray();
 
-			if(passListArray != null && !passListArray.isJsonNull())
-				for(int i = 0; i < passListArray.size(); i++)
+			if (passListArray != null && !passListArray.isJsonNull())
+				for (int i = 0; i < passListArray.size(); i++)
 					passList.add(passListArray.get(i).getAsString());
 
 			je = bean.get("banList");
 			final JsonArray banListArray = je == null || je.isJsonNull() ? null : je.getAsJsonArray();
 
-			if(banListArray != null && !banListArray.isJsonNull())
-				for(int i = 0; i < banListArray.size(); i++)
+			if (banListArray != null && !banListArray.isJsonNull())
+				for (int i = 0; i < banListArray.size(); i++)
 					banList.add(banListArray.get(i).getAsString());
 		}
 
 		final ImmutableHTTPLimiterConfig limiterConfig = ImmutableHTTPLimiterConfig.of(bean.get("limiter").toString());
-		return new ImmutableHTTPServerConfig(host, port, parallelism, includeResponseHeaders, passList, banList, limiterConfig);
-	}
-
-	private static class StringPair
-	{
-		private String key;
-		private String value;
-
-		public String getKey()
-		{
-			return this.key;
-		}
-
-		public String getValue()
-		{
-			return this.value;
-		}
+		return new ImmutableHTTPServerConfig(host, port, parallelism, backlog, includeResponseHeaders, passList, banList, limiterConfig);
 	}
 }

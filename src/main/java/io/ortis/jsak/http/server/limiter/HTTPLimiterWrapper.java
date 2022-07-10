@@ -13,20 +13,24 @@ public class HTTPLimiterWrapper implements HTTPLimiter, Runnable
 	private static final Duration RESTART_DELAY = Duration.ofMinutes(1);
 
 	private final HTTPLimiterConfig config;
+	private final Duration pulse;
 	private final Logger log;
 
 	private final Object lock = new Object();
 	private String serial;
 	private HTTPLimiter limiter;
 
-	public HTTPLimiterWrapper(final HTTPServerConfig config, final Logger log) throws Exception
+	public HTTPLimiterWrapper(final HTTPServerConfig config, final Duration pulse, final Logger log)
 	{
-		this(new HTTPLimiterConfig.HTTPConfigWrapper(config), log);
+		this(new HTTPLimiterConfig.HTTPConfigWrapper(config), pulse, log);
 	}
 
-	public HTTPLimiterWrapper(final HTTPLimiterConfig config, final Logger log) throws Exception
+	public HTTPLimiterWrapper(final HTTPLimiterConfig config, final Duration pulse, final Logger log)
 	{
 		this.config = config;
+		this.pulse = pulse;
+		if(this.pulse.isNegative())
+			throw new IllegalArgumentException("Pulse is negative");
 		this.log = log;
 
 		update(this.config.getSerial());
@@ -47,7 +51,7 @@ public class HTTPLimiterWrapper implements HTTPLimiter, Runnable
 		try
 		{
 			long lastClean = System.currentTimeMillis();
-			while(!Thread.interrupted())
+			while (!Thread.interrupted())
 			{
 				try
 				{
@@ -55,7 +59,7 @@ public class HTTPLimiterWrapper implements HTTPLimiter, Runnable
 					update(this.config.getSerial());
 
 					final long cleanSchedule = this.config.getCleanSchedule().toMillis();
-					if(cleanSchedule > 0 && System.currentTimeMillis() - lastClean > cleanSchedule)
+					if (cleanSchedule > 0 && System.currentTimeMillis() - lastClean > cleanSchedule)
 					{
 						this.log.fine("Cleaning limiter");
 						this.limiter.clean(System.currentTimeMillis());
@@ -63,12 +67,12 @@ public class HTTPLimiterWrapper implements HTTPLimiter, Runnable
 					}
 
 
-					Thread.sleep(5000);
+					Thread.sleep(this.pulse.toMillis());
 
-				} catch(final InterruptedException e)
+				} catch (final InterruptedException e)
 				{
 					throw e;
-				} catch(final Exception e)
+				} catch (final Exception e)
 				{
 					this.log.severe("Error in " + this.getClass().getSimpleName() + " engine - " + FormatUtils.formatException(e));
 					this.log.info("Waiting " + RESTART_DELAY + " before restart");
@@ -77,10 +81,10 @@ public class HTTPLimiterWrapper implements HTTPLimiter, Runnable
 				}
 			}
 
-		} catch(final InterruptedException e)
+		} catch (final InterruptedException e)
 		{
 			Thread.currentThread().interrupt();
-		} catch(final Exception e)
+		} catch (final Exception e)
 		{
 			this.log.severe("Critical error in " + this.getClass().getSimpleName() + " engine - " + FormatUtils.formatException(e));
 
@@ -90,11 +94,11 @@ public class HTTPLimiterWrapper implements HTTPLimiter, Runnable
 		}
 	}
 
-	public void update(final String serial) throws Exception
+	public void update(final String serial)
 	{
-		synchronized(this.lock)
+		synchronized (this.lock)
 		{
-			if(this.serial != null && this.serial.equals(serial))
+			if (this.serial != null && this.serial.equals(serial))
 				return;
 
 			this.log.info("Reloading limiter");

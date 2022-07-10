@@ -97,6 +97,15 @@ public class HTTPServerServerConfigFile implements HTTPServerConfig, FileContent
 	}
 
 	@Override
+	public int getBacklog()
+	{
+		synchronized (this.lock)
+		{
+			return this.httpConfig.getBacklog();
+		}
+	}
+
+	@Override
 	public List<String> getPassList()
 	{
 		synchronized (this.lock)

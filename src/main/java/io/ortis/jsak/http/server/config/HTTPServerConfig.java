@@ -13,6 +13,8 @@ public interface HTTPServerConfig
 
 	int getParallelism();
 
+	int getBacklog();
+
 	List<String> getPassList();
 
 	List<String> getBanList();

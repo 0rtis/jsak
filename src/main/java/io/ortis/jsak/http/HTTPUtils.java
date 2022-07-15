@@ -85,4 +85,18 @@ public abstract class HTTPUtils
 
 		return null;
 	}
+
+	public static String formatHeader(final List<String> values)
+	{
+		final StringBuilder sb = new StringBuilder();
+		for (final var v : values)
+		{
+			if (!sb.isEmpty())
+				sb.append("; ");
+
+			sb.append(v);
+		}
+
+		return sb.toString();
+	}
 }

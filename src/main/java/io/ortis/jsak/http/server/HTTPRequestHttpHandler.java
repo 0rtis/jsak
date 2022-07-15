@@ -26,14 +26,14 @@ public class HTTPRequestHttpHandler implements HttpHandler
 	private final int bufferLength;
 	private final Logger log;
 
-	public HTTPRequestHttpHandler(final HTTPServerConfig config, final List<HTTPEndpoint> endpoints,
+	public <E extends Collection<HTTPEndpoint>> HTTPRequestHttpHandler(final HTTPServerConfig config, final E endpoints,
 			final Compression.Algorithm compressionAlgorithm, final HTTPLimiter limiter, final int bufferLength,
 			final Logger log)
 	{
 		this(null, config, endpoints, compressionAlgorithm, limiter, bufferLength, log);
 	}
 
-	public HTTPRequestHttpHandler(final String contextPath, final HTTPServerConfig config, final List<HTTPEndpoint> endpoints,
+	public <E extends Collection<HTTPEndpoint>> HTTPRequestHttpHandler(final String contextPath, final HTTPServerConfig config, final E endpoints,
 			final Compression.Algorithm compressionAlgorithm, final HTTPLimiter limiter, final int bufferLength,
 			final Logger log)
 	{

@@ -86,6 +86,12 @@ public abstract class HTTPUtils
 		return null;
 	}
 
+	public static Map<String, String> formatHeaders(final Map<String,List<String>> headers){
+		final Map<String, String> buffer = new LinkedHashMap<>();
+		headers.forEach((k, v)->buffer.put(k, formatHeader(v)));
+		return Collections.unmodifiableMap(buffer);
+	}
+
 	public static String formatHeader(final List<String> values)
 	{
 		final StringBuilder sb = new StringBuilder();
@@ -93,10 +99,19 @@ public abstract class HTTPUtils
 		{
 			if (!sb.isEmpty())
 				sb.append("; ");
-
 			sb.append(v);
 		}
 
 		return sb.toString();
+	}
+
+	public static boolean isStatusCodeInRange(final int code, final int range)
+	{
+		if (code > 999 || code < 0)
+			throw new IllegalArgumentException("Invalid code (must between 0 and 999)");
+		if (range > 999 || range < 0)
+			throw new IllegalArgumentException("Invalid range (must between 0 and 999)");
+
+		return range / 100 == code / 100;
 	}
 }

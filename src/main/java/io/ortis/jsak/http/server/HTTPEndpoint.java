@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.InetSocketAddress;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -18,7 +19,7 @@ public interface HTTPEndpoint
 
 	boolean isMatch(final String requestMethod, final Map<String, List<String>> requestHeaders, final String path);
 
-	Response respond(final String requestMethod, final Map<String, List<String>> requestHeaders, final String path,
+	Response respond(final InetSocketAddress remoteHost, final String requestMethod, final Map<String, List<String>> requestHeaders, final String path,
 					 final String query, final InputStream requestBody);
 
 	public static class ErrorPayload

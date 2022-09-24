@@ -68,20 +68,22 @@ public class HTTPRequestHttpHandler implements HttpHandler
 		{
 			requestHeaders.putAll(httpExchange.getRequestHeaders());
 
+			final String remoteHost = httpExchange.getRemoteAddress().getAddress().getHostAddress();
+
 			final String rejectReason;
 			{
 				final List<String> passList = this.config.getPassList();
 				final List<String> banList = this.config.getBanList();
 
-				final String host = httpExchange.getRemoteAddress().getAddress().getHostAddress();
-				this.log.finer("Request from " + host + " - " + rawPath);
 
-				if (passList != null && (passList.contains(host) || passList.contains("*")))
+				this.log.finer("Request from " + remoteHost + " - " + rawPath);
+
+				if (passList != null && (passList.contains(remoteHost) || passList.contains("*")))
 					rejectReason = null;
-				else if (banList != null && (banList.contains(host) || banList.contains("*")))
+				else if (banList != null && (banList.contains(remoteHost) || banList.contains("*")))
 					rejectReason = "Banned";
 				else
-					rejectReason = this.limiter.onRequest(host, System.currentTimeMillis());
+					rejectReason = this.limiter.onRequest(remoteHost, System.currentTimeMillis());
 			}
 
 
@@ -100,10 +102,10 @@ public class HTTPRequestHttpHandler implements HttpHandler
 					final HTTPEndpoint endpoint;
 					{
 						HTTPEndpoint match = null;
-						for (final HTTPEndpoint httpe : this.endpoints)
-							if (httpe.isMatch(httpExchange.getRequestMethod(), requestHeaders, upperPath))
+						for (final HTTPEndpoint e : this.endpoints)
+							if (e.isMatch(httpExchange.getRequestMethod(), requestHeaders, upperPath))
 							{
-								match = httpe;
+								match = e;
 								break;
 							}
 
@@ -113,7 +115,7 @@ public class HTTPRequestHttpHandler implements HttpHandler
 					if (endpoint == null)
 						response = HTTPEndpoint.Response.http404NotFound();
 					else
-						response = endpoint.respond(httpExchange.getRequestMethod(), requestHeaders, path, query,
+						response = endpoint.respond(httpExchange.getRemoteAddress(), httpExchange.getRequestMethod(), requestHeaders, path, query,
 								httpExchange.getRequestBody());
 				}
 			} else

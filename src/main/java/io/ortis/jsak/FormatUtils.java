@@ -5,6 +5,26 @@ import java.time.Duration;
 public class FormatUtils
 {
 
+	public static String truncateString(final String str, final int maxLength)
+	{
+		if(str == null)
+			return null;
+
+		if(str.length() <= maxLength)
+			return str;
+
+		if(maxLength < 4)
+			return str.substring(0, maxLength);
+
+		return str.substring(0, maxLength - 3).concat("...");
+	}
+
+	public static String prependString(final String header, final String str)
+	{
+		return header + str;
+	}
+
+
 	public static String formatByteLength(final long bytes)
 	{
 		return formatByteLength(bytes, true);
@@ -50,20 +70,6 @@ public class FormatUtils
 			return String.format("%dh%02dm%02ds", s / 3600, (s % 3600) / 60, (s % 60));*/
 	}
 
-
-	public static String truncateString(final String msg, final int maxLength)
-	{
-		if(msg == null)
-			return null;
-
-		if(msg.length() <= maxLength)
-			return msg;
-
-		if(maxLength < 4)
-			return msg.substring(0, maxLength);
-
-		return msg.substring(0, maxLength - 3).concat("...");
-	}
 
 	public static String formatException(final Throwable t)
 	{

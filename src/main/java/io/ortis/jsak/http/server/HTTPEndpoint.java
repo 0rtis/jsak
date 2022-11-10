@@ -15,6 +15,11 @@ public interface HTTPEndpoint
 {
 	public static final String HTTP_METHOD_GET = "GET";
 	public static final String HTTP_METHOD_POST = "POST";
+	public static final String HTTP_METHOD_OPTIONS = "OPTIONS";
+	public static final String HTTP_METHOD_PUT = "PUT";
+	public static final String HTTP_METHOD_DELETE = "DELETE";
+
+
 	public static final Locale DEFAULT_LOCAL = Locale.ENGLISH;
 
 	boolean isMatch(final String requestMethod, final Map<String, List<String>> requestHeaders, final String path);

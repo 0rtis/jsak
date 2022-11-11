@@ -24,8 +24,9 @@ public interface HTTPEndpoint
 
 	boolean isMatch(final String requestMethod, final Map<String, List<String>> requestHeaders, final String path);
 
-	Response respond(final InetSocketAddress remoteHost, final String requestMethod, final Map<String, List<String>> requestHeaders, final String path,
-					 final String query, final InputStream requestBody);
+	Response respond(final InetSocketAddress remoteHost, final String requestMethod, final Map<String, List<String>> requestHeaders,
+			final String path,
+			final String query, final InputStream requestBody);
 
 	public static class ErrorPayload
 	{
@@ -39,7 +40,7 @@ public interface HTTPEndpoint
 
 	public static class Response
 	{
-		public static final Map<String, String> EMPTY_HEADERS = Collections.unmodifiableMap(new HashMap<>());
+		public static final Map<String, String> EMPTY_HEADERS = Map.of();
 
 		public static final Gson GSON = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
 
@@ -51,25 +52,25 @@ public interface HTTPEndpoint
 		private final Listener listener;
 
 		public Response(final Map<String, String> headers, final int code, final byte[] payload,
-						final boolean compressible)
+				final boolean compressible)
 		{
 			this(headers, code, payload.length, new ByteArrayInputStream(payload), compressible, null);
 		}
 
 		public Response(final Map<String, String> headers, final int code, final long payloadLength,
-						final InputStream payload, final boolean compressible)
+				final InputStream payload, final boolean compressible)
 		{
 			this(headers, code, payloadLength, payload, compressible, null);
 		}
 
 		public Response(final Map<String, String> headers, final int code, final byte[] payload,
-						final boolean compressible, final Listener listener)
+				final boolean compressible, final Listener listener)
 		{
 			this(headers, code, payload.length, new ByteArrayInputStream(payload), compressible, listener);
 		}
 
 		public Response(final Map<String, String> headers, final int code, final long payloadLength,
-						final InputStream payload, final boolean compressible, final Listener listener)
+				final InputStream payload, final boolean compressible, final Listener listener)
 		{
 			this.headers = headers == null ? EMPTY_HEADERS : headers;
 			this.code = code;
@@ -112,7 +113,12 @@ public interface HTTPEndpoint
 
 		public static Response http204NoContent()
 		{
-			return new Response(EMPTY_HEADERS, 204, 0, new ByteArrayInputStream(new byte [0]), false);
+			return http204NoContent(EMPTY_HEADERS);
+		}
+
+		public static Response http204NoContent(final Map<String, String> headers)
+		{
+			return new Response(headers, 204, 0, new ByteArrayInputStream(new byte[0]), false);
 		}
 
 		public static Response http400BadRequest()
@@ -120,24 +126,36 @@ public interface HTTPEndpoint
 			return http400BadRequest((String) null);
 		}
 
-		public static Response http400BadRequest(String msg)
+		public static Response http400BadRequest(final Map<String, String> headers)
+		{
+			return http400BadRequest(headers, (String) null);
+		}
+
+		public static Response http400BadRequest(final String msg)
+		{
+			return http400BadRequest(EMPTY_HEADERS, msg);
+		}
+
+		public static Response http400BadRequest(final Map<String, String> headers, String msg)
 		{
 			if (msg == null)
 				msg = "Bad request";
 			final ErrorPayload errorPayload = new ErrorPayload(msg);
-			return http400BadRequest(GSON.toJson(errorPayload).getBytes(StandardCharsets.UTF_8));
+			return http400BadRequest(headers, GSON.toJson(errorPayload).getBytes(StandardCharsets.UTF_8));
 		}
 
-		public static Response http400BadRequest(byte[] payload)
+		public static Response http400BadRequest(final Map<String, String> headers, final byte[] payload)
 		{
 			if (payload == null)
-				return http400BadRequest();
+				return http400BadRequest(headers);
 
-			return new Response(EMPTY_HEADERS, 400, payload.length, new ByteArrayInputStream(payload), false);
+			return new Response(headers, 400, payload.length, new ByteArrayInputStream(payload), false);
 		}
+
 
 		/**
 		 * Invalid credentials
+		 *
 		 * @return
 		 */
 		public static Response http401Unauthorized()
@@ -145,88 +163,125 @@ public interface HTTPEndpoint
 			return http401Unauthorized((String) null);
 		}
 
+		public static Response http401Unauthorized(final Map<String, String> headers)
+		{
+			return http401Unauthorized(headers, (String) null);
+		}
+
+		public static Response http401Unauthorized(final String msg)
+		{
+			return http401Unauthorized(EMPTY_HEADERS, msg);
+		}
+
+
 		/**
 		 * Invalid credentials
+		 *
 		 * @param msg
 		 * @return
 		 */
-		public static Response http401Unauthorized(String msg)
+		public static Response http401Unauthorized(final Map<String, String> headers, String msg)
 		{
 			if (msg == null)
 				msg = "Unauthorized";
 			final ErrorPayload errorPayload = new ErrorPayload(msg);
-			return http401Unauthorized(GSON.toJson(errorPayload).getBytes(StandardCharsets.UTF_8));
+			return http401Unauthorized(headers, GSON.toJson(errorPayload).getBytes(StandardCharsets.UTF_8));
 		}
 
 		/**
 		 * Invalid credentials
+		 *
 		 * @param payload
 		 * @return
 		 */
-		public static Response http401Unauthorized(byte[] payload)
+		public static Response http401Unauthorized(final Map<String, String> headers, final byte[] payload)
 		{
 			if (payload == null)
-				return http401Unauthorized();
+				return http401Unauthorized(headers);
 
-			return new Response(EMPTY_HEADERS, 401, payload.length, new ByteArrayInputStream(payload), false);
+			return new Response(headers, 401, payload.length, new ByteArrayInputStream(payload), false);
 		}
 
 
 		/**
 		 * Credentials provided but enough rights to perform the action
+		 *
 		 * @return
 		 */
+
 		public static Response http403Forbidden()
 		{
 			return http403Forbidden((String) null);
 		}
 
+		public static Response http403Forbidden(final Map<String, String> headers)
+		{
+			return http403Forbidden(headers, (String) null);
+		}
+
+		public static Response http403Forbidden(final String msg)
+		{
+			return http403Forbidden(EMPTY_HEADERS, msg);
+		}
+
+
 		/**
 		 * Credentials provided but enough rights to perform the action
+		 *
 		 * @param msg
 		 * @return
 		 */
-		public static Response http403Forbidden(String msg)
+		public static Response http403Forbidden(final Map<String, String> headers, String msg)
 		{
 			if (msg == null)
 				msg = "Forbidden";
 			final ErrorPayload errorPayload = new ErrorPayload(msg);
-			return http403Forbidden(GSON.toJson(errorPayload).getBytes(StandardCharsets.UTF_8));
+			return http403Forbidden(headers, GSON.toJson(errorPayload).getBytes(StandardCharsets.UTF_8));
 		}
 
 		/**
 		 * Credentials provided but enough rights to perform the action
+		 *
 		 * @param payload
 		 * @return
 		 */
-		public static Response http403Forbidden(byte[] payload)
+		public static Response http403Forbidden(final Map<String, String> headers, final byte[] payload)
 		{
 			if (payload == null)
-				return http403Forbidden();
+				return http403Forbidden(headers);
 
-			return new Response(EMPTY_HEADERS, 403, payload.length, new ByteArrayInputStream(payload), false);
+			return new Response(headers, 403, payload.length, new ByteArrayInputStream(payload), false);
 		}
-
 
 		public static Response http404NotFound()
 		{
 			return http404NotFound((String) null);
 		}
 
-		public static Response http404NotFound(String msg)
+		public static Response http404NotFound(final Map<String, String> headers)
 		{
-			if (msg == null)
-				msg = "Endpoint not found";
-			final ErrorPayload errorPayload = new ErrorPayload(msg);
-			return http404NotFound(GSON.toJson(errorPayload).getBytes(StandardCharsets.UTF_8));
+			return http404NotFound(headers, (String) null);
 		}
 
-		public static Response http404NotFound(byte[] payload)
+		public static Response http404NotFound(final String msg)
+		{
+			return http404NotFound(EMPTY_HEADERS, msg);
+		}
+
+		public static Response http404NotFound(final Map<String, String> headers, String msg)
+		{
+			if (msg == null)
+				msg = "Resource not found";
+			final ErrorPayload errorPayload = new ErrorPayload(msg);
+			return http404NotFound(headers, GSON.toJson(errorPayload).getBytes(StandardCharsets.UTF_8));
+		}
+
+		public static Response http404NotFound(final Map<String, String> headers, final byte[] payload)
 		{
 			if (payload == null)
-				return http404NotFound();
+				return http404NotFound(headers);
 
-			return new Response(EMPTY_HEADERS, 404, payload.length, new ByteArrayInputStream(payload), false);
+			return new Response(headers, 404, payload.length, new ByteArrayInputStream(payload), false);
 		}
 
 		public static Response http405MethodNotAllowed()
@@ -234,41 +289,59 @@ public interface HTTPEndpoint
 			return http405MethodNotAllowed((String) null);
 		}
 
-		public static Response http405MethodNotAllowed(String msg)
+		public static Response http405MethodNotAllowed(final Map<String, String> headers)
+		{
+			return http405MethodNotAllowed(headers,(String) null);
+		}
+
+		public static Response http405MethodNotAllowed(final String msg)
+		{
+			return http405MethodNotAllowed(EMPTY_HEADERS, msg);
+		}
+
+		public static Response http405MethodNotAllowed(final Map<String, String> headers, String msg)
 		{
 			if (msg == null)
 				msg = "Method not allowed";
 			final ErrorPayload errorPayload = new ErrorPayload(msg);
-			return http405MethodNotAllowed(GSON.toJson(errorPayload).getBytes(StandardCharsets.UTF_8));
+			return http405MethodNotAllowed(headers, GSON.toJson(errorPayload).getBytes(StandardCharsets.UTF_8));
 		}
 
-		public static Response http405MethodNotAllowed(byte[] payload)
+		public static Response http405MethodNotAllowed(final Map<String, String> headers, final byte[] payload)
 		{
 			if (payload == null)
-				return http405MethodNotAllowed();
+				return http405MethodNotAllowed(headers);
 
-			return new Response(EMPTY_HEADERS, 405, payload.length, new ByteArrayInputStream(payload), false);
+			return new Response(headers, 405, payload.length, new ByteArrayInputStream(payload), false);
 		}
 
 		public static Response http429TooManyRequests()
 		{
 			return http429TooManyRequests((String) null);
 		}
+		public static Response http429TooManyRequests(final Map<String, String> headers)
+		{
+			return http429TooManyRequests(headers, (String) null);
+		}
+		public static Response http429TooManyRequests(final String msg)
+		{
+			return http429TooManyRequests(EMPTY_HEADERS, msg);
+		}
 
-		public static Response http429TooManyRequests(String msg)
+		public static Response http429TooManyRequests(final Map<String, String> headers, String msg)
 		{
 			if (msg == null)
 				msg = "Too many requests";
 			final ErrorPayload errorPayload = new ErrorPayload(msg);
-			return http429TooManyRequests(GSON.toJson(errorPayload).getBytes(StandardCharsets.UTF_8));
+			return http429TooManyRequests(headers , GSON.toJson(errorPayload).getBytes(StandardCharsets.UTF_8));
 		}
 
-		public static Response http429TooManyRequests(byte[] payload)
+		public static Response http429TooManyRequests(final Map<String, String> headers, final byte[] payload)
 		{
 			if (payload == null)
-				return http429TooManyRequests();
+				return http429TooManyRequests(headers);
 
-			return new Response(EMPTY_HEADERS, 429, payload.length, new ByteArrayInputStream(payload), false);
+			return new Response(headers, 429, payload.length, new ByteArrayInputStream(payload), false);
 		}
 
 
@@ -276,21 +349,30 @@ public interface HTTPEndpoint
 		{
 			return http500InternalError((String) null);
 		}
+		public static Response http500InternalError(final Map<String, String> headers)
+		{
+			return http500InternalError(headers, (String) null);
+		}
 
-		public static Response http500InternalError(String msg)
+		public static Response http500InternalError(final String msg)
+		{
+			return http500InternalError(EMPTY_HEADERS, msg);
+		}
+
+		public static Response http500InternalError(final Map<String, String> headers, String msg)
 		{
 			if (msg == null)
 				msg = "Internal error";
 			final ErrorPayload errorPayload = new ErrorPayload(msg);
-			return http500InternalError(GSON.toJson(errorPayload).getBytes(StandardCharsets.UTF_8));
+			return http500InternalError(headers, GSON.toJson(errorPayload).getBytes(StandardCharsets.UTF_8));
 		}
 
-		public static Response http500InternalError(byte[] payload)
+		public static Response http500InternalError(final Map<String, String> headers, final byte[] payload)
 		{
 			if (payload == null)
-				return http500InternalError();
+				return http500InternalError(headers);
 
-			return new Response(EMPTY_HEADERS, 500, payload.length, new ByteArrayInputStream(payload), false);
+			return new Response(headers, 500, payload.length, new ByteArrayInputStream(payload), false);
 		}
 
 		public static Response http503ServiceNotAvailable()
@@ -298,21 +380,29 @@ public interface HTTPEndpoint
 			return http503ServiceNotAvailable((String) null);
 		}
 
-		public static Response http503ServiceNotAvailable(String msg)
+		public static Response http503ServiceNotAvailable(final Map<String, String> headers)
+		{
+			return http503ServiceNotAvailable(headers, (String) null);
+		}
+		public static Response http503ServiceNotAvailable(final String msg)
+		{
+			return http503ServiceNotAvailable(EMPTY_HEADERS, msg);
+		}
+
+		public static Response http503ServiceNotAvailable(final Map<String, String> headers, String msg)
 		{
 			if (msg == null)
 				msg = "Service not available";
 			final ErrorPayload errorPayload = new ErrorPayload(msg);
-			return http503ServiceNotAvailable(GSON.toJson(errorPayload).getBytes(StandardCharsets.UTF_8));
+			return http503ServiceNotAvailable(headers, GSON.toJson(errorPayload).getBytes(StandardCharsets.UTF_8));
 		}
 
-
-		public static Response http503ServiceNotAvailable(byte[] payload)
+		public static Response http503ServiceNotAvailable(final Map<String, String> headers, final byte[] payload)
 		{
 			if (payload == null)
-				return http503ServiceNotAvailable();
+				return http503ServiceNotAvailable(headers);
 
-			return new Response(EMPTY_HEADERS, 503, payload.length, new ByteArrayInputStream(payload), false);
+			return new Response(headers, 503, payload.length, new ByteArrayInputStream(payload), false);
 		}
 
 		public static interface Listener

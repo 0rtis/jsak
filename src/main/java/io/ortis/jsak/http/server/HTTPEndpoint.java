@@ -310,7 +310,7 @@ public interface HTTPEndpoint
 
 		public static Response http405MethodNotAllowed(final Map<String, String> headers)
 		{
-			return http405MethodNotAllowed(headers,(String) null);
+			return http405MethodNotAllowed(headers, (String) null);
 		}
 
 		public static Response http405MethodNotAllowed(final String msg)
@@ -338,10 +338,12 @@ public interface HTTPEndpoint
 		{
 			return http429TooManyRequests((String) null);
 		}
+
 		public static Response http429TooManyRequests(final Map<String, String> headers)
 		{
 			return http429TooManyRequests(headers, (String) null);
 		}
+
 		public static Response http429TooManyRequests(final String msg)
 		{
 			return http429TooManyRequests(EMPTY_HEADERS, msg);
@@ -352,7 +354,7 @@ public interface HTTPEndpoint
 			if (msg == null)
 				msg = "Too many requests";
 			final ErrorPayload errorPayload = new ErrorPayload(msg);
-			return http429TooManyRequests(headers , GSON.toJson(errorPayload).getBytes(StandardCharsets.UTF_8));
+			return http429TooManyRequests(headers, GSON.toJson(errorPayload).getBytes(StandardCharsets.UTF_8));
 		}
 
 		public static Response http429TooManyRequests(final Map<String, String> headers, final byte[] payload)
@@ -368,6 +370,7 @@ public interface HTTPEndpoint
 		{
 			return http500InternalError((String) null);
 		}
+
 		public static Response http500InternalError(final Map<String, String> headers)
 		{
 			return http500InternalError(headers, (String) null);
@@ -403,6 +406,7 @@ public interface HTTPEndpoint
 		{
 			return http503ServiceNotAvailable(headers, (String) null);
 		}
+
 		public static Response http503ServiceNotAvailable(final String msg)
 		{
 			return http503ServiceNotAvailable(EMPTY_HEADERS, msg);
@@ -449,6 +453,15 @@ public interface HTTPEndpoint
 				return this;
 			}
 
+			public Builder addHeaders(final Map<String, String> val)
+			{
+				if (headers == null)
+					headers = new LinkedHashMap<>(val);
+
+				headers.putAll(val);
+				return this;
+			}
+
 			public Builder code(final int val)
 			{
 				code = val;
@@ -481,7 +494,7 @@ public interface HTTPEndpoint
 
 			public Response build()
 			{
-				return new Response(headers, code,payloadLength, payload, compressible, listener);
+				return new Response(headers, code, payloadLength, payload, compressible, listener);
 			}
 		}
 	}

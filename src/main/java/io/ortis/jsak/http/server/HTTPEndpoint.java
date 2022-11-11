@@ -80,6 +80,24 @@ public interface HTTPEndpoint
 			this.listener = listener;
 		}
 
+
+		public static Builder newBuilder()
+		{
+			return new Builder();
+		}
+
+		public static Builder newBuilder(final Response copy)
+		{
+			Builder builder = new Builder();
+			builder.headers = copy.getHeaders();
+			builder.code = copy.getCode();
+			builder.payloadLength = copy.getPayloadLength();
+			builder.payload = copy.getPayload();
+			builder.compressible = copy.isCompressible();
+			builder.listener = copy.listener;
+			return builder;
+		}
+
 		public void cleanUp()
 		{
 			if (this.listener != null)
@@ -110,6 +128,7 @@ public interface HTTPEndpoint
 		{
 			return this.compressible;
 		}
+
 
 		public static Response http204NoContent()
 		{
@@ -408,6 +427,62 @@ public interface HTTPEndpoint
 		public static interface Listener
 		{
 			void onCompleted(final Response response);
+		}
+
+
+		public static final class Builder
+		{
+			private Map<String, String> headers;
+			private int code;
+			private long payloadLength;
+			private InputStream payload;
+			private boolean compressible;
+			private Listener listener;
+
+			private Builder()
+			{
+			}
+
+			public Builder headers(final Map<String, String> val)
+			{
+				headers = val;
+				return this;
+			}
+
+			public Builder code(final int val)
+			{
+				code = val;
+				return this;
+			}
+
+			public Builder payloadLength(final long val)
+			{
+				payloadLength = val;
+				return this;
+			}
+
+			public Builder payload(final InputStream val)
+			{
+				payload = val;
+				return this;
+			}
+
+			public Builder compressible(final boolean val)
+			{
+				compressible = val;
+				return this;
+			}
+
+			public Builder listener(final Listener val)
+			{
+				listener = val;
+				return this;
+			}
+
+			public Response build()
+			{
+				return new Response(headers, code,payloadLength, payload, compressible, listener);
+			}
 		}
 	}
 

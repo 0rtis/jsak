@@ -10,6 +10,8 @@ import java.net.InetSocketAddress;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public interface HTTPEndpoint
 {
@@ -455,10 +457,14 @@ public interface HTTPEndpoint
 
 			public Builder addHeaders(final Map<String, String> val)
 			{
-				if (headers == null)
-					headers = new LinkedHashMap<>(val);
+				if (val == null)
+					return this;
 
-				headers.putAll(val);
+				if (headers == null)
+					headers = Map.of();
+
+				headers = Stream.of(headers, val).flatMap(map -> map.entrySet().stream())
+								.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (v1, v2) -> v2));
 				return this;
 			}
 

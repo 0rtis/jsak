@@ -102,12 +102,6 @@ public class ConcurrentPointer<T>
 		return false;
 	}
 
-	@Override
-	public String toString()
-	{
-		return getClass().getSimpleName() + "{" + "value=" + getValue() + "}";
-	}
-
 	public static <T> ConcurrentPointer<T> of(final T value)
 	{
 		return new ConcurrentPointer<>(value);

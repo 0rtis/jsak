@@ -7,7 +7,7 @@
 
 The Java Swiss Army Knife is a utility package that provide various tools for Java development
 
-*You can support this project by donating to our crypto-currency wallet **0xA68fBfa3E0c86D1f3fF071853df6DAe8753095E2***
+*You can support this project by donating to our cryptocurrency wallet **0xA68fBfa3E0c86D1f3fF071853df6DAe8753095E2***
 
 ### Examples
 
@@ -18,23 +18,29 @@ Utility class for string formatting:
 - Format exception
 
 
-#### [Pointer](https://github.com/0rtis/jsak/blob/master/src/main/java/io/ortis/jsak/math/UZ.java)
+#### [Pointer](https://github.com/0rtis/jsak/blob/master/src/main/java/io/ortis/jsak/util/Pointer.java)
 Pointer of object (useful to access outer field from anonymous class)
 ```
-Pointer<Integer> p = Pointer.of(42);
+final Pointer<Integer> p = Pointer.of(42);
 new Thread(){
     @Override
     public void run()
     {
-        while(true){
-            System.out.println(p.getValue());			
+        while(true) {
+            synchonized(p) {
+                System.out.println(p.getValue());
+            }			
         }
     }
 }.start();
 
 while(true)
-    p.setValue(p.getValue() + 1);
+    synchonized(p) {
+        p.setValue(p.getValue() + 1);
+    }
 ```
+
+see [ConcurrentPointer](https://github.com/0rtis/jsak/blob/master/src/main/java/io/ortis/jsak/util/ConcurrentPointer.java) for built-in thread safe equivalent
 
 #### [UZ](https://github.com/0rtis/jsak/blob/master/src/main/java/io/ortis/jsak/math/UZ.java)
 Unsigned integer

@@ -37,8 +37,8 @@ public class Discretionary<T>
 
 	public T getValue()
 	{
-		if(!this.present)
-			throw new RuntimeException("Value is not present");
+		if (!this.present)
+			throw new IllegalStateException("Value is not present");
 
 		return this.value;
 	}
@@ -57,14 +57,11 @@ public class Discretionary<T>
 	@Override
 	public boolean equals(final Object o)
 	{
-		if(this == o)
+		if (this == o)
 			return true;
 
-		if(o instanceof Discretionary)
-		{
-			final Discretionary<?> other = (Discretionary<?>) o;
+		if (o instanceof final Discretionary<?> other)
 			return this.present == other.present && Objects.equals(this.value, other.value);
-		}
 
 		return false;
 	}
@@ -76,7 +73,7 @@ public class Discretionary<T>
 		sb.append("{");
 		sb.append("present=").append(this.present);
 
-		if(this.present)
+		if (this.present)
 			sb.append(", value=").append(this.value);
 
 		sb.append("}");

@@ -1,6 +1,7 @@
 package io.ortis.jsak.log;
 
-import org.junit.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.logging.Logger;
 
@@ -8,18 +9,6 @@ public class LogServiceTest
 {
 	private static final int BASE_TEST_RUNS = 1_000_000;
 
-
-	@Before
-	public void setUp() throws Exception
-	{
-
-	}
-
-	@After
-	public void tearDown() throws Exception
-	{
-
-	}
 
 	@Test
 	public void test() throws Exception
@@ -44,18 +33,7 @@ public class LogServiceTest
 
 		final Logger logger2 = logService.getLogger("test");
 
-		Assert.assertSame(logger, logger2);
+		Assertions.assertSame(logger, logger2);
 	}
 
-	@BeforeClass
-	public static void setUpBeforeClass()
-	{
-
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass()
-	{
-
-	}
 }

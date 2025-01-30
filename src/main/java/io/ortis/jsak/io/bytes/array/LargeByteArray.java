@@ -9,9 +9,9 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * RAM implementation of {@link WritableByteArray}. Max size 2^62 bytes.
+ * RAM implementation of {@link WritableByteStream}. Max size 2^62 bytes.
  */
-public class LargeByteArray implements WritableByteArray, Closeable
+public class LargeByteArray implements WritableByteStream, Closeable
 {
 	private final int minSectorLength;
 	private final List<byte[]> data;
@@ -265,12 +265,12 @@ public class LargeByteArray implements WritableByteArray, Closeable
 
 	public InputStream asInputStream()
 	{
-		return new ByteArrayInputStreamAdapter(this);
+		return new ByteInputStreamAdapter(this);
 	}
 
 	public OutputStream asOutputStream()
 	{
-		return new ByteArrayOutputStreamAdapter(this);
+		return new ByteOutputStreamAdapter(this);
 	}
 
 

@@ -1,13 +1,12 @@
 package io.ortis.jsak.io.file;
 
 
-import io.ortis.jsak.FormatUtils;
-import io.ortis.jsak.io.bytes.Bytes;
+import io.ortis.jsak.io.bytes.ByteArray;
+import io.ortis.jsak.util.FormatUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.WatchService;
 import java.time.Duration;
 import java.util.*;
@@ -27,7 +26,7 @@ public class FileContentMonitor implements Runnable
 
 	private final List<FileContentListener> listeners = new LinkedList<>();
 	private final Object lock = new Object();
-	private final Map<Path, Bytes> files;
+	private final Map<Path, ByteArray> files;
 
 	public FileContentMonitor(final Path filePath, final Duration pulse) throws IOException
 	{
@@ -50,7 +49,7 @@ public class FileContentMonitor implements Runnable
 		for (final Path path : filePaths)
 		{
 			if (!this.files.containsKey(path))
-				this.files.put(path, Bytes.wrap(Files.readAllBytes(path)));
+				this.files.put(path, ByteArray.wrap(Files.readAllBytes(path)));
 		}
 
 		this.pulse = pulse;
@@ -75,8 +74,8 @@ public class FileContentMonitor implements Runnable
 					final List<Path> paths = new LinkedList<>(this.files.keySet());
 					for (final Path path : paths)
 					{
-						final Bytes previousFileSerial = this.files.get(path);
-						final Bytes newFileSerial = Bytes.wrap(Files.readAllBytes(path));
+						final ByteArray previousFileSerial = this.files.get(path);
+						final ByteArray newFileSerial = ByteArray.wrap(Files.readAllBytes(path));
 						if (!newFileSerial.equals(previousFileSerial))
 						{
 							if (this.logger != null)
@@ -112,8 +111,8 @@ public class FileContentMonitor implements Runnable
 				{
 					if (this.logger != null)
 					{
-						this.logger.severe("Error while monitoring files\n" + FormatUtils.formatException(e));
-						this.logger.info(FormatUtils.formatDuration(COOLDOWN) + " before resuming files monitoring");
+						this.logger.severe("Error while monitoring files\n" + io.ortis.jsak.util.FormatUtils.formatException(e));
+						this.logger.info(io.ortis.jsak.util.FormatUtils.formatDuration(COOLDOWN) + " before resuming files monitoring");
 					} else
 						e.printStackTrace();
 
@@ -127,13 +126,13 @@ public class FileContentMonitor implements Runnable
 		} catch (final Exception e)
 		{
 			if (this.logger != null)
-				this.logger.severe("Critical error while monitoring files\n" + FormatUtils.formatException(e));
+				this.logger.severe("Critical error while monitoring files\n" + io.ortis.jsak.util.FormatUtils.formatException(e));
 			else
 				e.printStackTrace();
 		}
 	}
 
-	public Bytes getFileContent(final Path path)
+	public ByteArray getFileContent(final Path path)
 	{
 		synchronized (this.lock)
 		{

@@ -18,7 +18,7 @@ import java.util.UUID;
 public class LogFile implements LogService.Listener
 {
 	private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd_HHmmssSSS");
-	private static final DecimalFormat _4_LEADING_ZEROS_FORMATTER = new DecimalFormat("0000");
+	private static final DecimalFormat _5_LEADING_ZEROS_FORMATTER = new DecimalFormat("00000");
 
 	private final Path outputFilePath;
 	private final Long maxFileSize;
@@ -81,9 +81,9 @@ public class LogFile implements LogService.Listener
 		if (Files.exists(Path.of(sb.toString())))
 		{
 			String suffix = null;
-			for (int i = 0; i < 1000; i++)
+			for (int i = 0; i < 1_000_000; i++)
 			{
-				final String _suffix = "." + _4_LEADING_ZEROS_FORMATTER.format(i);
+				final String _suffix = "." + _5_LEADING_ZEROS_FORMATTER.format(i);
 				if (!Files.exists(Paths.get(sb + _suffix)))
 				{
 					suffix = _suffix;

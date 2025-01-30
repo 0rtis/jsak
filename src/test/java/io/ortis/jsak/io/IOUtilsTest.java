@@ -1,7 +1,8 @@
 package io.ortis.jsak.io;
 
 import io.ortis.jsak.TestUtils;
-import org.junit.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -13,17 +14,7 @@ public class IOUtilsTest
 	private static final int BASE_TEST_RUNS = 2_000_000;
 	private static final int MAX_BYTES_LENGTH = 256;
 
-	@Before
-	public void setUp() throws Exception
-	{
-
-	}
-
-	@After
-	public void tearDown() throws Exception
-	{
-
-	}
+	
 
 	@Test
 	public void testStream() throws Exception
@@ -44,14 +35,14 @@ public class IOUtilsTest
 
 
 					for (int i = 0; i < from; i++)
-						Assert.assertEquals(0, destination[i]);
+						Assertions.assertEquals(0, destination[i]);
 
 
 					for (int i = 0; i < read; i++)
-						Assert.assertEquals(data[i], destination[from + i]);
+						Assertions.assertEquals(data[i], destination[from + i]);
 
 					for (int i = from + read; read >= 0 && i < destination.length; i++)
-						Assert.assertEquals(0, destination[i]);
+						Assertions.assertEquals(0, destination[i]);
 				}
 
 				source.reset();
@@ -64,20 +55,20 @@ public class IOUtilsTest
 						final int read = IOUtils.stream(source, destination, buffer, from, buffer.length - from);
 
 						for (int i = 0; i < from; i++)
-							Assert.assertEquals(0, buffer[i]);
+							Assertions.assertEquals(0, buffer[i]);
 
 						if (buffer.length - from > 0)
 						{
 
 							if (data.length > 0)
-								Assert.assertEquals(read, data.length);
+								Assertions.assertEquals(read, data.length);
 							else
-								Assert.assertEquals(-1, read);
-							Assert.assertArrayEquals(data, destination.toByteArray());
+								Assertions.assertEquals(-1, read);
+							Assertions.assertArrayEquals(data, destination.toByteArray());
 						}
 
 						for (int i = from + read; read >= 0 && i < buffer.length; i++)
-							Assert.assertEquals(0, buffer[i]);
+							Assertions.assertEquals(0, buffer[i]);
 					}
 				}
 			}
@@ -110,7 +101,7 @@ public class IOUtilsTest
 							try
 							{
 								IOUtils.streamExact(length, source, destination, from);
-								Assert.fail("Should not allow destination too small for target read");
+								Assertions.fail("Should not allow destination too small for target read");
 							} catch (final Exception ignored)
 							{
 							}
@@ -118,7 +109,7 @@ public class IOUtilsTest
 							try
 							{
 								IOUtils.streamExact(length, source, destination, from);
-								Assert.fail("Should not allow to read more than available");
+								Assertions.fail("Should not allow to read more than available");
 							} catch (final Exception ignored)
 							{
 							}
@@ -127,13 +118,13 @@ public class IOUtilsTest
 							IOUtils.streamExact(length, source, destination, from);
 
 							for (int i = 0; i < from; i++)
-								Assert.assertEquals(0, destination[i]);
+								Assertions.assertEquals(0, destination[i]);
 
 							for (int i = 0; i < length; i++)
-								Assert.assertEquals(data[i], destination[from + i]);
+								Assertions.assertEquals(data[i], destination[from + i]);
 
 							for (int i = from + length; i < destination.length; i++)
-								Assert.assertEquals(0, destination[i]);
+								Assertions.assertEquals(0, destination[i]);
 						}
 					}
 
@@ -145,7 +136,7 @@ public class IOUtilsTest
 							try
 							{
 								IOUtils.streamExact(length, source, destination);
-								Assert.fail("Should not allow destination too small for target read");
+								Assertions.fail("Should not allow destination too small for target read");
 							} catch (final Exception ignored)
 							{
 							}
@@ -153,7 +144,7 @@ public class IOUtilsTest
 							try
 							{
 								IOUtils.streamExact(length, source, destination);
-								Assert.fail("Should not allow to read more than available");
+								Assertions.fail("Should not allow to read more than available");
 							} catch (final Exception ignored)
 							{
 							}
@@ -162,10 +153,10 @@ public class IOUtilsTest
 							IOUtils.streamExact(length, source, destination);
 
 							for (int i = 0; i < length; i++)
-								Assert.assertEquals(data[i], destination[i]);
+								Assertions.assertEquals(data[i], destination[i]);
 
 							for (int i = length; i < destination.length; i++)
-								Assert.assertEquals(0, destination[i]);
+								Assertions.assertEquals(0, destination[i]);
 						}
 					}
 
@@ -186,7 +177,7 @@ public class IOUtilsTest
 							try
 							{
 								IOUtils.streamExact(length, source, destination, buffer, bufferFrom, bufferLength);
-								Assert.fail("Should not allow buffer length below 1");
+								Assertions.fail("Should not allow buffer length below 1");
 							} catch (final Exception ignored)
 							{
 							}
@@ -194,7 +185,7 @@ public class IOUtilsTest
 							try
 							{
 								IOUtils.streamExact(length, source, destination, buffer, bufferFrom, bufferLength);
-								Assert.fail("Should not allow to read more than available");
+								Assertions.fail("Should not allow to read more than available");
 							} catch (final Exception ignored)
 							{
 							}
@@ -203,10 +194,10 @@ public class IOUtilsTest
 							IOUtils.streamExact(length, source, destination, buffer, bufferFrom, bufferLength);
 							final byte[] destinationb = destination.toByteArray();
 
-							Assert.assertEquals(length, destinationb.length);
+							Assertions.assertEquals(length, destinationb.length);
 
 							for (int i = 0; i < length; i++)
-								Assert.assertEquals(data[i], destinationb[i]);
+								Assertions.assertEquals(data[i], destinationb[i]);
 						}
 
 						source.reset();
@@ -216,7 +207,7 @@ public class IOUtilsTest
 							try
 							{
 								IOUtils.streamExact(length, source, destination, buffer);
-								Assert.fail("Should not allow buffer length below 1");
+								Assertions.fail("Should not allow buffer length below 1");
 							} catch (final Exception ignored)
 							{
 							}
@@ -224,7 +215,7 @@ public class IOUtilsTest
 							try
 							{
 								IOUtils.streamExact(length, source, destination, buffer);
-								Assert.fail("Should not allow to read more than available");
+								Assertions.fail("Should not allow to read more than available");
 							} catch (final Exception ignored)
 							{
 							}
@@ -233,10 +224,10 @@ public class IOUtilsTest
 							IOUtils.streamExact(length, source, destination, buffer);
 							final byte[] destinationb = destination.toByteArray();
 
-							Assert.assertEquals(length, destinationb.length);
+							Assertions.assertEquals(length, destinationb.length);
 
 							for (int i = 0; i < length; i++)
-								Assert.assertEquals(data[i], destinationb[i]);
+								Assertions.assertEquals(data[i], destinationb[i]);
 						}
 					}
 				}
@@ -244,15 +235,4 @@ public class IOUtilsTest
 		}
 	}
 
-	@BeforeClass
-	public static void setUpBeforeClass()
-	{
-
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass()
-	{
-
-	}
 }

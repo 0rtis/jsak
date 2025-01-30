@@ -3,24 +3,14 @@ package io.ortis.jsak.io.bytes;
 
 import io.ortis.jsak.TestUtils;
 import io.ortis.jsak.math.UZ;
-import org.junit.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;
 import java.util.Random;
 
 public class ByteUtilsTest
 {
-	@Before
-	public void setUp() throws Exception
-	{
-
-	}
-
-	@After
-	public void tearDown() throws Exception
-	{
-
-	}
 
 	@Test
 	public void testHexadecimal()
@@ -32,19 +22,19 @@ public class ByteUtilsTest
 		{
 			final byte[] bytes = ByteUtils.zToBytes(i, 6);
 			final String hex = ByteUtils.bytesToHexadecimal(bytes);
-			Assert.assertArrayEquals(bytes, ByteUtils.hexadecimalToBytes(hex));
+			Assertions.assertArrayEquals(bytes, ByteUtils.hexadecimalToBytes(hex));
 			final BigInteger bi = new BigInteger(hex, 16);
 			final BigInteger uz = ByteUtils.bytesToUnsignedZ(bytes);
-			Assert.assertEquals(bi, uz);
+			Assertions.assertEquals(bi, uz);
 		}
 	}
 
 	private void hexTest(final byte[] bytes, final String hex)
 	{
-		Assert.assertArrayEquals(bytes, ByteUtils.hexadecimalToBytes(hex));
-		Assert.assertArrayEquals(ByteUtils.hexadecimalToBytes(ByteUtils.bytesToHexadecimal(ByteUtils.hexadecimalToBytes(hex))),
+		Assertions.assertArrayEquals(bytes, ByteUtils.hexadecimalToBytes(hex));
+		Assertions.assertArrayEquals(ByteUtils.hexadecimalToBytes(ByteUtils.bytesToHexadecimal(ByteUtils.hexadecimalToBytes(hex))),
 				ByteUtils.hexadecimalToBytes(hex));
-		Assert.assertEquals(ByteUtils.bytesToHexadecimal(ByteUtils.hexadecimalToBytes(ByteUtils.bytesToHexadecimal(bytes))),
+		Assertions.assertEquals(ByteUtils.bytesToHexadecimal(ByteUtils.hexadecimalToBytes(ByteUtils.bytesToHexadecimal(bytes))),
 				ByteUtils.bytesToHexadecimal(bytes));
 	}
 
@@ -59,17 +49,17 @@ public class ByteUtilsTest
 			random.nextBytes(bytes);
 
 			// copy
-			Assert.assertArrayEquals(bytes, ByteUtils.copy(bytes));
-			Assert.assertArrayEquals(bytes, ByteUtils.copy(bytes, 0, bytes.length));
+			Assertions.assertArrayEquals(bytes, ByteUtils.copy(bytes));
+			Assertions.assertArrayEquals(bytes, ByteUtils.copy(bytes, 0, bytes.length));
 
 			{// bits
 				final boolean[] bits = ByteUtils.bytesToBits(bytes);
 				final String bitString = ByteUtils.bytesToBitString(bytes);
-				Assert.assertEquals(bits.length, bitString.length());
+				Assertions.assertEquals(bits.length, bitString.length());
 				for (int j = 0; j < bits.length; j++)
-					Assert.assertEquals(bits[j], bitString.charAt(j) == '1');
+					Assertions.assertEquals(bits[j], bitString.charAt(j) == '1');
 
-				Assert.assertArrayEquals(bytes, ByteUtils.bitsToBytes(bits));
+				Assertions.assertArrayEquals(bytes, ByteUtils.bitsToBytes(bits));
 
 				if (bytes.length == 4)
 				{
@@ -77,21 +67,21 @@ public class ByteUtilsTest
 					final int diff = bitString.length() - expected.length();
 
 					for (int j = 0; j < diff; j++)
-						Assert.assertEquals(bitString.charAt(j), '0');
+						Assertions.assertEquals(bitString.charAt(j), '0');
 
-					Assert.assertEquals(expected, bitString.substring(diff));
+					Assertions.assertEquals(expected, bitString.substring(diff));
 				}
 			}
 
 			// bytes to unsigned
 			final short[] ubytes = ByteUtils.bytesToUnsignedShortArray(bytes, new short[bytes.length]);
-			Assert.assertEquals(bytes.length, ubytes.length);
+			Assertions.assertEquals(bytes.length, ubytes.length);
 			for (int j = 0; j < bytes.length; j++)
 			{
 				final int expected = Byte.toUnsignedInt(bytes[j]);
 				final int e = bytes[j] & 0xff;
-				Assert.assertEquals(expected, ubytes[j]);
-				Assert.assertEquals(expected, ByteUtils.byteToUnsignedShort(bytes[j]));
+				Assertions.assertEquals(expected, ubytes[j]);
+				Assertions.assertEquals(expected, ByteUtils.byteToUnsignedShort(bytes[j]));
 			}
 
 			// pack
@@ -101,13 +91,13 @@ public class ByteUtilsTest
 				bytes[1] = ByteUtils.BITS_0;
 				BigInteger full = new BigInteger(bytes);
 				BigInteger packed = new BigInteger(ByteUtils.packSignedZBytes(bytes, bytes.length - 1));
-				Assert.assertEquals(full, packed);
+				Assertions.assertEquals(full, packed);
 
 				bytes[0] = ByteUtils.BITS_1;
 				bytes[1] = ByteUtils.BITS_1;
 				full = new BigInteger(bytes);
 				packed = new BigInteger(ByteUtils.packSignedZBytes(bytes, bytes.length - 1));
-				Assert.assertEquals(full, packed);
+				Assertions.assertEquals(full, packed);
 
 			}
 
@@ -128,7 +118,7 @@ public class ByteUtilsTest
 				try
 				{
 					intTest(i, 1);
-					Assert.fail("Should not allow underflow");
+					Assertions.fail("Should not allow underflow");
 				} catch (final Exception e)
 				{
 
@@ -140,7 +130,7 @@ public class ByteUtilsTest
 				try
 				{
 					intTest(i, 2);
-					Assert.fail("Should not allow underflow");
+					Assertions.fail("Should not allow underflow");
 				} catch (final Exception e)
 				{
 
@@ -216,62 +206,31 @@ public class ByteUtilsTest
 		System.out.println(ByteUtils.bytesToZ(ByteUtils.bitsToBytes(bb)));
 		*/
 
-		Assert.assertArrayEquals(iBytes, biBytes);
+		Assertions.assertArrayEquals(iBytes, biBytes);
 
 		if (i == 0)
 			for (byte b : iBytes)
 				if (b != 0)
-					Assert.fail("Serial of 0 should contains zeros");
+					Assertions.fail("Serial of 0 should contains zeros");
 
 
 		// signed
-		Assert.assertEquals(i, ByteUtils.bytesToZ(iBytes).intValueExact());
-		Assert.assertEquals(i, ByteUtils.bytesToZ(iBytes, 0, iBytes.length).intValueExact());
+		Assertions.assertEquals(i, ByteUtils.bytesToZ(iBytes).intValueExact());
+		Assertions.assertEquals(i, ByteUtils.bytesToZ(iBytes, 0, iBytes.length).intValueExact());
 
 		// BigInteger
-		Assert.assertEquals(bi, ByteUtils.bytesToZ(biBytes));
-		Assert.assertEquals(bi, ByteUtils.bytesToZ(biBytes, 0, biBytes.length));
+		Assertions.assertEquals(bi, ByteUtils.bytesToZ(biBytes));
+		Assertions.assertEquals(bi, ByteUtils.bytesToZ(biBytes, 0, biBytes.length));
 
 		if (i >= 0)
 		{
 			// unsigned
-			Assert.assertEquals(bi, ByteUtils.bytesToUnsignedZ(iBytes));
-			Assert.assertEquals(bi, ByteUtils.bytesToUnsignedZ(iBytes, 0, iBytes.length));
+			Assertions.assertEquals(bi, ByteUtils.bytesToUnsignedZ(iBytes));
+			Assertions.assertEquals(bi, ByteUtils.bytesToUnsignedZ(iBytes, 0, iBytes.length));
 
-			// UZ
-			final UZ uz = UZ.of(i);
-			final byte[] uzBytes = ByteUtils.uzToBytes(uz, serialLength);
 
-			final UZ uzb = new UZ(Bytes.copy(uzBytes));
-			Assert.assertEquals(uz, uzb);
-
-			Assert.assertArrayEquals(iBytes, uzBytes);
-			Assert.assertEquals(uz, ByteUtils.bytesToUZ(uzBytes));
-			Assert.assertEquals(uz, ByteUtils.bytesToUZ(uzBytes, 0, uzBytes.length));
-		} else
-		{
-			final UZ uz = new UZ(Bytes.wrap(bi.toByteArray()));
-			Assert.assertArrayEquals(bi.toByteArray(), uz.asBytes().toByteArray());
-			Assert.assertEquals(uz.toBigInteger(), new BigInteger(ByteUtils.bytesToHexadecimal(bi.toByteArray()), 16));
-
-			final byte[] uzBytes = ByteUtils.uzToBytes(uz, serialLength);
-			final UZ uz2 = new UZ(Bytes.wrap(uzBytes));
-			Assert.assertEquals(uz, uz2);
-			Assert.assertEquals(uz.hashCode(), uz2.hashCode());
-			Assert.assertEquals(serialLength, uz2.asBytes().length());
 		}
 	}
 
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception
-	{
-
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception
-	{
-
-	}
 }

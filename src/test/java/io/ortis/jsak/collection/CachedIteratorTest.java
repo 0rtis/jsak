@@ -1,27 +1,14 @@
 package io.ortis.jsak.collection;
 
-import io.ortis.jsak.TestUtils;
-import io.ortis.jsak.io.IOUtils;
-import org.junit.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class CachedIteratorTest
 {
-
-	@Before
-	public void setUp() throws Exception
-	{
-
-	}
-
-	@After
-	public void tearDown() throws Exception
-	{
-
-	}
 
 	@Test
 	public void test() throws Exception
@@ -37,22 +24,10 @@ public class CachedIteratorTest
 		while (iterator.hasNext())
 		{
 			final Integer value = iterator.next();
-			Assert.assertEquals(value, cachedIterator.next());
-			Assert.assertEquals(index++, cachedIterator.getIndex());
-			Assert.assertEquals(value, cachedIterator.getCurrent());
+			Assertions.assertEquals(value, cachedIterator.next());
+			Assertions.assertEquals(index++, cachedIterator.getIndex());
+			Assertions.assertEquals(value, cachedIterator.getCurrent());
 		}
 	}
 
-
-	@BeforeClass
-	public static void setUpBeforeClass()
-	{
-
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass()
-	{
-
-	}
 }

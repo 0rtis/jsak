@@ -1,11 +1,13 @@
 package io.ortis.jsak.math;
 
 import io.ortis.jsak.TestUtils;
+import io.ortis.jsak.io.bytes.ByteArray;
 import io.ortis.jsak.io.bytes.ByteUtils;
-import io.ortis.jsak.io.bytes.Bytes;
-import org.junit.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -15,18 +17,7 @@ public class UZTest
 {
 	private static final int BASE_TEST_RUNS = 1_000_000;
 
-
-	@Before
-	public void setUp() throws Exception
-	{
-
-	}
-
-	@After
-	public void tearDown() throws Exception
-	{
-
-	}
+	
 
 	@Test
 	public void test()
@@ -47,86 +38,91 @@ public class UZTest
 
 			// UZ to BigInteger
 
-			Assert.assertEquals(bi, uz.toBigInteger());
-			Assert.assertEquals(bi.hashCode(), uz.toBigInteger().hashCode());
-			Assert.assertEquals(bi.add(BigInteger.ONE), uz.add(UZ.ONE).toBigInteger());
-			Assert.assertEquals(z, uz.toBigInteger().longValueExact());
-			Assert.assertEquals(z + 1, uz.add(UZ.ONE).toBigInteger().longValueExact());
+			Assertions.assertEquals(bi, uz.toBigInteger());
+			Assertions.assertEquals(bi.hashCode(), uz.toBigInteger().hashCode());
+			Assertions.assertEquals(bi.add(BigInteger.ONE), uz.add(UZ.ONE).toBigInteger());
+			Assertions.assertEquals(z, uz.toBigInteger().longValueExact());
+			Assertions.assertEquals(z + 1, uz.add(UZ.ONE).toBigInteger().longValueExact());
 
 			// UZ from pack()
 			{
 				final UZ fromPack = uz.packBytes(uz.byteLength() + 3);
-				Assert.assertEquals(fromPack, uz);
-				Assert.assertEquals(fromPack.hashCode(), uz.hashCode());
-				Assert.assertEquals(uz.toBigInteger(), fromPack.toBigInteger());
-				Assert.assertEquals(UZ.ZERO, uz.subtract(fromPack));
+				Assertions.assertEquals(fromPack, uz);
+				Assertions.assertEquals(fromPack.hashCode(), uz.hashCode());
+				Assertions.assertEquals(uz.toBigInteger(), fromPack.toBigInteger());
+				Assertions.assertEquals(UZ.ZERO, uz.subtract(fromPack));
+				Assertions.assertEquals(uz, UZ.of(uz.toBytes(uz.byteLength() + 3)));
 			}
 
 			{// UZ from Z
 				final UZ uzFromZ = new UZ(z);
 
-				Assert.assertEquals(uz, uzFromZ);
-				Assert.assertEquals(uz.hashCode(), uzFromZ.hashCode());
-				Assert.assertEquals(uz.toBigInteger(), uzFromZ.toBigInteger());
-				Assert.assertEquals(uz.asBytes(), uzFromZ.asBytes());
-				Assert.assertArrayEquals(uz.asBytes().toByteArray(), uzFromZ.asBytes().toByteArray());
+				Assertions.assertEquals(uz, uzFromZ);
+				Assertions.assertEquals(uz.hashCode(), uzFromZ.hashCode());
+				Assertions.assertEquals(uz.toBigInteger(), uzFromZ.toBigInteger());
+				Assertions.assertEquals(uz.toBytes(), uzFromZ.toBytes());
+				Assertions.assertArrayEquals(uz.toBytes().toArray(), uzFromZ.toBytes().toArray());
+				Assertions.assertEquals(uz, UZ.of(uz.toBytes(uz.byteLength() + 3)));
 
-				Assert.assertEquals(UZ.ZERO, uz.subtract(uzFromZ));
+				Assertions.assertEquals(UZ.ZERO, uz.subtract(uzFromZ));
 			}
 
 			{// UZ from BigInteger
 				final UZ uzFromBi = new UZ(bi);
-				Assert.assertEquals(uz.hashCode(), uzFromBi.hashCode());
-				Assert.assertEquals(uz, uzFromBi);
-				Assert.assertEquals(uz.toBigInteger(), uzFromBi.toBigInteger());
-				Assert.assertEquals(uz.asBytes(), uzFromBi.asBytes());
-				Assert.assertArrayEquals(uz.asBytes().toByteArray(), uzFromBi.asBytes().toByteArray());
+				Assertions.assertEquals(uz.hashCode(), uzFromBi.hashCode());
+				Assertions.assertEquals(uz, uzFromBi);
+				Assertions.assertEquals(uz.toBigInteger(), uzFromBi.toBigInteger());
+				Assertions.assertEquals(uz.toBytes(), uzFromBi.toBytes());
+				Assertions.assertArrayEquals(uz.toBytes().toArray(), uzFromBi.toBytes().toArray());
+				Assertions.assertEquals(uz, UZ.of(uz.toBytes(uz.byteLength() + 3)));
 
-				Assert.assertEquals(UZ.ZERO, uz.subtract(uzFromBi));
+				Assertions.assertEquals(UZ.ZERO, uz.subtract(uzFromBi));
 			}
 
 			{// UZ from BigInteger bytes
-				final UZ uzFromBiBytes = new UZ(Bytes.wrap(bi.toByteArray()));
-				Assert.assertEquals(uz.hashCode(), uzFromBiBytes.hashCode());
-				Assert.assertEquals(uz, uzFromBiBytes);
-				Assert.assertEquals(uz.toBigInteger(), uzFromBiBytes.toBigInteger());
+				final UZ uzFromBiBytes = new UZ(ByteArray.wrap(bi.toByteArray()));
+				Assertions.assertEquals(uz.hashCode(), uzFromBiBytes.hashCode());
+				Assertions.assertEquals(uz, uzFromBiBytes);
+				Assertions.assertEquals(uz.toBigInteger(), uzFromBiBytes.toBigInteger());
+				Assertions.assertEquals(uz, UZ.of(uz.toBytes(uz.byteLength() + 3)));
 
 				/* Bytes might be different since UZ does not trim the leading zeros with constructor UZ(Bytes) */
-				//Assert.assertEquals(uz.toBytes(), uzFromBiBytes.toBytes());
-				//Assert.assertArrayEquals(uz.toBytes().toByteArray(), uzFromBiBytes.toBytes().toByteArray());
+				//Assertions.assertEquals(uz.toBytes(), uzFromBiBytes.toBytes());
+				//Assertions.assertArrayEquals(uz.toBytes().toByteArray(), uzFromBiBytes.toBytes().toByteArray());
 
-				Assert.assertEquals(UZ.ZERO, uz.subtract(uzFromBiBytes));
+				Assertions.assertEquals(UZ.ZERO, uz.subtract(uzFromBiBytes));
 			}
 
 			{// UZ from Bytes
-				final UZ uzFromBytes = new UZ(uz.asBytes());
-				Assert.assertEquals(uz.hashCode(), uzFromBytes.hashCode());
-				Assert.assertEquals(uz, uzFromBytes);
-				Assert.assertEquals(uz.toBigInteger(), uzFromBytes.toBigInteger());
-				Assert.assertEquals(uz.asBytes(), uzFromBytes.asBytes());
-				Assert.assertArrayEquals(uz.asBytes().toByteArray(), uzFromBytes.asBytes().toByteArray());
+				final UZ uzFromBytes = new UZ(uz.toBytes());
+				Assertions.assertEquals(uz.hashCode(), uzFromBytes.hashCode());
+				Assertions.assertEquals(uz, uzFromBytes);
+				Assertions.assertEquals(uz.toBigInteger(), uzFromBytes.toBigInteger());
+				Assertions.assertEquals(uz.toBytes(), uzFromBytes.toBytes());
+				Assertions.assertArrayEquals(uz.toBytes().toArray(), uzFromBytes.toBytes().toArray());
 
-				Assert.assertEquals(UZ.ZERO, uz.subtract(uzFromBytes));
+				Assertions.assertEquals(UZ.ZERO, uz.subtract(uzFromBytes));
 			}
 
 			{// UZ from ByteUtils bytes
-				final UZ uzFromZBytes = new UZ(Bytes.wrap(ByteUtils.zToBytes(z, 8)));
-				Assert.assertEquals(uz.hashCode(), uzFromZBytes.hashCode());
-				Assert.assertEquals(uz, uzFromZBytes);
-				Assert.assertEquals(uz.toBigInteger(), uzFromZBytes.toBigInteger());
+				final UZ uzFromZBytes = new UZ(ByteArray.wrap(ByteUtils.zToBytes(z, 8)));
+				Assertions.assertEquals(uz.hashCode(), uzFromZBytes.hashCode());
+				Assertions.assertEquals(uz, uzFromZBytes);
+				Assertions.assertEquals(uz.toBigInteger(), uzFromZBytes.toBigInteger());
+				Assertions.assertEquals(uz, UZ.of(uz.toBytes(uz.byteLength() + 3)));
 
 				/* Bytes might be different since UZ does not trim the leading zeros with constructor UZ(Bytes) */
-				//Assert.assertEquals(uz.toBytes(), uzFromZBytes.toBytes());
-				//Assert.assertArrayEquals(uz.toBytes().toByteArray(), uzFromZBytes.toBytes().toByteArray());
+				//Assertions.assertEquals(uz.toBytes(), uzFromZBytes.toBytes());
+				//Assertions.assertArrayEquals(uz.toBytes().toByteArray(), uzFromZBytes.toBytes().toByteArray());
 
-				Assert.assertEquals(UZ.ZERO, uz.subtract(uzFromZBytes));
+				Assertions.assertEquals(UZ.ZERO, uz.subtract(uzFromZBytes));
 			}
 		}
 
 		try
 		{
 			new UZ(-1);
-			Assert.fail("Should not accept negative number");
+			Assertions.fail("Should not accept negative number");
 		} catch(final Exception ignored)
 		{
 		}
@@ -139,21 +135,11 @@ public class UZTest
 		uzs.sort(null);
 		bis.sort(null);
 
-		Assert.assertEquals(uzs.size(), bis.size());
+		Assertions.assertEquals(uzs.size(), bis.size());
 
 		for(int i = 0; i < bis.size(); i++)
-			Assert.assertEquals(bis.get(i), uzs.get(i).toBigInteger());
+			Assertions.assertEquals(bis.get(i), uzs.get(i).toBigInteger());
 	}
 
-	@BeforeClass
-	public static void setUpBeforeClass()
-	{
 
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass()
-	{
-
-	}
 }

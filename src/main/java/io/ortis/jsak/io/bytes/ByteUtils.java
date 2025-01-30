@@ -1,10 +1,8 @@
 package io.ortis.jsak.io.bytes;
 
-import io.ortis.jsak.math.UZ;
 
 import java.math.BigInteger;
 import java.util.Arrays;
-import java.util.logging.Level;
 
 /**
  * Helper functions for {@link Byte}
@@ -54,29 +52,6 @@ public abstract class ByteUtils
 		return packSignedZBytes(data, length);
 	}
 
-	public static byte[] uzToBytes(final long value, final int length)
-	{
-		return uzToBytes(UZ.of(value), length);
-	}
-
-	public static byte[] uzToBytes(final UZ value, final int length)
-	{
-		final Bytes bytes = value.asBytes();
-		final int diff = bytes.length() - length;
-		if (diff == 0)
-			return bytes.toByteArray();
-
-		if (diff > 0)
-			throw new IndexOutOfBoundsException("Cannot fit bytes in given length");
-
-		// copy uz bytes to array pre-filled with 0
-		final byte[] filled = new byte[length];
-		System.arraycopy(bytes.toByteArray(), 0, filled, -diff, bytes.length());
-		return filled;
-		// BigInteger is signed so it will add bits(00000000) on the right side in order to insure the number is positive when deserializing
-		//return zToBytes(value.toBigInteger(), length);
-	}
-
 	public static BigInteger bytesToZ(final byte[] value)
 	{
 		return bytesToZ(value, 0, value.length);
@@ -107,15 +82,6 @@ public abstract class ByteUtils
 		return new BigInteger(buffer);
 	}
 
-	public static UZ bytesToUZ(final byte[] value)
-	{
-		return bytesToUZ(value, 0, value.length);
-	}
-
-	public static UZ bytesToUZ(final byte[] value, final int offset, final int length)
-	{
-		return new UZ(Bytes.copy(value, offset, length));
-	}
 
 	public static BigInteger bytesToUnsignedZ(final byte[] value)
 	{
@@ -250,60 +216,6 @@ public abstract class ByteUtils
 		return (short) (b & 0xff);
 	}
 
-		/*
-	public static int fillingZeros(final byte[] bytes)
-	{
-		return fillingZeros(bytes, 0, bytes.length);
-	}
-
-
-	public static int fillingZeros(final byte[] bytes, final int offset, final int length)
-	{
-		int fillingZeros = -1;
-		for(int i = 0; i < length; i++)
-			if(bytes[i + offset] == 0)
-				fillingZeros++;
-			else
-				break;
-
-		return Math.max(fillingZeros, 0);
-	}*/
-
-
-	/*public static byte[] pack(final byte[] bytes)
-	{
-		final int fillingZeros = fillingZeros(bytes);
-
-		if(fillingZeros == 0)
-			return Arrays.copyOf(bytes, bytes.length);
-
-		return pack(bytes, bytes.length - fillingZeros);
-	}
-
-
-	public static byte[] pack(final byte[] zBytes, final int packLength)
-	{
-		final int diff = zBytes.length - packLength;
-		final byte[] pack = new byte[packLength];
-
-		if(diff > 0)
-		{// bytes > pack
-
-			final byte[] trim = new byte[diff];
-			System.arraycopy(zBytes, 0, trim, 0, diff);
-
-			final BigInteger bi = new BigInteger(trim);
-			if(bi.compareTo(BigInteger.ZERO) != 0)
-				throw new IndexOutOfBoundsException("Cannot fit bytes in given length");
-
-			System.arraycopy(zBytes, diff, pack, 0, packLength);
-		}
-		else
-			System.arraycopy(zBytes, 0, pack, -diff, zBytes.length); // bytes < pack (leading space is filled with zeros)
-
-		return pack;
-	}
-*/
 
 
 	/**

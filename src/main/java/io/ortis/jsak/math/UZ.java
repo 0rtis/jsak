@@ -1,7 +1,7 @@
 package io.ortis.jsak.math;
 
 import io.ortis.jsak.io.bytes.ByteArray;
-import io.ortis.jsak.io.bytes.ByteUtils;
+import io.ortis.jsak.io.bytes.ByteUtil;
 import io.ortis.jsak.io.bytes.Bytes;
 
 import java.math.BigInteger;
@@ -64,7 +64,7 @@ public class UZ implements Comparable<UZ>
 		this.byteArray = ByteArray.copy(bytes);
 		if (this.byteArray.length() <= 0)
 			throw new IllegalArgumentException("Bytes is empty");
-		this.uz = ByteUtils.bytesToUnsignedZ(this.byteArray.toArray());
+		this.uz = ByteUtil.bytesToUnsignedZ(this.byteArray.toArray());
 
 		this.hashCode = this.uz.hashCode();
 	}

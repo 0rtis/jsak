@@ -1,7 +1,7 @@
 package io.ortis.jsak.io.bytes.array;
 
-import io.ortis.jsak.TestUtils;
-import io.ortis.jsak.io.IOUtils;
+import io.ortis.jsak.TestUtil;
+import io.ortis.jsak.io.IoUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -17,8 +17,8 @@ public class LargeByteArrayTest
 	@Test
 	public void testIO() throws IOException
 	{
-		final Random random = TestUtils.getDeterministicRandom();
-		final int runs = TestUtils.computeTestRuns(BASE_RUNS);
+		final Random random = TestUtil.getDeterministicRandom();
+		final int runs = TestUtil.computeTestRuns(BASE_RUNS);
 		for (int run = 0; run < runs; run++)
 		{
 			final byte[] data1 = new byte[run == 0 ? 0 : random.nextInt(MAX_BYTE_LENGTH)];
@@ -63,7 +63,7 @@ public class LargeByteArrayTest
 
 		try (final ByteArrayOutputStream baos = new ByteArrayOutputStream())
 		{//write data1 in baos
-			IOUtils.stream(inputStream, baos, buffer);
+			IoUtil.stream(inputStream, baos, buffer);
 			Assertions.assertArrayEquals(data1, baos.toByteArray());
 		}
 
@@ -78,7 +78,7 @@ public class LargeByteArrayTest
 
 		try (final ByteArrayInputStream bais = new ByteArrayInputStream(data2))
 		{// write data 2 in large byte array
-			IOUtils.stream(bais, outputStream, buffer);
+			IoUtil.stream(bais, outputStream, buffer);
 		}
 
 		Assertions.assertEquals(maxDataLength, lba.length());

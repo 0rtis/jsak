@@ -3,8 +3,13 @@ package io.ortis.jsak.concurrency;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class Threads
+public final class Threads
 {
+
+	private Threads()
+	{
+	}
+
 	public static void trySleep(final long ms)
 	{
 		try

@@ -4,8 +4,12 @@ import java.math.BigInteger;
 import java.time.Duration;
 import java.util.List;
 
-public class InputValidator
+public final class InputValidator
 {
+
+	private InputValidator()
+	{
+	}
 
 	public static void check(final boolean value, final String message)
 	{
@@ -147,7 +151,7 @@ public class InputValidator
 	public static int checkNonNegative(final int value, final String name)
 	{
 		if (value < 0)
-			throw new IllegalArgumentException("'%s' is less than 0:\t%s".formatted(name, value));
+			throw new IllegalArgumentException("'%s' is less than 0: %s".formatted(name, value));
 		return value;
 	}
 
@@ -161,7 +165,7 @@ public class InputValidator
 	public static long checkNonNegative(final long value, final String name)
 	{
 		if (value < 0)
-			throw new IllegalArgumentException("%s is less than 0:\t%s".formatted(name, value));
+			throw new IllegalArgumentException("%s is less than 0: %s".formatted(name, value));
 		return value;
 	}
 
@@ -177,7 +181,7 @@ public class InputValidator
 		if (value == null)
 			throw new IllegalArgumentException("'%s' is null".formatted(name));
 		if (value.signum() < 0)
-			throw new IllegalArgumentException("%s is less than 0:\t%s".formatted(name, value));
+			throw new IllegalArgumentException("%s is less than 0: %s".formatted(name, value));
 		return value;
 	}
 
@@ -193,7 +197,7 @@ public class InputValidator
 		if (value == null)
 			throw new IllegalArgumentException("'%s' is null".formatted(name));
 		if (value.isNegative())
-			throw new IllegalArgumentException("%s is less than 0:\t%s".formatted(name, value));
+			throw new IllegalArgumentException("%s is less than 0: %s".formatted(name, value));
 		return value;
 	}
 
@@ -207,7 +211,7 @@ public class InputValidator
 	public static int checkStrictlyPositive(final int value, final String name)
 	{
 		if (value <= 0)
-			throw new IllegalArgumentException("'%s' is less than 1:\t%s".formatted(name, value));
+			throw new IllegalArgumentException("'%s' is less than 1: %s".formatted(name, value));
 		return value;
 	}
 
@@ -221,7 +225,7 @@ public class InputValidator
 	public static long checkStrictlyPositive(final long value, final String name)
 	{
 		if (value <= 0)
-			throw new IllegalArgumentException("'%s' is less than 1:\t%s".formatted(name, value));
+			throw new IllegalArgumentException("'%s' is less than 1: %s".formatted(name, value));
 		return value;
 	}
 
@@ -237,7 +241,7 @@ public class InputValidator
 		if (value == null)
 			throw new IllegalArgumentException("'%s' is null".formatted(name));
 		if (value.signum() <= 0)
-			throw new IllegalArgumentException("'%s' is less than 1:\t%s".formatted(name, value));
+			throw new IllegalArgumentException("'%s' is less than 1: %s".formatted(name, value));
 		return value;
 	}
 
@@ -253,7 +257,7 @@ public class InputValidator
 		if (includedLowerBound >= excludedUpperBound)
 			throw new IllegalArgumentException("Invalid range [%s, %s)".formatted(includedLowerBound, excludedUpperBound));
 		if (value < includedLowerBound || value >= excludedUpperBound)
-			throw new IllegalArgumentException("'%s' is out of range [%s, %s):\t%s".formatted(name, includedLowerBound, excludedUpperBound, value));
+			throw new IllegalArgumentException("'%s' is out of range [%s, %s): %s".formatted(name, includedLowerBound, excludedUpperBound, value));
 		return value;
 	}
 
@@ -272,7 +276,7 @@ public class InputValidator
 		if (includedLowerBound >= excludedUpperBound)
 			throw new IllegalArgumentException("Invalid range [%s, %s)".formatted(includedLowerBound, excludedUpperBound));
 		if (value < includedLowerBound || value >= excludedUpperBound)
-			throw new IllegalArgumentException("'%s' is out of range [%s, %s):\t%s".formatted(name, includedLowerBound, excludedUpperBound, value));
+			throw new IllegalArgumentException("'%s' is out of range [%s, %s): %s".formatted(name, includedLowerBound, excludedUpperBound, value));
 		return value;
 	}
 
@@ -294,7 +298,7 @@ public class InputValidator
 		if (value == null)
 			throw new IllegalArgumentException("'%s' is null".formatted(name));
 		if (value.compareTo(includedLowerBound) < 0 || value.compareTo(excludedUpperBound) >= 0)
-			throw new IllegalArgumentException("'%s' is out of range [%s, %s):\t%s".formatted(name, includedLowerBound, excludedUpperBound, value));
+			throw new IllegalArgumentException("'%s' is out of range [%s, %s): %s".formatted(name, includedLowerBound, excludedUpperBound, value));
 		return value;
 	}
 
@@ -310,6 +314,77 @@ public class InputValidator
 		return value;
 	}
 
+	public static boolean[] checkLength(final boolean[] array, final int length, final String name)
+	{
+		if (array == null || array.length != length)
+			throw new IllegalArgumentException("'%s' length is not %s".formatted(name, length));
+		return array;
+	}
+
+	public static <E extends Exception> boolean[] checkLength(final boolean[] array, final int length, final E validationFailedException) throws E
+	{
+		if (array == null || array.length != length)
+			throw validationFailedException;
+		return array;
+	}
+
+
+	public static byte[] checkLength(final byte[] array, final int length, final String name)
+	{
+		if (array == null || array.length != length)
+			throw new IllegalArgumentException("'%s' length is not %s".formatted(name, length));
+		return array;
+	}
+
+	public static <E extends Exception> byte[] checkLength(final byte[] array, final int length, final E validationFailedException) throws E
+	{
+		if (array == null || array.length != length)
+			throw validationFailedException;
+		return array;
+	}
+
+	public static short[] checkLength(final short[] array, final int length, final String name)
+	{
+		if (array == null || array.length != length)
+			throw new IllegalArgumentException("'%s' length is not %s".formatted(name, length));
+		return array;
+	}
+
+	public static <E extends Exception> short[] checkLength(final short[] array, final int length, final E validationFailedException) throws E
+	{
+		if (array == null || array.length != length)
+			throw validationFailedException;
+		return array;
+	}
+
+	public static int[] checkLength(final int[] array, final int length, final String name)
+	{
+		if (array == null || array.length != length)
+			throw new IllegalArgumentException("'%s' length is not %s".formatted(name, length));
+		return array;
+	}
+
+	public static <E extends Exception> int[] checkLength(final int[] array, final int length, final E validationFailedException) throws E
+	{
+		if (array == null || array.length != length)
+			throw validationFailedException;
+		return array;
+	}
+
+	public static long[] checkLength(final long[] array, final int length, final String name)
+	{
+		if (array == null || array.length != length)
+			throw new IllegalArgumentException("'%s' length is not %s".formatted(name, length));
+		return array;
+	}
+
+	public static <E extends Exception> long[] checkLength(final long[] array, final int length, final E validationFailedException) throws E
+	{
+		if (array == null || array.length != length)
+			throw validationFailedException;
+		return array;
+	}
+
 
 	public static Duration checkDuration(final Duration value, final long includedLowerBoundMillis, final long excludedUpperBoundMillis,
 			final String name)
@@ -319,7 +394,7 @@ public class InputValidator
 					"Invalid range [%s, %s)".formatted(Duration.ofMillis(includedLowerBoundMillis), Duration.ofMillis(excludedUpperBoundMillis)));
 		final long millis = value.toMillis();
 		if (millis < includedLowerBoundMillis || millis >= excludedUpperBoundMillis)
-			throw new IllegalArgumentException("'%s' is out of range [%s, %s):\t%s".formatted(name, Duration.ofMillis(includedLowerBoundMillis),
+			throw new IllegalArgumentException("'%s' is out of range [%s, %s): %s".formatted(name, Duration.ofMillis(includedLowerBoundMillis),
 					Duration.ofMillis(excludedUpperBoundMillis), value));
 		return value;
 	}
@@ -339,7 +414,7 @@ public class InputValidator
 			throw new IllegalArgumentException("Invalid range [%s, %s)".formatted(includedLowerBound, excludedUpperBound));
 
 		if (value.compareTo(includedLowerBound) < 0 || value.compareTo(excludedUpperBound) >= 0)
-			throw new IllegalArgumentException("'%s' is out of range [%s, %s):\t%s".formatted(name, includedLowerBound, excludedUpperBound, value));
+			throw new IllegalArgumentException("'%s' is out of range [%s, %s): %s".formatted(name, includedLowerBound, excludedUpperBound, value));
 
 		return value;
 	}

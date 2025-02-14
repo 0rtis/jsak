@@ -2,6 +2,7 @@ package io.ortis.jsak.lang;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * A better implementation than {@link Optional}
@@ -11,6 +12,8 @@ import java.util.Optional;
 public class Discretionary<T>
 {
 	private static final Discretionary<?> ABSENT = new Discretionary<>(false, null);
+
+	private static final IllegalStateException VALUE_NOT_PRESENT = new IllegalStateException("Value is not present");
 
 	private final boolean present;
 	private final T value;
@@ -38,15 +41,32 @@ public class Discretionary<T>
 	public T getValue()
 	{
 		if (!this.present)
-			throw new IllegalStateException("Value is not present");
+			throw VALUE_NOT_PRESENT;
 
 		return this.value;
 	}
 
-	public T computeValueIfNotPresent(final T fallbackValue)
+	public <E extends Throwable> T getValueIfPresentOrThrow(final E exception) throws E
 	{
-		return this.present ? this.value : fallbackValue;
+		if (!this.present)
+			throw exception;
+
+		return this.value;
 	}
+
+	public T getValueIfPresent(final T fallbackValue)
+	{
+		if (!this.present)
+			return fallbackValue;
+
+		return this.value;
+	}
+
+	public T computeValueIfNotPresent(final Supplier<T> fallbackValue)
+	{
+		return this.present ? this.value : fallbackValue.get();
+	}
+
 
 	@Override
 	public int hashCode()

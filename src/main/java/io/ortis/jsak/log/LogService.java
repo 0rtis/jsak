@@ -2,7 +2,7 @@ package io.ortis.jsak.log;
 
 
 import io.ortis.jsak.log.config.LogServiceConfig;
-import io.ortis.jsak.util.FormatUtils;
+import io.ortis.jsak.util.FormatUtil;
 
 import java.time.Clock;
 import java.time.Duration;
@@ -273,7 +273,7 @@ public class LogService extends Handler implements Runnable
 				sb.append(" ").append(DATETIME_FORMATTER.format(now));
 				sb.append("|").append(logRecord.getLoggerName());
 				sb.append("|").append(Thread.currentThread().getName());
-				sb.append("|").append(FormatUtils.extractSimpleClassName(logRecord.getSourceClassName())).append(".")
+				sb.append("|").append(FormatUtil.extractSimpleClassName(logRecord.getSourceClassName())).append(".")
 				  .append(logRecord.getSourceMethodName());
 				sb.append(": ").append(logRecord.getMessage());
 
@@ -291,7 +291,7 @@ public class LogService extends Handler implements Runnable
 				sb.append(" ").append(DATETIME_FORMATTER.format(now));
 				sb.append("|").append(logRecord.getLoggerName());
 				sb.append("|").append(Thread.currentThread().getName());
-				sb.append("|").append(io.ortis.jsak.util.FormatUtils.extractSimpleClassName(logRecord.getSourceClassName())).append(".")
+				sb.append("|").append(FormatUtil.extractSimpleClassName(logRecord.getSourceClassName())).append(".")
 				  .append(logRecord.getSourceMethodName());
 				sb.append(":\n").append(logRecord.getMessage());
 

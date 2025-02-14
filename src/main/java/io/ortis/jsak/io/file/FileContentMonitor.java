@@ -2,7 +2,7 @@ package io.ortis.jsak.io.file;
 
 
 import io.ortis.jsak.io.bytes.ByteArray;
-import io.ortis.jsak.util.FormatUtils;
+import io.ortis.jsak.util.FormatUtil;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -99,7 +99,7 @@ public class FileContentMonitor implements Runnable
 					if (sleep < 0)
 					{
 						if (this.logger != null)
-							this.logger.warning("Monitoring loop is late by " + FormatUtils.formatDuration(Duration.ofMillis(sleep).negated()));
+							this.logger.warning("Monitoring loop is late by " + FormatUtil.formatDuration(Duration.ofMillis(sleep).negated()));
 					} else
 						Thread.sleep(sleep);
 
@@ -111,8 +111,8 @@ public class FileContentMonitor implements Runnable
 				{
 					if (this.logger != null)
 					{
-						this.logger.severe("Error while monitoring files\n" + io.ortis.jsak.util.FormatUtils.formatException(e));
-						this.logger.info(io.ortis.jsak.util.FormatUtils.formatDuration(COOLDOWN) + " before resuming files monitoring");
+						this.logger.severe("Error while monitoring files\n" + FormatUtil.formatException(e));
+						this.logger.info(FormatUtil.formatDuration(COOLDOWN) + " before resuming files monitoring");
 					} else
 						e.printStackTrace();
 
@@ -126,7 +126,7 @@ public class FileContentMonitor implements Runnable
 		} catch (final Exception e)
 		{
 			if (this.logger != null)
-				this.logger.severe("Critical error while monitoring files\n" + io.ortis.jsak.util.FormatUtils.formatException(e));
+				this.logger.severe("Critical error while monitoring files\n" + FormatUtil.formatException(e));
 			else
 				e.printStackTrace();
 		}

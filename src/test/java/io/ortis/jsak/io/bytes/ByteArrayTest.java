@@ -1,6 +1,8 @@
 package io.ortis.jsak.io.bytes;
 
-import io.ortis.jsak.TestUtils;
+import io.ortis.jsak.TestUtil;
+import io.ortis.jsak.io.BytesProvider;
+import io.ortis.jsak.io.IoUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -12,14 +14,14 @@ import java.util.Random;
 public class ByteArrayTest
 {
 	private static final int BASE_RUNS = 3_000_000;
-	private static final int MAX_LENGTH = 256;
+	private static final int MAX_LENGTH = 1024;
 
 
 	@Test
-	public void testGetters()
+	public void testGetters() throws IOException
 	{
-		final Random random = TestUtils.getDeterministicRandom();
-		final int runs = TestUtils.computeTestRuns(BASE_RUNS);
+		final Random random = TestUtil.getDeterministicRandom();
+		final int runs = TestUtil.computeTestRuns(BASE_RUNS);
 		for (int run = 0; run < runs; run++)
 		{
 			final int length = run == 0 ? 0 : random.nextInt(MAX_LENGTH);
@@ -27,6 +29,7 @@ public class ByteArrayTest
 			random.nextBytes(buffer);
 
 			final ByteArray bytes = ByteArray.copy(buffer);
+			final BytesProvider provider = bytes.newBytesProvider();
 
 			Assertions.assertEquals(length, bytes.length());
 			Assertions.assertArrayEquals(buffer, bytes.toArray());
@@ -36,14 +39,18 @@ public class ByteArrayTest
 
 			Assertions.assertEquals(bytes, bytesw);
 			Assertions.assertEquals(bytes.hashCode(), bytesw.hashCode());
+
+			final byte[] buffer2 = new byte[length];
+			IoUtil.stream(provider, buffer2, 0, length);
+			Assertions.assertArrayEquals(buffer, buffer2);
 		}
 	}
 
 	@Test
 	public void testEquals() throws IOException
 	{
-		final Random random = TestUtils.getDeterministicRandom();
-		final int runs = TestUtils.computeTestRuns(BASE_RUNS);
+		final Random random = TestUtil.getDeterministicRandom();
+		final int runs = TestUtil.computeTestRuns(BASE_RUNS);
 		for (int run = 0; run < runs; run++)
 		{
 			final int length = run == 0 ? 0 : random.nextInt(MAX_LENGTH);

@@ -1,6 +1,6 @@
 package io.ortis.jsak.log.output;
 
-import io.ortis.jsak.TestUtils;
+import io.ortis.jsak.TestUtil;
 import io.ortis.jsak.log.LogService;
 import org.junit.jupiter.api.*;
 
@@ -20,20 +20,20 @@ public class LogFileTest
 	@BeforeAll
 	static void beforeAll() throws Exception
 	{
-		workspace = TestUtils.mkdir();
+		workspace = TestUtil.mkdir();
 
 	}
 
 	@AfterAll
 	static void afterAll() throws Exception
 	{
-		TestUtils.delete(workspace);
+		TestUtil.delete(workspace);
 	}
 
 	@BeforeEach
 	void setUp()
 	{
-		logFilePath = workspace.resolve(TestUtils.randomString(16) + ".log");
+		logFilePath = workspace.resolve(TestUtil.randomString(16) + ".log");
 	}
 
 	@Test

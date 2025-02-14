@@ -5,13 +5,13 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
-public class FormatUtilsTest
+public class FormatUtilTest
 {
 	@Test
 	public void testF()
 	{
 		final LocalDateTime now = LocalDateTime.now();
-		final String formatedString = io.ortis.jsak.util.FormatUtils.f("There is only {} hours each {}. Current time is {}", 24, "day", now);
+		final String formatedString = FormatUtil.f("There is only {} hours each {}. Current time is {}", 24, "day", now);
 		final String formatedString2 = "There is only %s hours each %s. Current time is %s".formatted(24, "day", now);
 		System.out.println(formatedString);
 		System.out.println(formatedString2);

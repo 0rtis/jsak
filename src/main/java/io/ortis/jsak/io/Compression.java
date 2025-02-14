@@ -43,14 +43,14 @@ public class Compression
 			{
 				try (final GZIPOutputStream gos = new GZIPOutputStream(destination))
 				{
-					IOUtils.stream(source, gos, buffer);
+					IoUtil.stream(source, gos, buffer);
 					gos.flush();
 				}
 			}
 			break;
 
 			case Raw:
-				IOUtils.stream(source, destination, buffer);
+				IoUtil.stream(source, destination, buffer);
 				break;
 
 			default:
@@ -71,13 +71,13 @@ public class Compression
 			{
 				try (final GZIPInputStream gis = new GZIPInputStream(source))
 				{
-					IOUtils.stream(gis, destination, buffer);
+					IoUtil.stream(gis, destination, buffer);
 				}
 			}
 			break;
 
 			case Raw:
-				IOUtils.stream(source, destination, buffer);
+				IoUtil.stream(source, destination, buffer);
 				break;
 
 			default:

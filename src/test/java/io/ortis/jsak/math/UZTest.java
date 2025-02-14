@@ -1,13 +1,12 @@
 package io.ortis.jsak.math;
 
-import io.ortis.jsak.TestUtils;
+import io.ortis.jsak.TestUtil;
 import io.ortis.jsak.io.bytes.ByteArray;
-import io.ortis.jsak.io.bytes.ByteUtils;
+import io.ortis.jsak.io.bytes.ByteUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,8 +21,8 @@ public class UZTest
 	@Test
 	public void test()
 	{
-		final Random random = TestUtils.getDeterministicRandom();
-		final int runs = TestUtils.computeTestRuns(BASE_TEST_RUNS);
+		final Random random = TestUtil.getDeterministicRandom();
+		final int runs = TestUtil.computeTestRuns(BASE_TEST_RUNS);
 		final List<UZ> uzs = new ArrayList<>();
 		final List<BigInteger> bis = new ArrayList<>();
 		for(int run = 0; run < runs; run++)
@@ -105,7 +104,7 @@ public class UZTest
 			}
 
 			{// UZ from ByteUtils bytes
-				final UZ uzFromZBytes = new UZ(ByteArray.wrap(ByteUtils.zToBytes(z, 8)));
+				final UZ uzFromZBytes = new UZ(ByteArray.wrap(ByteUtil.unsignedZToBytes(z, 8)));
 				Assertions.assertEquals(uz.hashCode(), uzFromZBytes.hashCode());
 				Assertions.assertEquals(uz, uzFromZBytes);
 				Assertions.assertEquals(uz.toBigInteger(), uzFromZBytes.toBigInteger());

@@ -17,18 +17,40 @@ public class ByteUtilTest
 	public void testHexadecimal()
 	{
 
-
 		{
-			final String hex =
-					"0000000000000000000000000000000000000000000000000000000000000004000000000000000000000000f994808674cc05ea2799c6ea30d4f0782716438a0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000006d2ed0000000000000000000000000000000000000000000000008ac7230489e80000000000000000000000000000f994808674cc05ea2799c6ea30d4f0782716438a000000000000000000000000000000000000000000000000000000000006d2ed0000000000000000000000000000000000000000000000000000000000001178000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000022f0000000000000000000000000000000000000000000000001158e460913d000000000000000000000000000000000000000000000000000000000000000000001";
-			final byte[] bytes = ByteUtil.hexToBytes(hex);
-			Assertions.assertEquals(hex, ByteUtil.bytesToHex(bytes));
+			final byte[] expectedBytes;
+			final BigInteger expectedZ;
+
+			{
+				final String hex =
+						"0000000000000000000000000000000000000000000000000000000000000004000000000000000000000000f994808674cc05ea2799c6ea30d4f0782716438a0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000006d2ed0000000000000000000000000000000000000000000000008ac7230489e80000000000000000000000000000f994808674cc05ea2799c6ea30d4f0782716438a000000000000000000000000000000000000000000000000000000000006d2ed0000000000000000000000000000000000000000000000000000000000001178000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000022f0000000000000000000000000000000000000000000000001158e460913d000000000000000000000000000000000000000000000000000000000000000000001";
+				Assertions.assertTrue(hex.length() % 2 == 0);
+				final byte[] bytes = ByteUtil.hexToBytes(hex);
+				expectedZ = ByteUtil.hexToUnsignedZ(hex);
+				Assertions.assertEquals(hex, ByteUtil.bytesToHex(bytes));
+				expectedBytes = bytes;
+			}
+
+			{
+				final String hex =
+						"000000000000000000000000000000000000000000000000000000000000004000000000000000000000000f994808674cc05ea2799c6ea30d4f0782716438a0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000006d2ed0000000000000000000000000000000000000000000000008ac7230489e80000000000000000000000000000f994808674cc05ea2799c6ea30d4f0782716438a000000000000000000000000000000000000000000000000000000000006d2ed0000000000000000000000000000000000000000000000000000000000001178000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000022f0000000000000000000000000000000000000000000000001158e460913d000000000000000000000000000000000000000000000000000000000000000000001";
+				Assertions.assertFalse(hex.length() % 2 == 0);
+				Assertions.assertArrayEquals(expectedBytes, ByteUtil.hexToBytes(hex));
+				Assertions.assertEquals(expectedZ, ByteUtil.hexToUnsignedZ(hex));
+			}
+
+			{
+				final String hex =
+						"004000000000000000000000000f994808674cc05ea2799c6ea30d4f0782716438a0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000006d2ed0000000000000000000000000000000000000000000000008ac7230489e80000000000000000000000000000f994808674cc05ea2799c6ea30d4f0782716438a000000000000000000000000000000000000000000000000000000000006d2ed0000000000000000000000000000000000000000000000000000000000001178000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000022f0000000000000000000000000000000000000000000000001158e460913d000000000000000000000000000000000000000000000000000000000000000000001";
+				Assertions.assertFalse(hex.length() % 2 == 0);
+					Assertions.assertEquals(expectedZ, ByteUtil.hexToUnsignedZ(hex));
+			}
 		}
 
-		Assertions.assertEquals("00".repeat(32), ByteUtil.zToHex(BigInteger.ZERO, 32));
-		Assertions.assertEquals("00".repeat(31) + "01", ByteUtil.zToHex(BigInteger.ONE, 32));
-		Assertions.assertEquals("00" + "ff".repeat(32), ByteUtil.zToHex(BigInteger.TWO.pow(256).subtract(BigInteger.ONE), 33));
-		Assertions.assertThrows(IllegalArgumentException.class, () -> ByteUtil.zToHex(BigInteger.TWO.pow(256), 32));
+		Assertions.assertEquals("00".repeat(32), ByteUtil.unsignedZToHex(BigInteger.ZERO, 32));
+		Assertions.assertEquals("00".repeat(31) + "01", ByteUtil.unsignedZToHex(BigInteger.ONE, 32));
+		Assertions.assertEquals("00" + "ff".repeat(32), ByteUtil.unsignedZToHex(BigInteger.TWO.pow(256).subtract(BigInteger.ONE), 33));
+		Assertions.assertThrows(Exception.class, () -> ByteUtil.unsignedZToHex(BigInteger.TWO.pow(256), 32));
 		Assertions.assertThrows(IllegalArgumentException.class, () -> ByteUtil.hexToBytes("00ffg0"));
 
 		hexTest(new byte[]{0, 0, 0, 0, 0, 0, 0}, "00000000000000");
@@ -47,6 +69,7 @@ public class ByteUtilTest
 				Assertions.assertArrayEquals(bytes, buffer);
 				final BigInteger uz = ByteUtil.bytesToSignedZ(bytes);
 				Assertions.assertEquals(i, uz.intValueExact());
+				Assertions.assertEquals(i, ByteUtil.bytesToSignedZ(ByteUtil.signedZToBytes(i)).longValueExact());
 			}
 
 			if (i >= 0)
@@ -59,6 +82,7 @@ public class ByteUtilTest
 				Assertions.assertArrayEquals(bytes, buffer);
 				final BigInteger uz = ByteUtil.bytesToUnsignedZ(bytes);
 				Assertions.assertEquals(i, uz.intValueExact());
+				Assertions.assertEquals(i, ByteUtil.bytesToUnsignedZ(ByteUtil.unsignedZToBytes(i)).longValueExact());
 			}
 		}
 	}
@@ -179,10 +203,11 @@ public class ByteUtilTest
 		for (final BigInteger z : List.of(BigInteger.ZERO, BigInteger.ONE, BigInteger.TEN, BigInteger.TWO.pow(bitRange).subtract(BigInteger.ONE),
 				BigInteger.TWO.pow(bitRange)))
 		{
-			final String expectedHex = ByteUtil.zToHex(z);
+			final String expectedHex = ByteUtil.unsignedZToHex(z, byteLength);
 			final byte[] expectedBytes = ByteUtil.unsignedZToBytes(z, byteLength);
 
-			Assertions.assertEquals(expectedHex, ByteUtil.zToHex(z));
+			Assertions.assertEquals(z, ByteUtil.bytesToUnsignedZ(ByteUtil.unsignedZToBytes(z)));
+			Assertions.assertEquals(expectedHex, ByteUtil.unsignedZToHex(z, byteLength));
 			Assertions.assertArrayEquals(expectedBytes, ByteUtil.unsignedZToBytes(z, byteLength));
 			Assertions.assertEquals(z, ByteUtil.bytesToUnsignedZ(expectedBytes));
 			Assertions.assertEquals(z, ByteUtil.hexToUnsignedZ(expectedHex));
@@ -195,10 +220,11 @@ public class ByteUtilTest
 		for (int i = 0; i < RUNS; i++)
 		{
 			final BigInteger z = TestUtil.randomBigInteger(0, Long.MAX_VALUE);
-			final String expectedHex = ByteUtil.zToHex(z);
+			final String expectedHex = ByteUtil.unsignedZToHex(z, byteLength);
 			final byte[] expectedBytes = ByteUtil.unsignedZToBytes(z, byteLength);
 
-			Assertions.assertEquals(expectedHex, ByteUtil.zToHex(z));
+			Assertions.assertEquals(z, ByteUtil.bytesToUnsignedZ(ByteUtil.unsignedZToBytes(z)));
+			Assertions.assertEquals(expectedHex, ByteUtil.unsignedZToHex(z, byteLength));
 			Assertions.assertArrayEquals(expectedBytes, ByteUtil.unsignedZToBytes(z, byteLength));
 			Assertions.assertEquals(z, ByteUtil.bytesToUnsignedZ(expectedBytes));
 			Assertions.assertEquals(z, ByteUtil.hexToUnsignedZ(expectedHex));
@@ -219,10 +245,11 @@ public class ByteUtilTest
 				BigInteger.TEN.negate(), BigInteger.ONE.negate(), BigInteger.ZERO, BigInteger.ONE, BigInteger.TEN,
 				BigInteger.TWO.pow(bitRange).subtract(BigInteger.ONE)))
 		{
-			final String expectedHex = ByteUtil.zToHex(z);
+			final String expectedHex = ByteUtil.signedZToHex(z, byteLength);
 			final byte[] expectedBytes = ByteUtil.signedZToBytes(z, byteLength);
 
-			Assertions.assertEquals(expectedHex, ByteUtil.zToHex(z));
+			Assertions.assertEquals(z, ByteUtil.bytesToSignedZ(ByteUtil.signedZToBytes(z)));
+			Assertions.assertEquals(expectedHex, ByteUtil.signedZToHex(z, byteLength));
 			Assertions.assertArrayEquals(expectedBytes, ByteUtil.signedZToBytes(z, byteLength));
 			Assertions.assertEquals(z, ByteUtil.bytesToSignedZ(expectedBytes));
 			Assertions.assertEquals(z, ByteUtil.hexToSignedZ(expectedHex));
@@ -233,10 +260,11 @@ public class ByteUtilTest
 		for (int i = 0; i < RUNS; i++)
 		{
 			final BigInteger z = TestUtil.randomBigInteger(Long.MIN_VALUE, Long.MAX_VALUE);
-			final String expectedHex = ByteUtil.zToHex(z);
+			final String expectedHex = ByteUtil.signedZToHex(z, byteLength);
 			final byte[] expectedBytes = ByteUtil.signedZToBytes(z, byteLength);
 
-			Assertions.assertEquals(expectedHex, ByteUtil.zToHex(z));
+			Assertions.assertEquals(z, ByteUtil.bytesToSignedZ(ByteUtil.signedZToBytes(z)));
+			Assertions.assertEquals(expectedHex, ByteUtil.signedZToHex(z, byteLength));
 			Assertions.assertArrayEquals(expectedBytes, ByteUtil.signedZToBytes(z, byteLength));
 			Assertions.assertEquals(z, ByteUtil.bytesToSignedZ(expectedBytes));
 			Assertions.assertEquals(z, ByteUtil.hexToSignedZ(expectedHex));

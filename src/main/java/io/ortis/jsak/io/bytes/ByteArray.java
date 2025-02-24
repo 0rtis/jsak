@@ -26,6 +26,16 @@ public class ByteArray implements Bytes
 		return ByteArray.wrap(concat(this, other));
 	}
 
+	public byte[] head(final int length)
+	{
+		return Arrays.copyOfRange(this.bytes, 0, length);
+	}
+
+	public byte[] tail(final int length)
+	{
+		return Arrays.copyOfRange(this.bytes, this.bytes.length - length, this.bytes.length);
+	}
+
 	@Override
 	public int length()
 	{
@@ -94,10 +104,10 @@ public class ByteArray implements Bytes
 	{
 		if (this == o)
 			return true;
-		if (!(o instanceof final ByteArray other))
+		if (o == null || getClass() != o.getClass() || hashCode() != o.hashCode())
 			return false;
-
-		return hashCode == other.hashCode && Arrays.equals(this.bytes, other.bytes);
+		final ByteArray other = (ByteArray) o;
+		return Arrays.equals(this.bytes, other.bytes);
 	}
 
 	public static byte[] concat(final ByteArray head, final ByteArray tail)

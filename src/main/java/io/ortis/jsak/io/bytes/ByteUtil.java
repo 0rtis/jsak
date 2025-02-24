@@ -34,6 +34,11 @@ public abstract class ByteUtil
 		return copy(value, 0, value.length);
 	}
 
+	public static byte[] copy(final byte[] value, final int offset)
+	{
+		return copy(value, offset, value.length - offset);
+	}
+
 	public static byte[] copy(final byte[] value, final int offset, final int length)
 	{
 		final byte[] copy = new byte[length];
@@ -56,10 +61,37 @@ public abstract class ByteUtil
 		return concat;
 	}
 
+	public static byte[] unsignedZToBytes(final long value)
+	{
+		return unsignedZToBytes(BigInteger.valueOf(value));
+	}
+
 	public static byte[] unsignedZToBytes(final long value, final int length)
 	{
 		return unsignedZToBytes(BigInteger.valueOf(value), length, new byte[length], 0);
 	}
+
+	/**
+	 * Convert a positive BigInteger to a byte array without guaranteeing the length
+	 *
+	 * @param value
+	 * @return
+	 */
+	public static byte[] unsignedZToBytes(final BigInteger value)
+	{
+		final byte[] data = value.toByteArray();
+		int off = 0;
+		if (data.length > 1)
+			for (int i = 0; i < data.length; i++, off++)
+				if (data[i] != 0)
+					break;
+		if (off == 0)
+			return data;
+		final byte[] buffer = new byte[data.length - off];
+		System.arraycopy(data, off, buffer, 0, buffer.length);
+		return buffer;
+	}
+
 
 	public static byte[] unsignedZToBytes(final BigInteger value, final int length)
 	{
@@ -69,8 +101,8 @@ public abstract class ByteUtil
 
 	public static byte[] unsignedZToBytes(final BigInteger value, final int length, final byte[] destination, final int offset)
 	{
-
 		final byte[] data = value.toByteArray();
+
 		if (data.length == length)
 			System.arraycopy(data, 0, destination, offset, length);
 		else
@@ -100,9 +132,25 @@ public abstract class ByteUtil
 		return destination;
 	}
 
+	public static byte[] signedZToBytes(final long value)
+	{
+		return signedZToBytes(BigInteger.valueOf(value));
+	}
+
 	public static byte[] signedZToBytes(final long value, final int length)
 	{
 		return signedZToBytes(BigInteger.valueOf(value), length, new byte[length], 0);
+	}
+
+	/**
+	 * Convert a BigInteger to a byte array without guaranteeing the length
+	 *
+	 * @param value
+	 * @return
+	 */
+	public static byte[] signedZToBytes(final BigInteger value)
+	{
+		return value.toByteArray();
 	}
 
 	public static byte[] signedZToBytes(final BigInteger value, final int length)
@@ -129,6 +177,9 @@ public abstract class ByteUtil
 
 	public static BigInteger bytesToSignedZ(final byte[] value, final int offset, final int length)
 	{
+		if (length <= 0)
+			throw new IllegalArgumentException("Invalid byte array length " + length);
+
 		final byte[] buffer;
 		/*
 		final int fillingZeros = fillingZeros(value, offset, length);
@@ -325,24 +376,16 @@ public abstract class ByteUtil
 	}
 
 
-	public static String zToHex(final long value)
+	public static String unsignedZToHex(final long value, final int byteLength)
 	{
-		return zToHex(value, -1);
-	}
-
-	public static String zToHex(final BigInteger value)
-	{
-		return zToHex(value, -1);
-	}
-
-	public static String zToHex(final long value, final int byteLength)
-	{
-		return zToHex(BigInteger.valueOf(value), byteLength);
+		return unsignedZToHex(BigInteger.valueOf(value), byteLength);
 	}
 
 
-	public static String zToHex(final BigInteger value, final int byteLength)
+	public static String unsignedZToHex(final BigInteger value, final int byteLength)
 	{
+		return bytesToHex(unsignedZToBytes(value, byteLength));
+		/*
 		if (byteLength != -1)
 			InputValidator.checkStrictlyPositive(byteLength, "byteLength");
 
@@ -368,8 +411,19 @@ public abstract class ByteUtil
 
 		for (int i = offset; i < bytes.length; i++)
 			base16.append(String.format("%02x", bytes[i]));
-		return base16.toString();
+		return base16.toString();*/
 	}
+
+	public static String signedZToHex(final long value, final int byteLength)
+	{
+		return signedZToHex(BigInteger.valueOf(value), byteLength);
+	}
+
+	public static String signedZToHex(final BigInteger value, final int byteLength)
+	{
+		return bytesToHex(signedZToBytes(value, byteLength));
+	}
+
 
 	public static String bytesToHex(final byte[] bytes)
 	{
@@ -398,7 +452,7 @@ public abstract class ByteUtil
 		}
 		return new String(buffer);
 	}
-
+/*
 	public static byte[] hexToBytes(final String hex)
 	{
 		InputValidator.check(hex.length() % 2 == 0, "Hexadecimal string must be of even length");
@@ -407,14 +461,45 @@ public abstract class ByteUtil
 			bytes[i >> 1] = (byte) ((hexCharTo4BitWord(hex.charAt(i)) << 4) | hexCharTo4BitWord(hex.charAt(i + 1)));
 
 		return bytes;
-	}
+	}*/
 
+	public static byte[] hexToBytes(final String hex)
+	{
+		final int len = hex.length();
+		final byte[] bytes = new byte[(len + 1) >> 1];
+
+		final int offset = len % 2;
+		if (offset == 1)
+			bytes[0] = (byte) hexCharTo4BitWord(hex.charAt(0));
+
+		for (int i = offset; i < len; i += 2)
+			bytes[(i + 1) >> 1] = (byte) ((hexCharTo4BitWord(hex.charAt(i)) << 4) | hexCharTo4BitWord(hex.charAt(i + 1)));
+
+		return bytes;
+	}
+/*
 	public static int hexToBytes(final String hex, final byte[] destination, final int offset)
 	{
 		InputValidator.check(hex.length() % 2 == 0, "Hexadecimal string must be of even length");
 		for (int i = 0; i < hex.length(); i += 2)
 			destination[offset + (i >> 1)] = (byte) ((Character.digit(hex.charAt(i), 16) << 4) + Character.digit(hex.charAt(i + 1), 16));
 		return hex.length() >> 1;
+	}
+*/
+
+	public static int hexToBytes(final String hex, final byte[] destination, final int offset)
+	{
+		final int len = hex.length();
+
+		final int off = len % 2;
+		if (off == 1)
+			destination[offset] = (byte) hexCharTo4BitWord(hex.charAt(0));
+
+		for (int i = off; i < len; i += 2)
+			destination[offset + ((i + 1) >> 1)] = (byte) ((hexCharTo4BitWord(hex.charAt(i)) << 4) | hexCharTo4BitWord(hex.charAt(i + 1)));
+
+		return (len + 1) >> 1;
+
 	}
 
 	private static int hexCharTo4BitWord(final char c)
@@ -430,15 +515,15 @@ public abstract class ByteUtil
 
 	public static BigInteger hexToUnsignedZ(final String hex)
 	{
-		InputValidator.check(hex.length() % 2 == 0, "Hexadecimal string must be of even length");
+		//InputValidator.check(hex.length() % 2 == 0, "Hexadecimal string must be of even length");
 		return new BigInteger(hex, 16);
 
 	}
 
 	public static BigInteger hexToSignedZ(final String hex)
 	{
-		InputValidator.check(hex.length() % 2 == 0, "Hexadecimal string must be of even length");
-		final int inputBits = hex.length() << 2;
+		InputValidator.check(hex.length() % 2 == 0, "Signed z hexadecimal string must be of even length");
+		final int inputBits = (hex.length()) << 2;
 		/*if (bits > inputBits)
 			bits = inputBits;*/
 		BigInteger bigInteger = new BigInteger(hex, 16);
@@ -448,5 +533,52 @@ public abstract class ByteUtil
 		return bigInteger;
 	}
 
+	/**
+	 * Return a prefixed hex string
+	 *
+	 * @param hex
+	 * @return
+	 */
+	public static String ensurePrefixHex(final String hex)
+	{
+		if (hex.startsWith("0x"))
+			return hex;
+		return prefixHex(hex);
+	}
+
+	/**
+	 * Add a prefix to a hex string
+	 *
+	 * @param unprefixedHex
+	 * @return
+	 */
+	public static String prefixHex(final String unprefixedHex)
+	{
+		return "0x%s".formatted(unprefixedHex);
+	}
+
+	/**
+	 * Return an unprefixed hex string
+	 *
+	 * @param hex
+	 * @return
+	 */
+	public static String ensureUnprefixHex(final String hex)
+	{
+		if (hex.startsWith("0x"))
+			return unprefixHex(hex);
+		return hex;
+	}
+
+	/**
+	 * Remove the prefix from a hex string
+	 *
+	 * @param prefixedHex
+	 * @return
+	 */
+	public static String unprefixHex(final String prefixedHex)
+	{
+		return prefixedHex.substring(2);
+	}
 
 }

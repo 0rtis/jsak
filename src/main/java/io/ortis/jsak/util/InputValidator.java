@@ -314,6 +314,171 @@ public final class InputValidator
 		return value;
 	}
 
+	public static boolean[] checkLengthRange(final boolean[] array, final int minLengthIncluded, final int maxLengthExcluded, final String name)
+	{
+		if ((minLengthIncluded < 0 && maxLengthExcluded < 0) ||
+			(minLengthIncluded >= 0 && maxLengthExcluded >= 0 && minLengthIncluded >= maxLengthExcluded))
+			throw new IllegalArgumentException("Invalid range [%s, %s)".formatted(minLengthIncluded, maxLengthExcluded));
+		if (array == null
+			|| (minLengthIncluded >= 0 && array.length < minLengthIncluded)
+			|| (maxLengthExcluded >= 0 && array.length >= maxLengthExcluded))
+			throw new IllegalArgumentException(
+					"'%s' length is out of range [%s, %s): %s".formatted(name, minLengthIncluded, maxLengthExcluded, array == null ? null : array.length));
+
+		return array;
+	}
+
+	public static <E extends Exception> boolean[] checkLengthRange(final boolean[] array, final int minLengthIncluded, final int maxLengthExcluded,
+			final E validationFailedException) throws E
+	{
+		if ((minLengthIncluded < 0 && maxLengthExcluded < 0) ||
+			(minLengthIncluded >= 0 && maxLengthExcluded >= 0 && minLengthIncluded >= maxLengthExcluded))
+			throw new IllegalArgumentException("Invalid range [%s, %s)".formatted(minLengthIncluded, maxLengthExcluded));
+		if (array == null
+			|| (minLengthIncluded >= 0 && array.length < minLengthIncluded)
+			|| (maxLengthExcluded >= 0 && array.length >= maxLengthExcluded))
+			throw validationFailedException;
+
+		return array;
+	}
+
+
+	public static byte[] checkLengthRange(final byte[] array, final int minLengthIncluded, final int maxLengthExcluded, final String name)
+	{
+		if ((minLengthIncluded < 0 && maxLengthExcluded < 0) ||
+			(minLengthIncluded >= 0 && maxLengthExcluded >= 0 && minLengthIncluded >= maxLengthExcluded))
+			throw new IllegalArgumentException("Invalid range [%s, %s)".formatted(minLengthIncluded, maxLengthExcluded));
+		if (array == null
+			|| (minLengthIncluded >= 0 && array.length < minLengthIncluded)
+			|| (maxLengthExcluded >= 0 && array.length >= maxLengthExcluded))
+			throw new IllegalArgumentException(
+					"'%s' length is out of range [%s, %s): %s".formatted(name, minLengthIncluded, maxLengthExcluded, array == null ? null : array.length));
+		return array;
+	}
+
+	public static <E extends Exception> byte[] checkLengthRange(final byte[] array, final int minLengthIncluded, final int maxLengthExcluded,
+			final E validationFailedException) throws E
+	{
+		if ((minLengthIncluded < 0 && maxLengthExcluded < 0) ||
+			(minLengthIncluded >= 0 && maxLengthExcluded >= 0 && minLengthIncluded >= maxLengthExcluded))
+			throw new IllegalArgumentException("Invalid range [%s, %s)".formatted(minLengthIncluded, maxLengthExcluded));
+		if (array == null
+			|| (minLengthIncluded >= 0 && array.length < minLengthIncluded)
+			|| (maxLengthExcluded >= 0 && array.length >= maxLengthExcluded))
+			throw validationFailedException;
+
+		return array;
+	}
+
+	public static short[] checkLengthRange(final short[] array, final int minLengthIncluded, final int maxLengthExcluded, final String name)
+	{
+		if ((minLengthIncluded < 0 && maxLengthExcluded < 0) ||
+			(minLengthIncluded >= 0 && maxLengthExcluded >= 0 && minLengthIncluded >= maxLengthExcluded))
+			throw new IllegalArgumentException("Invalid range [%s, %s)".formatted(minLengthIncluded, maxLengthExcluded));
+		if (array == null
+			|| (minLengthIncluded >= 0 && array.length < minLengthIncluded)
+			|| (maxLengthExcluded >= 0 && array.length >= maxLengthExcluded))
+			throw new IllegalArgumentException(
+					"'%s' length is out of range [%s, %s): %s".formatted(name, minLengthIncluded, maxLengthExcluded, array == null ? null : array.length));
+		return array;
+	}
+
+	public static <E extends Exception> short[] checkLengthRange(final short[] array, final int minLengthIncluded, final int maxLengthExcluded,
+			final E validationFailedException) throws E
+	{
+		if ((minLengthIncluded < 0 && maxLengthExcluded < 0) ||
+			(minLengthIncluded >= 0 && maxLengthExcluded >= 0 && minLengthIncluded >= maxLengthExcluded))
+			throw new IllegalArgumentException("Invalid range [%s, %s)".formatted(minLengthIncluded, maxLengthExcluded));
+		if (array == null
+			|| (minLengthIncluded >= 0 && array.length < minLengthIncluded)
+			|| (maxLengthExcluded >= 0 && array.length >= maxLengthExcluded))
+			throw validationFailedException;
+
+		return array;
+	}
+
+	public static int[] checkLengthRange(final int[] array, final int minLengthIncluded, final int maxLengthExcluded, final String name)
+	{
+		if ((minLengthIncluded < 0 && maxLengthExcluded < 0) ||
+			(minLengthIncluded >= 0 && maxLengthExcluded >= 0 && minLengthIncluded >= maxLengthExcluded))
+			throw new IllegalArgumentException("Invalid range [%s, %s)".formatted(minLengthIncluded, maxLengthExcluded));
+		if (array == null
+			|| (minLengthIncluded >= 0 && array.length < minLengthIncluded)
+			|| (maxLengthExcluded >= 0 && array.length >= maxLengthExcluded))
+			throw new IllegalArgumentException(
+					"'%s' length is out of range [%s, %s): %s".formatted(name, minLengthIncluded, maxLengthExcluded, array == null ? null : array.length));
+		return array;
+	}
+
+	public static <E extends Exception> int[] checkLengthRange(final int[] array, final int minLengthIncluded, final int maxLengthExcluded,
+			final E validationFailedException) throws E
+	{
+		if ((minLengthIncluded < 0 && maxLengthExcluded < 0) ||
+			(minLengthIncluded >= 0 && maxLengthExcluded >= 0 && minLengthIncluded >= maxLengthExcluded))
+			throw new IllegalArgumentException("Invalid range [%s, %s)".formatted(minLengthIncluded, maxLengthExcluded));
+		if (array == null
+			|| (minLengthIncluded >= 0 && array.length < minLengthIncluded)
+			|| (maxLengthExcluded >= 0 && array.length >= maxLengthExcluded))
+			throw validationFailedException;
+
+		return array;
+	}
+
+	public static long[] checkLengthRange(final long[] array, final int minLengthIncluded, final int maxLengthExcluded, final String name)
+	{
+		if ((minLengthIncluded < 0 && maxLengthExcluded < 0) ||
+			(minLengthIncluded >= 0 && maxLengthExcluded >= 0 && minLengthIncluded >= maxLengthExcluded))
+			throw new IllegalArgumentException("Invalid range [%s, %s)".formatted(minLengthIncluded, maxLengthExcluded));
+		if (array == null
+			|| (minLengthIncluded >= 0 && array.length < minLengthIncluded)
+			|| (maxLengthExcluded >= 0 && array.length >= maxLengthExcluded))
+			throw new IllegalArgumentException(
+					"'%s' length is out of range [%s, %s): %s".formatted(name, minLengthIncluded, maxLengthExcluded, array == null ? null : array.length));
+		return array;
+	}
+
+	public static <E extends Exception> long[] checkLengthRange(final long[] array, final int minLengthIncluded, final int maxLengthExcluded,
+			final E validationFailedException) throws E
+	{
+		if ((minLengthIncluded < 0 && maxLengthExcluded < 0) ||
+			(minLengthIncluded >= 0 && maxLengthExcluded >= 0 && minLengthIncluded >= maxLengthExcluded))
+			throw new IllegalArgumentException("Invalid range [%s, %s)".formatted(minLengthIncluded, maxLengthExcluded));
+		if (array == null
+			|| (minLengthIncluded >= 0 && array.length < minLengthIncluded)
+			|| (maxLengthExcluded >= 0 && array.length >= maxLengthExcluded))
+			throw validationFailedException;
+
+		return array;
+	}
+
+	public static <T> T[] checkLengthRange(final T[] array, final int minLengthIncluded, final int maxLengthExcluded, final String name)
+	{
+		if ((minLengthIncluded < 0 && maxLengthExcluded < 0) ||
+			(minLengthIncluded >= 0 && maxLengthExcluded >= 0 && minLengthIncluded >= maxLengthExcluded))
+			throw new IllegalArgumentException("Invalid range [%s, %s)".formatted(minLengthIncluded, maxLengthExcluded));
+		if (array == null
+			|| (minLengthIncluded >= 0 && array.length < minLengthIncluded)
+			|| (maxLengthExcluded >= 0 && array.length >= maxLengthExcluded))
+			throw new IllegalArgumentException(
+					"'%s' length is out of range [%s, %s): %s".formatted(name, minLengthIncluded, maxLengthExcluded, array == null ? null : array.length));
+		return array;
+	}
+
+	public static <T, E extends Exception> T[] checkLengthRange(final T[] array, final int minLengthIncluded, final int maxLengthExcluded,
+			final E validationFailedException) throws E
+	{
+		if ((minLengthIncluded < 0 && maxLengthExcluded < 0) ||
+			(minLengthIncluded >= 0 && maxLengthExcluded >= 0 && minLengthIncluded >= maxLengthExcluded))
+			throw new IllegalArgumentException("Invalid range [%s, %s)".formatted(minLengthIncluded, maxLengthExcluded));
+		if (array == null
+			|| (minLengthIncluded >= 0 && array.length < minLengthIncluded)
+			|| (maxLengthExcluded >= 0 && array.length >= maxLengthExcluded))
+			throw validationFailedException;
+
+		return array;
+	}
+
+
 	public static boolean[] checkLength(final boolean[] array, final int length, final String name)
 	{
 		if (array == null || array.length != length)
@@ -385,6 +550,20 @@ public final class InputValidator
 		return array;
 	}
 
+	public static <T> T[] checkLength(final T[] array, final int length, final String name)
+	{
+		if (array == null || array.length != length)
+			throw new IllegalArgumentException("'%s' length is not %s".formatted(name, length));
+		return array;
+	}
+
+	public static <T, E extends Exception> T[] checkLength(final T[] array, final int length, final E validationFailedException) throws E
+	{
+		if (array == null || array.length != length)
+			throw validationFailedException;
+		return array;
+	}
+
 
 	public static Duration checkDuration(final Duration value, final long includedLowerBoundMillis, final long excludedUpperBoundMillis,
 			final String name)
@@ -392,8 +571,8 @@ public final class InputValidator
 		if (includedLowerBoundMillis >= excludedUpperBoundMillis)
 			throw new IllegalArgumentException(
 					"Invalid range [%s, %s)".formatted(Duration.ofMillis(includedLowerBoundMillis), Duration.ofMillis(excludedUpperBoundMillis)));
-		final long millis = value.toMillis();
-		if (millis < includedLowerBoundMillis || millis >= excludedUpperBoundMillis)
+		final long millis = value == null ? 0 : value.toMillis();
+		if (value == null || millis < includedLowerBoundMillis || millis >= excludedUpperBoundMillis)
 			throw new IllegalArgumentException("'%s' is out of range [%s, %s): %s".formatted(name, Duration.ofMillis(includedLowerBoundMillis),
 					Duration.ofMillis(excludedUpperBoundMillis), value));
 		return value;
@@ -413,20 +592,19 @@ public final class InputValidator
 		if (includedLowerBound.compareTo(excludedUpperBound) >= 0)
 			throw new IllegalArgumentException("Invalid range [%s, %s)".formatted(includedLowerBound, excludedUpperBound));
 
-		if (value.compareTo(includedLowerBound) < 0 || value.compareTo(excludedUpperBound) >= 0)
+		if (value == null || value.compareTo(includedLowerBound) < 0 || value.compareTo(excludedUpperBound) >= 0)
 			throw new IllegalArgumentException("'%s' is out of range [%s, %s): %s".formatted(name, includedLowerBound, excludedUpperBound, value));
 
 		return value;
 	}
 
 	public static <E extends Exception> Duration checkDuration(final Duration value, final Duration includedLowerBound,
-			final Duration excludedUpperBound,
-			final E validationFailedException) throws E
+			final Duration excludedUpperBound, final E validationFailedException) throws E
 	{
 		if (includedLowerBound.compareTo(excludedUpperBound) >= 0)
 			throw new IllegalArgumentException("Invalid range [%s, %s)".formatted(includedLowerBound, excludedUpperBound));
 
-		if (value.compareTo(includedLowerBound) < 0 || value.compareTo(excludedUpperBound) >= 0)
+		if (value == null || value.compareTo(includedLowerBound) < 0 || value.compareTo(excludedUpperBound) >= 0)
 			throw validationFailedException;
 		return value;
 	}

@@ -15,7 +15,7 @@ public class FuturesTest
 	{
 		final Future<String> future = createSuccessFuture("Success", 5000);
 
-		Assertions.assertEquals("Success", Futures.whenDone(future, (s, t) -> {
+		Assertions.assertEquals("Success", Futures.awaitThen(future, (s, t) -> {
 			if (t != null)
 				Assertions.fail();
 
@@ -29,7 +29,7 @@ public class FuturesTest
 	{
 		final Future<String> future = createFailFuture(5000);
 
-		Assertions.assertEquals("Failed", Futures.whenDone(future, (s, t) -> {
+		Assertions.assertEquals("Failed", Futures.awaitThen(future, (s, t) -> {
 			if (t == null)
 				Assertions.fail();
 			return "Failed";
@@ -41,7 +41,7 @@ public class FuturesTest
 	{
 		final Future<String> future = createCompletedFuture("Success");
 
-		Assertions.assertEquals("Success", Futures.whenDone(future, (s, t) -> {
+		Assertions.assertEquals("Success", Futures.awaitThen(future, (s, t) -> {
 			if (t != null)
 				Assertions.fail();
 
@@ -54,7 +54,7 @@ public class FuturesTest
 	{
 		final Future<String> future = createFailedFuture(new Exception("Fail"));
 
-		Assertions.assertEquals("Failed", Futures.whenDone(future, (s, t) -> {
+		Assertions.assertEquals("Failed", Futures.awaitThen(future, (s, t) -> {
 			if (t == null)
 				Assertions.fail();
 			return "Failed";

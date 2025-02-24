@@ -11,14 +11,14 @@ public final class Futures
 	{
 	}
 
-	public static <T, R> R whenDone(final Future<T> future, final BiFunction<T, Throwable, R> function)
+	public static <T, R> R awaitThen(final Future<T> future, final BiFunction<T, Throwable, R> function)
 			throws InterruptedException, CancellationException, TimeoutException
 	{
-		return whenDone(future, function, null);
+		return awaitThen(future, function, null);
 	}
 
 
-	public static <T, R> R whenDone(final Future<T> future, final BiFunction<T, Throwable, R> function, final Duration futureTimeout)
+	public static <T, R> R awaitThen(final Future<T> future, final BiFunction<T, Throwable, R> function, final Duration futureTimeout)
 			throws InterruptedException, CancellationException, TimeoutException
 	{
 		final Long timeoutMillis = futureTimeout == null ? null : futureTimeout.toMillis();

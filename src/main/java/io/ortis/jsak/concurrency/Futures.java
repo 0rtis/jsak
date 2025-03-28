@@ -11,6 +11,22 @@ public final class Futures
 	{
 	}
 
+
+	public static <R> R await(final Future<R> future, final Duration timeout)
+			throws InterruptedException, ExecutionException, CancellationException, TimeoutException
+	{
+
+		try
+		{
+			if (timeout == null)
+				return future.get();
+			return future.get(timeout.toMillis(), TimeUnit.MILLISECONDS);
+		} catch (final InterruptedException | ExecutionException | CancellationException | TimeoutException e)
+		{
+			throw e;
+		}
+	}
+
 	public static <T, R> R awaitThen(final Future<T> future, final BiFunction<T, Throwable, R> function)
 			throws InterruptedException, CancellationException, TimeoutException
 	{
@@ -18,13 +34,12 @@ public final class Futures
 	}
 
 
-	public static <T, R> R awaitThen(final Future<T> future, final BiFunction<T, Throwable, R> function, final Duration futureTimeout)
+	public static <T, R> R awaitThen(final Future<T> future, final BiFunction<T, Throwable, R> function, final Duration timeout)
 			throws InterruptedException, CancellationException, TimeoutException
 	{
-		final Long timeoutMillis = futureTimeout == null ? null : futureTimeout.toMillis();
 		try
 		{
-			return function.apply(timeoutMillis == null ? future.get() : future.get(timeoutMillis, TimeUnit.MILLISECONDS), null);
+			return function.apply(await(future, timeout), null);
 		} catch (final InterruptedException | CancellationException | TimeoutException e)
 		{
 			throw e;

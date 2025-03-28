@@ -82,9 +82,15 @@ public class ByteArray implements Bytes
 	}
 
 	@Override
-	public String toHex()
+	public String toHex(final boolean withPrefix)
 	{
-		return ByteUtil.bytesToHex(this.bytes);
+		return withPrefix ? ByteUtil.prefixHex(ByteUtil.bytesToHex(this.bytes)) : ByteUtil.bytesToHex(this.bytes);
+	}
+
+	@Override
+	public String toHex(final int offset, final int length, final boolean withPrefix)
+	{
+		return withPrefix ? ByteUtil.prefixHex(ByteUtil.bytesToHex(this.bytes, offset, length)) : ByteUtil.bytesToHex(this.bytes, offset, length);
 	}
 
 	@Override

@@ -20,14 +20,14 @@ public interface Bytes
 
 	void apply(final Consumer<Byte> encoder);
 
-	default String toHex()
+	default String toHex(final boolean withPrefix)
 	{
-		return ByteUtil.bytesToHex(toArray());
+		return withPrefix ? ByteUtil.prefixHex(ByteUtil.bytesToHex(toArray())) : ByteUtil.bytesToHex(toArray());
 	}
 
-	default String toHex(final int offset, final int length)
+	default String toHex(final int offset, final int length, final boolean withPrefix)
 	{
-		return ByteUtil.bytesToHex(toArray(offset, length));
+		return withPrefix ? ByteUtil.prefixHex(ByteUtil.bytesToHex(toArray(offset, length))) : ByteUtil.bytesToHex(toArray(offset, length));
 	}
 
 

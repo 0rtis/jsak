@@ -1,8 +1,10 @@
 package io.ortis.jsak.util;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.Duration;
 import java.util.List;
+import java.util.Objects;
 
 public final class InputValidator
 {
@@ -140,13 +142,26 @@ public final class InputValidator
 		return value;
 	}
 
-	public static <E extends Exception> long checkEqual(final long value, final E validationFailedException) throws E
+	public static <E extends Exception> long checkEqual(final long value, final long expectedValue, final E validationFailedException) throws E
 	{
-		if (value != 0)
+		if (value != expectedValue)
 			throw validationFailedException;
 		return value;
 	}
 
+	public static <T> T checkEqual(final T value, final T expectedValue, final String name)
+	{
+		if (Objects.equals(value, expectedValue))
+			throw new IllegalArgumentException("%s is different from %s".formatted(name, value));
+		return value;
+	}
+
+	public static <T, E extends Exception> T checkEqual(final T value, final T expectedValue, final E validationFailedException) throws E
+	{
+		if (Objects.equals(value, expectedValue))
+			throw validationFailedException;
+		return value;
+	}
 
 	public static int checkNonNegative(final int value, final String name)
 	{
@@ -186,6 +201,36 @@ public final class InputValidator
 	}
 
 	public static <E extends Exception> BigInteger checkNonNegative(final BigInteger value, final E validationFailedException) throws E
+	{
+		if (value == null || value.signum() < 0)
+			throw validationFailedException;
+		return value;
+	}
+
+	public static double checkNonNegative(final double value, final String name)
+	{
+		if (value < 0)
+			throw new IllegalArgumentException("%s is less than 0: %s".formatted(name, value));
+		return value;
+	}
+
+	public static <E extends Exception> double checkNonNegative(final double value, final E validationFailedException) throws E
+	{
+		if (value < 0)
+			throw validationFailedException;
+		return value;
+	}
+
+	public static BigDecimal checkNonNegative(final BigDecimal value, final String name)
+	{
+		if (value == null)
+			throw new IllegalArgumentException("'%s' is null".formatted(name));
+		if (value.signum() < 0)
+			throw new IllegalArgumentException("%s is less than 0: %s".formatted(name, value));
+		return value;
+	}
+
+	public static <E extends Exception> BigDecimal checkNonNegative(final BigDecimal value, final E validationFailedException) throws E
 	{
 		if (value == null || value.signum() < 0)
 			throw validationFailedException;

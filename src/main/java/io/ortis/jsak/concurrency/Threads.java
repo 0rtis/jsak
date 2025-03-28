@@ -23,7 +23,7 @@ public final class Threads
 
 	public static ThreadFactory buildPlainThreadFactory(final Class<?> clazz, final boolean daemon)
 	{
-		return buildPlainThreadFactory(clazz.getName(), daemon);
+		return buildPlainThreadFactory(clazz.getSimpleName(), daemon);
 	}
 
 	public static ThreadFactory buildPlainThreadFactory(final String name, final boolean daemon)

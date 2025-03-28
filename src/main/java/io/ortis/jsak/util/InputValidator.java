@@ -151,14 +151,14 @@ public final class InputValidator
 
 	public static <T> T checkEqual(final T value, final T expectedValue, final String name)
 	{
-		if (Objects.equals(value, expectedValue))
+		if (!Objects.equals(value, expectedValue))
 			throw new IllegalArgumentException("%s is different from %s".formatted(name, value));
 		return value;
 	}
 
 	public static <T, E extends Exception> T checkEqual(final T value, final T expectedValue, final E validationFailedException) throws E
 	{
-		if (Objects.equals(value, expectedValue))
+		if (!Objects.equals(value, expectedValue))
 			throw validationFailedException;
 		return value;
 	}

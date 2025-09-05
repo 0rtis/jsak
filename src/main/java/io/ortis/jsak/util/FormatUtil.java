@@ -10,6 +10,15 @@ public class FormatUtil
 		return MessageFormatter.arrayFormat(str, args).getMessage();
 	}
 
+	public static String removeBlanks(final String str)
+	{
+		if (str == null)
+			return null;
+
+		return str.replaceAll("\\s+", "").replaceAll("\\r?\\n", "");
+	}
+
+
 	public static String truncateString(final String str, final int maxLength)
 	{
 		if (str == null)

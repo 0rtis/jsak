@@ -25,4 +25,6 @@ public interface InboundMessageBus<M>
 	void ack(final M message);
 
 	boolean subscribe(final InboundMessageBusListener<M> listener);
+
+	boolean unsubscribe(final InboundMessageBusListener<M> listener);
 }

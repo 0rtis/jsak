@@ -11,6 +11,24 @@ public final class Futures
 	{
 	}
 
+	/**
+	 * Waits for the future to complete and returns the result. Any exceptions thrown during the execution of the future will be wrapped in a RuntimeException.
+	 *
+	 * @param future
+	 * @param <R>
+	 * @return
+	 */
+	public static <R> R awaitSilently(final Future<R> future)
+	{
+		try
+		{
+			return future.get();
+
+		} catch (final InterruptedException | ExecutionException | CancellationException e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
 
 	public static <R> R await(final Future<R> future, final Duration timeout)
 			throws InterruptedException, ExecutionException, CancellationException, TimeoutException
@@ -20,7 +38,7 @@ public final class Futures
 		{
 			if (timeout == null)
 				return future.get();
-			return future.get(timeout.toMillis(), TimeUnit.MILLISECONDS);
+			return future.get(timeout.toNanos(), TimeUnit.NANOSECONDS);
 		} catch (final InterruptedException | ExecutionException | CancellationException | TimeoutException e)
 		{
 			throw e;

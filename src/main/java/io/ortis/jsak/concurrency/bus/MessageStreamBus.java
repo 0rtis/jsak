@@ -65,4 +65,12 @@ public class MessageStreamBus<M> implements BiDirectionalMessageBus<M, Void>
 	{
 		return this.listeners.add(listener);
 	}
+
+	@Override
+	public boolean unsubscribe(final InboundMessageBusListener<M> listener)
+	{
+		if (listener == null)
+			return false;
+		return this.listeners.remove(listener);
+	}
 }

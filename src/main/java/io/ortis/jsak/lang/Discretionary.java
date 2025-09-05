@@ -46,10 +46,10 @@ public class Discretionary<T>
 		return this.value;
 	}
 
-	public <E extends Throwable> T getValueIfPresentOrThrow(final E exception) throws E
+	public <E extends Throwable> T getValueIfPresentOrThrow(final Supplier<E> exception) throws E
 	{
 		if (!this.present)
-			throw exception;
+			throw exception.get();
 
 		return this.value;
 	}

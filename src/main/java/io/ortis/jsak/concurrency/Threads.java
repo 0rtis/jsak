@@ -21,6 +21,11 @@ public final class Threads
 		}
 	}
 
+	public static String currentMethodName()
+	{
+		return Thread.currentThread().getStackTrace()[2].getMethodName();
+	}
+
 	public static ThreadFactory buildPlainThreadFactory(final Class<?> clazz, final boolean daemon)
 	{
 		return buildPlainThreadFactory(clazz.getSimpleName(), daemon);

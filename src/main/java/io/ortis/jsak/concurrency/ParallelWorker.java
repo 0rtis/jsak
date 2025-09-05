@@ -1,5 +1,6 @@
 package io.ortis.jsak.concurrency;
 
+import io.ortis.jsak.concurrency.bus.InboundMessageBus;
 import io.ortis.jsak.util.InputValidator;
 
 import java.time.Duration;
@@ -74,7 +75,7 @@ public class ParallelWorker<T>
 	{
 		if (this.shutdown.get() <= 0)
 			throw new IllegalStateException("Worker not shutdown");
-		return this.executor.awaitTermination(duration.toMillis(), TimeUnit.MILLISECONDS);
+		return this.executor.awaitTermination(duration.toNanos(), TimeUnit.NANOSECONDS);
 	}
 
 	public static <T> ParallelWorker.Builder<T> newBuilder()
@@ -102,7 +103,7 @@ public class ParallelWorker<T>
 			this.supplier = () -> {
 				try
 				{
-					return queue.poll(pollTimeout.toMillis(), TimeUnit.MILLISECONDS);
+					return queue.poll(pollTimeout.toNanos(), TimeUnit.NANOSECONDS);
 				} catch (final InterruptedException e)
 				{
 					Thread.currentThread().interrupt();
@@ -111,6 +112,13 @@ public class ParallelWorker<T>
 			};
 			return this;
 		}
+
+		public ParallelWorker.Builder<T> setSupplier(final InboundMessageBus<T> bus, final Duration pollTimeout)
+		{
+			this.supplier = () -> bus.poll(pollTimeout);
+			return this;
+		}
+
 
 		public ParallelWorker.Builder<T> setConsumer(final Consumer<T> consumer)
 		{

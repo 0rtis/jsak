@@ -36,7 +36,7 @@ public final class ReentrantReadWriteGroupLock<T> implements GroupLock<T>
 	@Override
 	public LockInfo<T> getLockInfo(final Group<T> group, final Duration timeout) throws InterruptedException
 	{
-		if (!this.lock.readLock().tryLock(timeout.toMillis(), TimeUnit.MILLISECONDS))
+		if (!this.lock.readLock().tryLock(timeout.toNanos(), TimeUnit.NANOSECONDS))
 			return null;
 		try
 		{
@@ -52,10 +52,10 @@ public final class ReentrantReadWriteGroupLock<T> implements GroupLock<T>
 	public LockInfo<T> tryLock(final Group<T> group, final Duration timeout) throws InterruptedException
 	{
 
-		final long timeoutMillis = InputValidator.checkNonNegative(timeout.toMillis(), "timeout");
-		final long start = System.currentTimeMillis();
+		final long timeoutNanos = InputValidator.checkNonNegative(timeout.toNanos(), "timeout");
+		final long start = System.nanoTime();
 		GroupLock<T> groupLock = null;
-		if (!this.lock.writeLock().tryLock(timeout.toMillis(), TimeUnit.MILLISECONDS))
+		if (!this.lock.writeLock().tryLock(timeout.toNanos(), TimeUnit.NANOSECONDS))
 			return null;
 		try
 		{
@@ -74,8 +74,8 @@ public final class ReentrantReadWriteGroupLock<T> implements GroupLock<T>
 					final GroupLock<T> gl = this.unitToGroupLock.get(unit);
 					if (gl != null)
 					{
-						final long waitTime = timeoutMillis - (System.currentTimeMillis() - start);
-						if (waitTime <= 0 || !this.writeCondition.await(waitTime, TimeUnit.MILLISECONDS))
+						final long waitTime = timeoutNanos - (System.nanoTime() - start);
+						if (waitTime <= 0 || !this.writeCondition.await(waitTime, TimeUnit.NANOSECONDS))
 							return null;
 						continue whileLoop;
 					}

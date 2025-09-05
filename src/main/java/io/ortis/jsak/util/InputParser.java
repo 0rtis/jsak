@@ -1,14 +1,15 @@
 package io.ortis.jsak.util;
 
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public final class InputParser
 {
 
-	private static final IllegalArgumentException FAILED_TO_PARSE_BOOLEAN = new IllegalArgumentException("Failed to parse boolean");
-	private static final IllegalArgumentException FAILED_TO_PARSE_LONG = new IllegalArgumentException("Failed to parse long");
-	private static final IllegalArgumentException FAILED_TO_PARSE_LIST = new IllegalArgumentException("Failed to parse list");
+	private static final Supplier<IllegalArgumentException> FAILED_TO_PARSE_BOOLEAN = () -> new IllegalArgumentException("Failed to parse boolean");
+	private static final Supplier<IllegalArgumentException> FAILED_TO_PARSE_LONG = () -> new IllegalArgumentException("Failed to parse long");
+	private static final Supplier<IllegalArgumentException> FAILED_TO_PARSE_LIST = () -> new IllegalArgumentException("Failed to parse list");
 
 	private InputParser()
 	{
@@ -20,7 +21,7 @@ public final class InputParser
 	}
 
 
-	public static <E extends Exception> boolean parseBoolean(final String value, final E parsingFailedException) throws E
+	public static <E extends Exception> boolean parseBoolean(final String value, final Supplier<E> parsingFailedException) throws E
 	{
 		try
 		{
@@ -28,10 +29,10 @@ public final class InputParser
 				return true;
 			if ("false".equalsIgnoreCase(value.trim()))
 				return false;
-			throw parsingFailedException;
+			throw parsingFailedException.get();
 		} catch (final Throwable t)
 		{
-			throw parsingFailedException;
+			throw parsingFailedException.get();
 		}
 	}
 
@@ -41,7 +42,7 @@ public final class InputParser
 		return parseLong(value, FAILED_TO_PARSE_LONG);
 	}
 
-	public static <E extends Exception> long parseLong(final String value, final E parsingFailedException) throws E
+	public static <E extends Exception> long parseLong(final String value, final Supplier<E> parsingFailedException) throws E
 	{
 		try
 		{
@@ -50,7 +51,7 @@ public final class InputParser
 			return result;
 		} catch (final Throwable t)
 		{
-			throw parsingFailedException;
+			throw parsingFailedException.get();
 		}
 	}
 
@@ -66,13 +67,14 @@ public final class InputParser
 
 	}
 
-	public static <E extends Exception> List<String> parseArrayToList(final String value, final E parsingFailedException) throws E
+	public static <E extends Exception> List<String> parseArrayToList(final String value, final Supplier<E> parsingFailedException) throws E
 	{
 		return parseArrayToList(value, ",", parsingFailedException);
 
 	}
 
-	public static <E extends Exception> List<String> parseArrayToList(final String value, final String regexDelimiter, final E parsingFailedException)
+	public static <E extends Exception> List<String> parseArrayToList(final String value, final String regexDelimiter,
+			final Supplier<E> parsingFailedException)
 			throws E
 	{
 		try
@@ -80,7 +82,7 @@ public final class InputParser
 			return Stream.of(value.split(regexDelimiter)).map(String::trim).toList();
 		} catch (final Throwable t)
 		{
-			throw parsingFailedException;
+			throw parsingFailedException.get();
 		}
 	}
 
@@ -89,12 +91,13 @@ public final class InputParser
 		return parseArrayToStream(value, FAILED_TO_PARSE_LIST);
 	}
 
-	public static <E extends Exception> Stream<String> parseArrayToStream(final String value, final E parsingFailedException) throws E
+	public static <E extends Exception> Stream<String> parseArrayToStream(final String value, final Supplier<E> parsingFailedException) throws E
 	{
 		return parseArrayToStream(value, ",", parsingFailedException);
 	}
 
-	public static <E extends Exception> Stream<String> parseArrayToStream(final String value, final String regexDelimiter, final E parsingFailedException)
+	public static <E extends Exception> Stream<String> parseArrayToStream(final String value, final String regexDelimiter,
+			final Supplier<E> parsingFailedException)
 			throws E
 	{
 		try
@@ -102,7 +105,7 @@ public final class InputParser
 			return Stream.of(value.split(regexDelimiter)).map(String::trim);
 		} catch (final Throwable t)
 		{
-			throw parsingFailedException;
+			throw parsingFailedException.get();
 		}
 	}
 }

@@ -71,7 +71,7 @@ public class ReentrantReadWriteMapLock<T> {
 			return l;
 		});
 
-		if (!lock.lock.readLock().tryLock(timeout.toMillis(), TimeUnit.MILLISECONDS)) {
+		if (!lock.lock.readLock().tryLock(timeout.toNanos(), TimeUnit.NANOSECONDS)) {
 			W(() -> {
 				if (lock.count.decrementAndGet() <= 0)
 					locks.unsafeRemove(key);
@@ -122,7 +122,7 @@ public class ReentrantReadWriteMapLock<T> {
 			return l;
 		});
 
-		if (!lock.lock.writeLock().tryLock(timeout.toMillis(), TimeUnit.MILLISECONDS)) {
+		if (!lock.lock.writeLock().tryLock(timeout.toNanos(), TimeUnit.NANOSECONDS)) {
 			W(() -> {
 				if (lock.count.decrementAndGet() <= 0)
 					locks.unsafeRemove(key);

@@ -5,6 +5,7 @@ import io.ortis.jsak.io.BytesProvider;
 import io.ortis.jsak.io.ByteArrayChannel;
 import io.ortis.jsak.util.InputValidator;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.function.Consumer;
@@ -31,9 +32,29 @@ public class ByteArray implements Bytes
 		return Arrays.copyOfRange(this.bytes, 0, length);
 	}
 
+	public void head(final int length, final byte[] destination, final int destinationOffset)
+	{
+		System.arraycopy(this.bytes, 0, destination, destinationOffset, length);
+	}
+
 	public byte[] tail(final int length)
 	{
 		return Arrays.copyOfRange(this.bytes, this.bytes.length - length, this.bytes.length);
+	}
+
+	public void tail(final int length, final byte[] destination, final int destinationOffset)
+	{
+		System.arraycopy(this.bytes, this.bytes.length - length, destination, destinationOffset, length);
+	}
+
+	public byte[] read(final int offset, final int length) throws IOException
+	{
+		return Arrays.copyOfRange(this.bytes, offset, offset + length);
+	}
+
+	public void read(final int offset, final int length, final byte[] destination, final int destinationOffset) throws IOException
+	{
+		System.arraycopy(this.bytes, offset, destination, destinationOffset, length);
 	}
 
 	@Override
@@ -41,6 +62,7 @@ public class ByteArray implements Bytes
 	{
 		return this.bytes.length;
 	}
+
 
 	@Override
 	public BytesProvider newBytesProvider()

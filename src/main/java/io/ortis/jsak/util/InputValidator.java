@@ -3,8 +3,10 @@ package io.ortis.jsak.util;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.Duration;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Supplier;
 
 public final class InputValidator
@@ -18,6 +20,25 @@ public final class InputValidator
 	{
 		if (!value)
 			throw new IllegalArgumentException(message);
+	}
+
+	public static <E extends Exception> void check(final boolean value, final Supplier<E> exceptionSupplier) throws E
+	{
+		if (!value)
+			throw exceptionSupplier.get();
+	}
+
+
+	public static <T> T checkNull(final T t, final String name)
+	{
+		return checkNull(t, () -> new IllegalArgumentException("'%s' is not null".formatted(name)));
+	}
+
+	public static <T, E extends Exception> T checkNull(final T t, final Supplier<E> exceptionSupplier) throws E
+	{
+		if (t != null)
+			throw exceptionSupplier.get();
+		return t;
 	}
 
 	public static <T> T checkNotNull(final T t, final String name)
@@ -129,7 +150,7 @@ public final class InputValidator
 
 	public static long checkEqual(final long value, final long expectedValue, final String name)
 	{
-		return checkEqual(value, expectedValue, () -> new IllegalArgumentException("%s is different from %s".formatted(name, value)));
+		return checkEqual(value, expectedValue, () -> new IllegalArgumentException("Expected %s for %s but was %s".formatted(expectedValue, name, value)));
 	}
 
 	public static <E extends Exception> long checkEqual(final long value, final long expectedValue, final Supplier<E> exceptionSupplier) throws E
@@ -141,7 +162,7 @@ public final class InputValidator
 
 	public static <T> T checkEqual(final T value, final T expectedValue, final String name)
 	{
-		return checkEqual(value, expectedValue, () -> new IllegalArgumentException("%s is different from %s".formatted(name, value)));
+		return checkEqual(value, expectedValue, () -> new IllegalArgumentException("Expected %s for %s but was %s".formatted(expectedValue, name, value)));
 	}
 
 	public static <T, E extends Exception> T checkEqual(final T value, final T expectedValue, final Supplier<E> exceptionSupplier) throws E
@@ -476,6 +497,29 @@ public final class InputValidator
 		return array;
 	}
 
+	public static <T> Collection<T> checkLengthRange(final Collection<T> collection, final int minLengthIncluded, final int maxLengthExcluded,
+			final String name)
+	{
+		return checkLengthRange(collection, minLengthIncluded, maxLengthExcluded, () -> new IllegalArgumentException(
+				"'%s' length is out of range [%s, %s): %s".formatted(name, minLengthIncluded, maxLengthExcluded,
+						collection == null ? null : collection.size())));
+	}
+
+	public static <T, E extends Exception> Collection<T> checkLengthRange(final Collection<T> collection, final int minLengthIncluded,
+			final int maxLengthExcluded,
+			final Supplier<E> exceptionSupplier) throws E
+	{
+		if ((minLengthIncluded < 0 && maxLengthExcluded < 0) ||
+			(minLengthIncluded >= 0 && maxLengthExcluded >= 0 && minLengthIncluded >= maxLengthExcluded))
+			throw new IllegalArgumentException("Invalid range [%s, %s)".formatted(minLengthIncluded, maxLengthExcluded));
+		if (collection == null
+			|| (minLengthIncluded >= 0 && collection.size() < minLengthIncluded)
+			|| (maxLengthExcluded >= 0 && collection.size() >= maxLengthExcluded))
+			throw exceptionSupplier.get();
+
+		return collection;
+	}
+
 
 	public static boolean[] checkLength(final boolean[] array, final int length, final String name)
 	{
@@ -550,6 +594,19 @@ public final class InputValidator
 		return array;
 	}
 
+	public static <T> Collection<T> checkLength(final Collection<T> collection, final int length, final String name)
+	{
+		return checkLength(collection, length, () -> new IllegalArgumentException("'%s' length is not %s".formatted(name, length)));
+	}
+
+	public static <T, E extends Exception> Collection<T> checkLength(final Collection<T> collection, final int length, final Supplier<E> exceptionSupplier)
+			throws E
+	{
+		if (collection == null || collection.size() != length)
+			throw exceptionSupplier.get();
+		return collection;
+	}
+
 
 	public static Duration checkDuration(final Duration value, final long includedLowerBoundMillis, final long excludedUpperBoundMillis,
 			final String name)
@@ -597,25 +654,74 @@ public final class InputValidator
 		return clazz.cast(object);
 	}
 
-	public static <T> List<T> checkNotNullAndCopy(final List<T> list, final String name)
+	public static <T> List<T> checkNotNullAndCopyAndCheckNoNullElement(final List<T> list, final String name)
 	{
-		return List.copyOf(InputValidator.checkNotNull(list, name));
+		final List<T> l = List.copyOf(InputValidator.checkNotNull(list, name));
+		InputValidator.check(l.stream().noneMatch(Objects::isNull), "List '%s' contains null element".formatted(name));
+		return l;
 	}
 
-	public static <T> List<T> copyAnCheckNotEmpty(final List<T> list, final String name)
+	public static <T, E extends Exception> List<T> checkNotNullAndCopyAndCheckNoNullElement(final List<T> list, final Supplier<E> exceptionSupplier)
+			throws E
+	{
+		final List<T> l = List.copyOf(InputValidator.checkNotNull(list, exceptionSupplier));
+		InputValidator.check(l.stream().noneMatch(Objects::isNull), exceptionSupplier);
+		return l;
+	}
+
+	public static <T> List<T> checkNotNullAndCopyAndCheckNotEmptyAndCheckNoNullElement(final List<T> list, final String name)
 	{
 		final List<T> copy = List.copyOf(InputValidator.checkNotNull(list, name));
 		checkStrictlyPositive(copy.size(), "%s.%s".formatted(name, "size"));
+		InputValidator.check(list.stream().noneMatch(Objects::isNull), "List '%s' contains null element".formatted(name));
 		return copy;
 	}
 
 
-	public static <T, E extends Exception> List<T> copyAnCheckNotEmpty(final List<T> list, final Supplier<E> exceptionSupplier) throws E
+	public static <T, E extends Exception> List<T> checkNotNullAndCopyAndCheckNotEmptyAndCheckNoNullElement(final List<T> list,
+			final Supplier<E> exceptionSupplier) throws E
 	{
 		if (list == null)
 			throw exceptionSupplier.get();
 		final List<T> copy = List.copyOf(list);
 		checkStrictlyPositive(copy.size(), exceptionSupplier);
+		InputValidator.check(list.stream().noneMatch(Objects::isNull), exceptionSupplier);
+		return copy;
+	}
+
+
+	public static <T> Set<T> checkNotNullAndCopyAndCheckNoNullElement(final Set<T> set, final String name)
+	{
+		final Set<T> copy = Set.copyOf(InputValidator.checkNotNull(set, name));
+		InputValidator.check(copy.stream().noneMatch(Objects::isNull), "Set '%s' contains null element".formatted(name));
+		return copy;
+	}
+
+	public static <T, E extends Exception> Set<T> checkNotNullAndCopyAndCheckNoNullElement(final Set<T> set, final Supplier<E> exceptionSupplier)
+			throws E
+	{
+		final Set<T> copy = Set.copyOf(InputValidator.checkNotNull(set, exceptionSupplier));
+		InputValidator.check(copy.stream().noneMatch(Objects::isNull), exceptionSupplier);
+		return copy;
+	}
+
+	public static <T> Set<T> checkNotNullAndCopyAndCheckNotEmptyAndCheckNoNullElement(final Set<T> set, final String name)
+	{
+		final Set<T> copy = Set.copyOf(InputValidator.checkNotNull(set, name));
+		checkStrictlyPositive(copy.size(), "%s.%s".formatted(name, "size"));
+		InputValidator.check(set.stream().noneMatch(Objects::isNull), "Set '%s' contains null element".formatted(name));
+		return copy;
+	}
+
+
+	public static <T, E extends Exception> Set<T> checkNotNullAndCopyAndCheckNotEmptyAndCheckNoNullElement(final Set<T> set,
+			final Supplier<E> exceptionSupplier) throws E
+	{
+		if (set == null)
+			throw exceptionSupplier.get();
+		final Set<T> copy = Set.copyOf(set);
+		checkStrictlyPositive(copy.size(), exceptionSupplier);
+		InputValidator.check(set.stream().noneMatch(Objects::isNull), exceptionSupplier);
 		return copy;
 	}
 

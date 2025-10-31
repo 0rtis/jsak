@@ -23,7 +23,14 @@ public final class Threads
 
 	public static String currentMethodName()
 	{
-		return Thread.currentThread().getStackTrace()[2].getMethodName();
+		return methodName(1);
+	}
+
+	public static String methodName(final int callDepth)
+	{
+		final StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+		return (callDepth >= stackTraceElements.length ? stackTraceElements[stackTraceElements.length - 1] :
+				stackTraceElements[2 + callDepth]).getMethodName();
 	}
 
 	public static ThreadFactory buildPlainThreadFactory(final Class<?> clazz, final boolean daemon)

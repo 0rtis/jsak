@@ -3,90 +3,84 @@ package io.ortis.jsak.util;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDateTime;
-
 public class InputParserTest
 {
 	@Test
 	void parseBoolean()
 	{
-		Assertions.assertTrue(InputParser.parseBoolean("true"));
-		Assertions.assertTrue(InputParser.parseBoolean("True"));
-		Assertions.assertTrue(InputParser.parseBoolean("TRUE"));
-		Assertions.assertTrue(InputParser.parseBoolean("  true  "));
-		Assertions.assertTrue(InputParser.parseBoolean("  True  "));
-		Assertions.assertTrue(InputParser.parseBoolean("  TRUE  "));
+		Assertions.assertTrue(ObjectEncoder.toBoolean("true"));
+		Assertions.assertTrue(ObjectEncoder.toBoolean("True"));
+		Assertions.assertTrue(ObjectEncoder.toBoolean("TRUE"));
+		Assertions.assertTrue(ObjectEncoder.toBoolean("  true  "));
+		Assertions.assertTrue(ObjectEncoder.toBoolean("  True  "));
+		Assertions.assertTrue(ObjectEncoder.toBoolean("  TRUE  "));
 
-		Assertions.assertFalse(InputParser.parseBoolean("false"));
-		Assertions.assertFalse(InputParser.parseBoolean("False"));
-		Assertions.assertFalse(InputParser.parseBoolean("FALSE"));
-		Assertions.assertFalse(InputParser.parseBoolean("  false  "));
-		Assertions.assertFalse(InputParser.parseBoolean("  False  "));
-		Assertions.assertFalse(InputParser.parseBoolean("  FALSE  "));
+		Assertions.assertFalse(ObjectEncoder.toBoolean("false"));
+		Assertions.assertFalse(ObjectEncoder.toBoolean("False"));
+		Assertions.assertFalse(ObjectEncoder.toBoolean("FALSE"));
+		Assertions.assertFalse(ObjectEncoder.toBoolean("  false  "));
+		Assertions.assertFalse(ObjectEncoder.toBoolean("  False  "));
+		Assertions.assertFalse(ObjectEncoder.toBoolean("  FALSE  "));
 
-		Assertions.assertThrows(IllegalArgumentException.class, () -> InputParser.parseBoolean("t"));
-		Assertions.assertThrows(IllegalArgumentException.class, () -> InputParser.parseBoolean("f"));
-		Assertions.assertThrows(IllegalArgumentException.class, () -> InputParser.parseBoolean("0"));
-		Assertions.assertThrows(IllegalArgumentException.class, () -> InputParser.parseBoolean("1"));
-		Assertions.assertThrows(IllegalArgumentException.class, () -> InputParser.parseBoolean("yes"));
-		Assertions.assertThrows(IllegalArgumentException.class, () -> InputParser.parseBoolean("no"));
-		Assertions.assertThrows(IllegalArgumentException.class, () -> InputParser.parseBoolean("on"));
-		Assertions.assertThrows(IllegalArgumentException.class, () -> InputParser.parseBoolean("off"));
-		Assertions.assertThrows(IllegalArgumentException.class, () -> InputParser.parseBoolean("  "));
-		Assertions.assertThrows(IllegalArgumentException.class, () -> InputParser.parseBoolean(""));
-		Assertions.assertThrows(IllegalArgumentException.class, () -> InputParser.parseBoolean(null));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> ObjectEncoder.toBoolean("t"));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> ObjectEncoder.toBoolean("f"));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> ObjectEncoder.toBoolean("0"));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> ObjectEncoder.toBoolean("1"));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> ObjectEncoder.toBoolean("yes"));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> ObjectEncoder.toBoolean("no"));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> ObjectEncoder.toBoolean("on"));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> ObjectEncoder.toBoolean("off"));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> ObjectEncoder.toBoolean("  "));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> ObjectEncoder.toBoolean(""));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> ObjectEncoder.toBoolean(null));
 	}
 
 	@Test
 	void parseLong()
 	{
-		Assertions.assertEquals(0, InputParser.parseLong("0"));
-		Assertions.assertEquals(0, InputParser.parseLong("  0  "));
-		Assertions.assertEquals(0, InputParser.parseLong("0  "));
-		Assertions.assertEquals(0, InputParser.parseLong("  0"));
+		Assertions.assertEquals(0, ObjectEncoder.toLong("0"));
+		Assertions.assertEquals(0, ObjectEncoder.toLong("  0  "));
+		Assertions.assertEquals(0, ObjectEncoder.toLong("0  "));
+		Assertions.assertEquals(0, ObjectEncoder.toLong("  0"));
 
-		Assertions.assertEquals(1, InputParser.parseLong("1"));
-		Assertions.assertEquals(1, InputParser.parseLong("  1  "));
-		Assertions.assertEquals(1, InputParser.parseLong("1  "));
-		Assertions.assertEquals(1, InputParser.parseLong("  1"));
+		Assertions.assertEquals(1, ObjectEncoder.toLong("1"));
+		Assertions.assertEquals(1, ObjectEncoder.toLong("  1  "));
+		Assertions.assertEquals(1, ObjectEncoder.toLong("1  "));
+		Assertions.assertEquals(1, ObjectEncoder.toLong("  1"));
 
-		Assertions.assertEquals(-1, InputParser.parseLong("-1"));
-		Assertions.assertEquals(-1, InputParser.parseLong("  -1  "));
-		Assertions.assertEquals(-1, InputParser.parseLong("-1  "));
-		Assertions.assertEquals(-1, InputParser.parseLong("  -1"));
+		Assertions.assertEquals(-1, ObjectEncoder.toLong("-1"));
+		Assertions.assertEquals(-1, ObjectEncoder.toLong("  -1  "));
+		Assertions.assertEquals(-1, ObjectEncoder.toLong("-1  "));
+		Assertions.assertEquals(-1, ObjectEncoder.toLong("  -1"));
 
-		Assertions.assertEquals(Long.MAX_VALUE, InputParser.parseLong(Long.toString(Long.MAX_VALUE)));
-		Assertions.assertEquals(Long.MIN_VALUE, InputParser.parseLong(Long.toString(Long.MIN_VALUE)));
+		Assertions.assertEquals(Long.MAX_VALUE, ObjectEncoder.toLong(Long.toString(Long.MAX_VALUE)));
+		Assertions.assertEquals(Long.MIN_VALUE, ObjectEncoder.toLong(Long.toString(Long.MIN_VALUE)));
 
-		Assertions.assertThrows(IllegalArgumentException.class, () -> InputParser.parseLong("a"));
-		Assertions.assertThrows(IllegalArgumentException.class, () -> InputParser.parseLong("1a"));
-		Assertions.assertThrows(IllegalArgumentException.class, () -> InputParser.parseLong("a1"));
-		Assertions.assertThrows(IllegalArgumentException.class, () -> InputParser.parseLong("  "));
-		Assertions.assertThrows(IllegalArgumentException.class, () -> InputParser.parseLong(""));
-		Assertions.assertThrows(IllegalArgumentException.class, () -> InputParser.parseLong(null));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> ObjectEncoder.toLong("a"));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> ObjectEncoder.toLong("1a"));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> ObjectEncoder.toLong("a1"));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> ObjectEncoder.toLong("  "));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> ObjectEncoder.toLong(""));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> ObjectEncoder.toLong(null));
 	}
 
 	@Test
 	void parseArray()
 	{
-		Assertions.assertArrayEquals(new String[]{"a", "b", "c"}, InputParser.parseArrayToList("a,b,c").toArray());
-		Assertions.assertArrayEquals(new String[]{"a", "b", "c"}, InputParser.parseArrayToList("a, b, c").toArray());
-		Assertions.assertArrayEquals(new String[]{"a", "b", "c"}, InputParser.parseArrayToList("a , b , c").toArray());
-		Assertions.assertArrayEquals(new String[]{"a", "b", "c"}, InputParser.parseArrayToList("a ,b , c").toArray());
-		Assertions.assertArrayEquals(new String[]{"a", "b", "c"}, InputParser.parseArrayToList("a, b ,c").toArray());
-		Assertions.assertArrayEquals(new String[]{"a", "b", "c"}, InputParser.parseArrayToList("a,b, c").toArray());
-		Assertions.assertArrayEquals(new String[]{"a", "b", "c"}, InputParser.parseArrayToList("a,b,c").toArray());
+		Assertions.assertArrayEquals(new String[]{"a", "b", "c"}, ObjectEncoder.toListOfString("a,b,c").toArray());
+		Assertions.assertArrayEquals(new String[]{"a", " b", " c"}, ObjectEncoder.toListOfString("a, b, c").toArray());
+		Assertions.assertArrayEquals(new String[]{"a ", " b ", " c"}, ObjectEncoder.toListOfString("a , b , c").toArray());
 
-		Assertions.assertArrayEquals(new String[]{"a b c"}, InputParser.parseArrayToList("a b c").toArray());
-		Assertions.assertArrayEquals(new String[]{"a  b  c"}, InputParser.parseArrayToList("a  b  c").toArray());
-		Assertions.assertArrayEquals(new String[]{"a   b   c"}, InputParser.parseArrayToList("a   b   c").toArray());
-		Assertions.assertArrayEquals(new String[]{"a    b    c"}, InputParser.parseArrayToList("a    b    c").toArray());
+		Assertions.assertArrayEquals(new String[]{"a b c"}, ObjectEncoder.toListOfString("a b c").toArray());
+		Assertions.assertArrayEquals(new String[]{"a  b  c"}, ObjectEncoder.toListOfString("a  b  c").toArray());
+		Assertions.assertArrayEquals(new String[]{"a   b   c"}, ObjectEncoder.toListOfString("a   b   c").toArray());
+		Assertions.assertArrayEquals(new String[]{"a    b    c"}, ObjectEncoder.toListOfString("a    b    c").toArray());
 
-		Assertions.assertArrayEquals(new String[]{"a", "b", "c"}, InputParser.parseArrayToList("a;b;c", ";").toArray());
-		Assertions.assertArrayEquals(new String[]{"a", "b", "c"}, InputParser.parseArrayToList("a; b; c", ";").toArray());
-		Assertions.assertArrayEquals(new String[]{"a", "b", "c"}, InputParser.parseArrayToList("a ; b ; c", ";").toArray());
-		Assertions.assertArrayEquals(new String[]{"a", "b", "c"}, InputParser.parseArrayToList("a ;b ; c", ";").toArray());
-		Assertions.assertArrayEquals(new String[]{"a", "b", "c"}, InputParser.parseArrayToList("a; b ;c", ";").toArray());
+		Assertions.assertArrayEquals(new String[]{"a", "b", "c"}, ObjectEncoder.toListOfString("a;b;c", ";").toArray());
+		Assertions.assertArrayEquals(new String[]{"a", " b", " c"}, ObjectEncoder.toListOfString("a; b; c", ";").toArray());
+		Assertions.assertArrayEquals(new String[]{"a ", " b ", " c"}, ObjectEncoder.toListOfString("a ; b ; c", ";").toArray());
+		Assertions.assertArrayEquals(new String[]{"a ", "b ", " c"}, ObjectEncoder.toListOfString("a ;b ; c", ";").toArray());
+		Assertions.assertArrayEquals(new String[]{"a", " b ", "c"}, ObjectEncoder.toListOfString("a; b ;c", ";").toArray());
 
 	}
 }

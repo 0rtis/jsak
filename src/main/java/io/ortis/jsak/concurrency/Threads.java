@@ -1,5 +1,6 @@
 package io.ortis.jsak.concurrency;
 
+import java.time.Duration;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -8,6 +9,17 @@ public final class Threads
 
 	private Threads()
 	{
+	}
+
+	public static void trySleep(final Duration sleep)
+	{
+		try
+		{
+			Thread.sleep(sleep);
+		} catch (final InterruptedException _)
+		{
+			Thread.currentThread().interrupt();
+		}
 	}
 
 	public static void trySleep(final long ms)

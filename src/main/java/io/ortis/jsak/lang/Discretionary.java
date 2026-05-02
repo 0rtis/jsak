@@ -54,17 +54,10 @@ public class Discretionary<T>
 		return this.value;
 	}
 
-	public T getValueIfPresent(final T fallbackValue)
-	{
-		if (!this.present)
-			return fallbackValue;
 
-		return this.value;
-	}
-
-	public T computeValueIfNotPresent(final Supplier<T> fallbackValue)
+	public T getValueIfPresent(final Supplier<T> fallback)
 	{
-		return this.present ? this.value : fallbackValue.get();
+		return this.present ? this.value : fallback == null ? null : fallback.get();
 	}
 
 

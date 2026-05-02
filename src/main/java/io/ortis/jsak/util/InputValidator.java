@@ -18,14 +18,30 @@ public final class InputValidator
 
 	public static void check(final boolean value, final String message)
 	{
+		check(value, message, null);
+	}
+
+	public static <T> T check(final boolean value, final String message, final Supplier<T> returnValue)
+	{
 		if (!value)
 			throw new IllegalArgumentException(message);
+		if (returnValue == null)
+			return null;
+		return returnValue.get();
 	}
 
 	public static <E extends Exception> void check(final boolean value, final Supplier<E> exceptionSupplier) throws E
 	{
+		check(value, exceptionSupplier, null);
+	}
+
+	public static <T, E extends Exception> T check(final boolean value, final Supplier<E> exceptionSupplier, final Supplier<T> returnValue) throws E
+	{
 		if (!value)
 			throw exceptionSupplier.get();
+		if (returnValue == null)
+			return null;
+		return returnValue.get();
 	}
 
 
@@ -652,6 +668,19 @@ public final class InputValidator
 		if (!clazz.isInstance(object))
 			throw exceptionSupplier.get();
 		return clazz.cast(object);
+	}
+
+	public static <T> List<T> checkNotNullAndEmpty(final List<T> list, final String name)
+	{
+		InputValidator.check(InputValidator.checkNotNull(list, name).isEmpty(), "List '%s' is not empty".formatted(name));
+		return List.of();
+	}
+
+	public static <T, E extends Exception> List<T> checkNotNullAndEmpty(final List<T> list, final Supplier<E> exceptionSupplier)
+			throws E
+	{
+		InputValidator.check(InputValidator.checkNotNull(list, exceptionSupplier).isEmpty(), exceptionSupplier);
+		return List.of();
 	}
 
 	public static <T> List<T> checkNotNullAndCopyAndCheckNoNullElement(final List<T> list, final String name)

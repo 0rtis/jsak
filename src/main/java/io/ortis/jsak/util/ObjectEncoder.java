@@ -17,6 +17,40 @@ public final class ObjectEncoder
 	{
 	}
 
+	// from string
+
+	public static String fromStrings(final String... values)
+	{
+		return fromIterableOfString(List.of(values));
+	}
+
+	public static String fromListOfStrings(final List<String> values)
+	{
+		return fromIterableOfString(values);
+	}
+
+	public static String fromStreamOfString(final Stream<String> value)
+	{
+		return fromStreamOfString(value, DEFAULT_LIST_DELIMITER);
+	}
+
+	public static String fromStreamOfString(final Stream<String> value, final String delimiter)
+	{
+		return fromIterableOfString(value.toList(), delimiter);
+	}
+
+
+	public static String fromIterableOfString(final Iterable<String> value)
+	{
+		return fromIterableOfString(value, DEFAULT_LIST_DELIMITER);
+	}
+
+	public static String fromIterableOfString(final Iterable<String> value, final String delimiter)
+	{
+		return String.join(delimiter, value);
+	}
+
+
 	// Boolean
 
 	public static boolean toBoolean(final String value)
@@ -64,32 +98,6 @@ public final class ObjectEncoder
 
 	// List of String
 
-
-	public static String fromStrings(final String... values)
-	{
-		return fromIterableOfString(List.of(values));
-	}
-
-	public static String fromStreamOfString(final Stream<String> value)
-	{
-		return fromStreamOfString(value, DEFAULT_LIST_DELIMITER);
-	}
-
-	public static String fromStreamOfString(final Stream<String> value, final String delimiter)
-	{
-		return fromIterableOfString(value.toList(), delimiter);
-	}
-
-
-	public static String fromIterableOfString(final Iterable<String> value)
-	{
-		return fromIterableOfString(value, DEFAULT_LIST_DELIMITER);
-	}
-
-	public static String fromIterableOfString(final Iterable<String> value, final String delimiter)
-	{
-		return String.join(delimiter, value);
-	}
 
 	public static <E extends Exception> List<String> toListOfString(final String value) throws E
 	{

@@ -38,6 +38,21 @@ public class FormatUtil
 		return header + str;
 	}
 
+	public static String obfuscate(final String str, final int visibleChars)
+	{
+		if (str == null)
+			return null;
+
+		final int length = str.length();
+
+		if (length == 1)
+			return "%s***".formatted(str);
+
+		if (length <= visibleChars * 2)
+			return str.charAt(0) + "***" + str.charAt(length - 1);
+
+		return "%s***%s".formatted(str.substring(0, visibleChars), str.substring(length - visibleChars));
+	}
 
 	public static String formatByteLength(final long bytes)
 	{

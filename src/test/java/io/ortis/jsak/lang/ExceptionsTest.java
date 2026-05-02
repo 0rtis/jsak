@@ -26,7 +26,7 @@ public class ExceptionsTest
 
 		for (int i = 0; i < exceptions.size(); i++)
 			Assertions.assertEquals(exceptions.getLast(),
-					Exceptions.find(root, Exception.class, i).computeValueIfNotPresent(() -> {
+					Exceptions.find(root, Exception.class, i).getValueIfPresent(() -> {
 						Assertions.fail();
 						return null;
 					}));
@@ -36,7 +36,7 @@ public class ExceptionsTest
 			Assertions.assertNull(Exceptions.find(root, IOException.class, 0).getValueIfPresent(null));
 		for (int i = 1; i < exceptions.size(); i++)
 			Assertions.assertEquals(exceptions.get(exceptions.size() - 2),
-					Exceptions.find(root, IOException.class, i).computeValueIfNotPresent(() -> {
+					Exceptions.find(root, IOException.class, i).getValueIfPresent(() -> {
 						Assertions.fail();
 						return null;
 					}));
@@ -46,7 +46,7 @@ public class ExceptionsTest
 			Assertions.assertNull(Exceptions.find(root, IllegalArgumentException.class, i).getValueIfPresent(null));
 		for (int i = 2; i < exceptions.size(); i++)
 			Assertions.assertEquals(exceptions.get(exceptions.size() - 3),
-					Exceptions.find(root, IllegalArgumentException.class, i).computeValueIfNotPresent(() -> {
+					Exceptions.find(root, IllegalArgumentException.class, i).getValueIfPresent(() -> {
 						Assertions.fail();
 						return null;
 					}));
@@ -55,7 +55,7 @@ public class ExceptionsTest
 			Assertions.assertNull(Exceptions.find(root, IllegalStateException.class, i).getValueIfPresent(null));
 		for (int i = 3; i < exceptions.size(); i++)
 			Assertions.assertEquals(exceptions.get(exceptions.size() - 4),
-					Exceptions.find(root, IllegalStateException.class, i).computeValueIfNotPresent(() -> {
+					Exceptions.find(root, IllegalStateException.class, i).getValueIfPresent(() -> {
 						Assertions.fail();
 						return null;
 					}));

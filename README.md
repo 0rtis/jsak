@@ -105,27 +105,6 @@ LogService can be configured from a JSON file through [LogConfigFileMonitor](htt
 new LogConfigFileMonitor(logService, Paths.get("log_config.json"), null, Duration.ofSeconds(10), logService.getLogger("log-config")).start();
 ```
 
-#### [Web server](https://github.com/0rtis/jsak/tree/master/src/main/java/io/ortis/jsak/http/server)
-A simple & lightweight web server (based of SUN implementation) 
-```
-final HTTPServer httpServer = new HTTPServer(new InetSocketAddress("0.0.0.0", 8888), Executors.newFixedThreadPool(2), 2);
-HTTPEndpoint endpoint = new HTTPEndpoint()
-{
-    @Override
-    public boolean isMatch(final String requestMethod, final Map<String, List<String>> requestHeaders, final String path)
-    {
-        return true;
-    }
-
-    @Override
-    public Response respond(final String requestMethod, final Map<String, List<String>> requestHeaders, final String path,
-            final String query, final InputStream requestBody)
-    {
-        return new Response(null, 200, "hello world".getBytes(StandardCharsets.UTF_8), false);
-    }
-};
-httpServer.addContext("/myPath", new HTTPRequestHttpHandler("/myPath", httpServerConfig, List.of(endpoint), Compression.Algorithm.Raw, new NoLimitHTTPLimiter(), 4096, logger));
-```
 
 #### [CachedIterator](https://github.com/0rtis/jsak/blob/master/src/main/java/io/ortis/jsak/collection/CachedIterator.java)
 Get the current value of an Iterator more than once

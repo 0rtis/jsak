@@ -670,6 +670,19 @@ public final class InputValidator
 		return clazz.cast(object);
 	}
 
+	public static <T> List<T> checkNotNullAndNotEmpty(final List<T> list, final String name)
+	{
+		InputValidator.check(!InputValidator.checkNotNull(list, name).isEmpty(), "List '%s' is not empty".formatted(name));
+		return List.of();
+	}
+
+	public static <T, E extends Exception> List<T> checkNotNullAndNotEmpty(final List<T> list, final Supplier<E> exceptionSupplier)
+			throws E
+	{
+		InputValidator.check(!InputValidator.checkNotNull(list, exceptionSupplier).isEmpty(), exceptionSupplier);
+		return List.of();
+	}
+
 	public static <T> List<T> checkNotNullAndEmpty(final List<T> list, final String name)
 	{
 		InputValidator.check(InputValidator.checkNotNull(list, name).isEmpty(), "List '%s' is not empty".formatted(name));

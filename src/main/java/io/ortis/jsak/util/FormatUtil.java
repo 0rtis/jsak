@@ -100,6 +100,12 @@ public class FormatUtil
 			return String.format("%dh%02dm%02ds", s / 3600, (s % 3600) / 60, (s % 60));*/
 	}
 
+	public static String formatEnumToWords(final Enum<?> enumInstance)
+	{
+		if (enumInstance == null)
+			return "";
+		return enumInstance.name().replaceAll("(?<!^)(?=[A-Z])", " ");
+	}
 
 	public static String formatException(final Throwable t)
 	{

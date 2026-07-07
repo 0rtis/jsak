@@ -40,9 +40,36 @@ public final class Threads
 
 	public static String methodName(final int callDepth)
 	{
-		final StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
-		return (callDepth >= stackTraceElements.length ? stackTraceElements[stackTraceElements.length - 1] :
-				stackTraceElements[2 + callDepth]).getMethodName();
+		final StackTraceElement[] stackTraceElements =
+				Thread.currentThread().getStackTrace();
+
+		final StackTraceElement element =
+				(callDepth >= stackTraceElements.length - 2)
+				? stackTraceElements[stackTraceElements.length - 1]
+				: stackTraceElements[2 + callDepth];
+
+		String className = element.getClassName();
+		className = className.substring(className.lastIndexOf('.') + 1);
+
+		return className + "." + element.getMethodName();
+	}
+
+	public static String currentSimpleMethodName()
+	{
+		return simpleMethodName(1);
+	}
+
+	public static String simpleMethodName(final int callDepth)
+	{
+		final StackTraceElement[] stackTraceElements =
+				Thread.currentThread().getStackTrace();
+
+		final StackTraceElement element =
+				(callDepth >= stackTraceElements.length - 2)
+				? stackTraceElements[stackTraceElements.length - 1]
+				: stackTraceElements[2 + callDepth];
+
+		return element.getMethodName();
 	}
 
 	public static ThreadFactory buildPlainThreadFactory(final Class<?> clazz, final boolean daemon)

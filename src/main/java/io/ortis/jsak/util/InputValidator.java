@@ -381,11 +381,11 @@ public final class InputValidator
 			final Supplier<E> exceptionSupplier) throws E
 	{
 		if ((minLengthIncluded < 0 && maxLengthExcluded < 0) ||
-			(minLengthIncluded >= 0 && maxLengthExcluded >= 0 && minLengthIncluded >= maxLengthExcluded))
+		    (minLengthIncluded >= 0 && maxLengthExcluded >= 0 && minLengthIncluded >= maxLengthExcluded))
 			throw new IllegalArgumentException("Invalid range [%s, %s)".formatted(minLengthIncluded, maxLengthExcluded));
 		if (string == null
-			|| (minLengthIncluded >= 0 && string.length() < minLengthIncluded)
-			|| (maxLengthExcluded >= 0 && string.length() >= maxLengthExcluded))
+		    || (minLengthIncluded >= 0 && string.length() < minLengthIncluded)
+		    || (maxLengthExcluded >= 0 && string.length() >= maxLengthExcluded))
 			throw exceptionSupplier.get();
 
 		return string;
@@ -402,11 +402,11 @@ public final class InputValidator
 			final Supplier<E> exceptionSupplier) throws E
 	{
 		if ((minLengthIncluded < 0 && maxLengthExcluded < 0) ||
-			(minLengthIncluded >= 0 && maxLengthExcluded >= 0 && minLengthIncluded >= maxLengthExcluded))
+		    (minLengthIncluded >= 0 && maxLengthExcluded >= 0 && minLengthIncluded >= maxLengthExcluded))
 			throw new IllegalArgumentException("Invalid range [%s, %s)".formatted(minLengthIncluded, maxLengthExcluded));
 		if (array == null
-			|| (minLengthIncluded >= 0 && array.length < minLengthIncluded)
-			|| (maxLengthExcluded >= 0 && array.length >= maxLengthExcluded))
+		    || (minLengthIncluded >= 0 && array.length < minLengthIncluded)
+		    || (maxLengthExcluded >= 0 && array.length >= maxLengthExcluded))
 			throw exceptionSupplier.get();
 
 		return array;
@@ -423,11 +423,11 @@ public final class InputValidator
 			final Supplier<E> exceptionSupplier) throws E
 	{
 		if ((minLengthIncluded < 0 && maxLengthExcluded < 0) ||
-			(minLengthIncluded >= 0 && maxLengthExcluded >= 0 && minLengthIncluded >= maxLengthExcluded))
+		    (minLengthIncluded >= 0 && maxLengthExcluded >= 0 && minLengthIncluded >= maxLengthExcluded))
 			throw new IllegalArgumentException("Invalid range [%s, %s)".formatted(minLengthIncluded, maxLengthExcluded));
 		if (array == null
-			|| (minLengthIncluded >= 0 && array.length < minLengthIncluded)
-			|| (maxLengthExcluded >= 0 && array.length >= maxLengthExcluded))
+		    || (minLengthIncluded >= 0 && array.length < minLengthIncluded)
+		    || (maxLengthExcluded >= 0 && array.length >= maxLengthExcluded))
 			throw exceptionSupplier.get();
 
 		return array;
@@ -443,11 +443,11 @@ public final class InputValidator
 			final Supplier<E> exceptionSupplier) throws E
 	{
 		if ((minLengthIncluded < 0 && maxLengthExcluded < 0) ||
-			(minLengthIncluded >= 0 && maxLengthExcluded >= 0 && minLengthIncluded >= maxLengthExcluded))
+		    (minLengthIncluded >= 0 && maxLengthExcluded >= 0 && minLengthIncluded >= maxLengthExcluded))
 			throw new IllegalArgumentException("Invalid range [%s, %s)".formatted(minLengthIncluded, maxLengthExcluded));
 		if (array == null
-			|| (minLengthIncluded >= 0 && array.length < minLengthIncluded)
-			|| (maxLengthExcluded >= 0 && array.length >= maxLengthExcluded))
+		    || (minLengthIncluded >= 0 && array.length < minLengthIncluded)
+		    || (maxLengthExcluded >= 0 && array.length >= maxLengthExcluded))
 			throw exceptionSupplier.get();
 
 		return array;
@@ -463,11 +463,11 @@ public final class InputValidator
 			final Supplier<E> exceptionSupplier) throws E
 	{
 		if ((minLengthIncluded < 0 && maxLengthExcluded < 0) ||
-			(minLengthIncluded >= 0 && maxLengthExcluded >= 0 && minLengthIncluded >= maxLengthExcluded))
+		    (minLengthIncluded >= 0 && maxLengthExcluded >= 0 && minLengthIncluded >= maxLengthExcluded))
 			throw new IllegalArgumentException("Invalid range [%s, %s)".formatted(minLengthIncluded, maxLengthExcluded));
 		if (array == null
-			|| (minLengthIncluded >= 0 && array.length < minLengthIncluded)
-			|| (maxLengthExcluded >= 0 && array.length >= maxLengthExcluded))
+		    || (minLengthIncluded >= 0 && array.length < minLengthIncluded)
+		    || (maxLengthExcluded >= 0 && array.length >= maxLengthExcluded))
 			throw exceptionSupplier.get();
 
 		return array;
@@ -483,11 +483,11 @@ public final class InputValidator
 			final Supplier<E> exceptionSupplier) throws E
 	{
 		if ((minLengthIncluded < 0 && maxLengthExcluded < 0) ||
-			(minLengthIncluded >= 0 && maxLengthExcluded >= 0 && minLengthIncluded >= maxLengthExcluded))
+		    (minLengthIncluded >= 0 && maxLengthExcluded >= 0 && minLengthIncluded >= maxLengthExcluded))
 			throw new IllegalArgumentException("Invalid range [%s, %s)".formatted(minLengthIncluded, maxLengthExcluded));
 		if (array == null
-			|| (minLengthIncluded >= 0 && array.length < minLengthIncluded)
-			|| (maxLengthExcluded >= 0 && array.length >= maxLengthExcluded))
+		    || (minLengthIncluded >= 0 && array.length < minLengthIncluded)
+		    || (maxLengthExcluded >= 0 && array.length >= maxLengthExcluded))
 			throw exceptionSupplier.get();
 
 		return array;
@@ -503,11 +503,11 @@ public final class InputValidator
 			final Supplier<E> exceptionSupplier) throws E
 	{
 		if ((minLengthIncluded < 0 && maxLengthExcluded < 0) ||
-			(minLengthIncluded >= 0 && maxLengthExcluded >= 0 && minLengthIncluded >= maxLengthExcluded))
+		    (minLengthIncluded >= 0 && maxLengthExcluded >= 0 && minLengthIncluded >= maxLengthExcluded))
 			throw new IllegalArgumentException("Invalid range [%s, %s)".formatted(minLengthIncluded, maxLengthExcluded));
 		if (array == null
-			|| (minLengthIncluded >= 0 && array.length < minLengthIncluded)
-			|| (maxLengthExcluded >= 0 && array.length >= maxLengthExcluded))
+		    || (minLengthIncluded >= 0 && array.length < minLengthIncluded)
+		    || (maxLengthExcluded >= 0 && array.length >= maxLengthExcluded))
 			throw exceptionSupplier.get();
 
 		return array;
@@ -526,11 +526,11 @@ public final class InputValidator
 			final Supplier<E> exceptionSupplier) throws E
 	{
 		if ((minLengthIncluded < 0 && maxLengthExcluded < 0) ||
-			(minLengthIncluded >= 0 && maxLengthExcluded >= 0 && minLengthIncluded >= maxLengthExcluded))
+		    (minLengthIncluded >= 0 && maxLengthExcluded >= 0 && minLengthIncluded >= maxLengthExcluded))
 			throw new IllegalArgumentException("Invalid range [%s, %s)".formatted(minLengthIncluded, maxLengthExcluded));
 		if (collection == null
-			|| (minLengthIncluded >= 0 && collection.size() < minLengthIncluded)
-			|| (maxLengthExcluded >= 0 && collection.size() >= maxLengthExcluded))
+		    || (minLengthIncluded >= 0 && collection.size() < minLengthIncluded)
+		    || (maxLengthExcluded >= 0 && collection.size() >= maxLengthExcluded))
 			throw exceptionSupplier.get();
 
 		return collection;
@@ -695,6 +695,20 @@ public final class InputValidator
 		InputValidator.check(InputValidator.checkNotNull(list, exceptionSupplier).isEmpty(), exceptionSupplier);
 		return List.of();
 	}
+
+
+	public static <T> Collection<T> checkNotNullAndCopyAndCheckNoNullElement(final Collection<T> collection, final String name)
+	{
+		return checkNotNullAndCopyAndCheckNoNullElement(List.copyOf(InputValidator.checkNotNull(collection, name)), name);
+	}
+
+	public static <T, E extends Exception> Collection<T> checkNotNullAndCopyAndCheckNoNullElement(final Collection<T> collection,
+			final Supplier<E> exceptionSupplier)
+			throws E
+	{
+		return checkNotNullAndCopyAndCheckNoNullElement(List.copyOf(InputValidator.checkNotNull(collection, exceptionSupplier)), exceptionSupplier);
+	}
+
 
 	public static <T> List<T> checkNotNullAndCopyAndCheckNoNullElement(final List<T> list, final String name)
 	{
